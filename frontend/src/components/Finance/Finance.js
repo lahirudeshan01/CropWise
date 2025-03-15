@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getTransactions, generateReport } from '../../api/financeApi';
 import './Finance.css';
 
 const Finance = () => {
   const [transactions, setTransactions] = useState([]);
   const [report, setReport] = useState({ totalIncome: 0, totalOutcome: 0, profit: 0 });
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,6 +24,13 @@ const Finance = () => {
     fetchData();
   }, []);
 
+  // Handle new transaction from form pages
+  useEffect(() => {
+    if (location.state?.newTransaction) {
+      setTransactions([...transactions, location.state.newTransaction]);
+    }
+  }, [location.state]);
+
   // Handle Export PDF Button Click
   const handleExportPDF = () => {
     // Redirect to the FinanceReportPage with data
@@ -30,11 +38,11 @@ const Finance = () => {
   };
 
   const handleIncome = () => {
-    console.log('Income button clicked');
+    navigate('/income-form');
   };
 
   const handleOutcome = () => {
-    console.log('Outcome button clicked');
+    navigate('/outcome-form');
   };
 
   return (
@@ -83,11 +91,11 @@ const Finance = () => {
           </tr>
         </thead>
         <tbody>
-          {transactions.map((transaction) => (
-            <tr key={transaction._id}>
+          {transactions.map((transaction, index) => (
+            <tr key={index}>
               <td>{transaction.name}</td>
               <td>{new Date(transaction.date).toLocaleString()}</td>
-              <td>Rs.{transaction.amount.toLocaleString()}</td>
+              <td>Rs.{transaction.amount}</td>
               <td data-status={transaction.status}>{transaction.status}</td>
               <td>{transaction.reference}</td>
             </tr>

@@ -14,6 +14,31 @@ exports.getTransactions = async (req, res) => {
   res.status(200).json(transactions); // Return transactions directly
 };
 
+// Add a new transaction
+const addTransaction = async (req, res) => {
+  try {
+    const { name, amount, reference, status, date } = req.body;
+
+    // Create a new transaction
+    const newTransaction = new Finance({
+      name,
+      amount,
+      reference,
+      status,
+      date: date || new Date(), // Use provided date or current date
+    });
+
+    // Save the transaction to the database
+    await newTransaction.save();
+
+    res.status(201).json({ message: "Transaction added successfully", newTransaction });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding transaction", error: error.message });
+  }
+};
+
+module.exports = { addTransaction };
+
 // Generate financial report
 exports.generateReport = async (req, res) => {
   const transactions = await Transaction.find();

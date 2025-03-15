@@ -182,18 +182,18 @@ td[data-status="Outcome"] {
       display: none !important;
     }
 
-    .metrics{
+    .metrics {
         display: flex !important;
         flex-direction: row !important;
     }
-  }
+}
 
-  @media not print {
-  .report-page{
+@media not print {
+  .report-page {
     display: flex;
   }
 
-  .report-page>div{
+  .report-page > div {
     max-width: 1200px;
     margin: auto;
     box-shadow: 0 5px 10px #000;
@@ -202,12 +202,88 @@ td[data-status="Outcome"] {
   }
 }
 
-.report-page>div{
+.report-page > div {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.report-buttons{
-    justify-content: center;
+.report-buttons {
+    justify-content: space-between;
+    width: 720px !important;
+    margin: auto;
+    padding-right: 10px;
+    padding-bottom: 20px;
+}
+
+/* Form Container */
+.form-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Title */
+.form-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+/* Form Inputs */
+.form-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-container input:focus {
+  border-color: #007bff;
+}
+
+/* Form Button */
+.form-container button {
+    width: auto; /* Adjust width to fit content */
+    padding: 8px 16px; /* Smaller padding */
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px; /* Smaller font size */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block; /* Make the button a block element */
+    margin: 0 auto; /* Center the button horizontally */
+}
+
+.form-container button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Design for Forms */
+@media (max-width: 480px) {
+  .form-container {
+    padding: 15px;
+  }
+
+  .form-container h2 {
+    font-size: 20px;
+  }
+
+  .form-container input {
+    font-size: 14px;
+  }
+
+  .form-container button {
+    font-size: 14px;
+  }
 }

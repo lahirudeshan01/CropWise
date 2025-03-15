@@ -12,4 +12,7 @@ router.get('/transactions', financeController.getTransactions);
 // Generate financial report
 router.get('/report', financeController.generateReport);
 
+//Add transactions
+router.post("/transactions", financeController.addTransaction);
+
 module.exports = router;
