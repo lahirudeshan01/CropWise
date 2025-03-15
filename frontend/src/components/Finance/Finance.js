@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getTransactions, generateReport } from '../../api/financeApi';
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable'; // For table support
 import './Finance.css';
 
 const Finance = () => {
@@ -25,39 +23,9 @@ const Finance = () => {
 
   // Handle Export PDF Button Click
   const handleExportPDF = () => {
-    // Create a new PDF document
-    const doc = new jsPDF();
-
-    // Add title
-    doc.setFontSize(18);
-    doc.text('Financial Transactions Report', 14, 22);
-
-    // Add summary
-    doc.setFontSize(12);
-    doc.text(`Total Income: Rs.${report.totalIncome.toLocaleString()}`, 14, 32);
-    doc.text(`Total Outcome: Rs.${report.totalOutcome.toLocaleString()}`, 14, 38);
-    doc.text(`Profit: Rs.${report.profit.toLocaleString()}`, 14, 44);
-
-    // Add transactions table
-    const headers = [['Name', 'Date & Time', 'Amount', 'Status', 'Reference']];
-    const data = transactions.map((t) => [
-      t.name,
-      new Date(t.date).toLocaleString(),
-      `Rs.${t.amount.toLocaleString()}`,
-      t.status,
-      t.reference,
-    ]);
-
-    // Use autoTable to create the table
-    doc.autoTable({
-      head: headers,
-      body: data,
-      startY: 50, // Start table below the summary
-      theme: 'striped', // Add styling to the table
-    });
-
-    // Save the PDF
-    doc.save('Financial_Report.pdf');
+    window.print();
+    return;
+   
   };
 
   const handleIncome = () => {
