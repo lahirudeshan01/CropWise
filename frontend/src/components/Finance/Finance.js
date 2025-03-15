@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getTransactions, generateReport } from '../../api/financeApi';
 import './Finance.css';
 
 const Finance = () => {
   const [transactions, setTransactions] = useState([]);
   const [report, setReport] = useState({ totalIncome: 0, totalOutcome: 0, profit: 0 });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,9 +25,8 @@ const Finance = () => {
 
   // Handle Export PDF Button Click
   const handleExportPDF = () => {
-    window.print();
-    return;
-   
+    // Redirect to the FinanceReportPage with data
+    navigate('/finance-report', { state: { transactions, report } });
   };
 
   const handleIncome = () => {

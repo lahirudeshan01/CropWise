@@ -1,12 +1,19 @@
-import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Finance from './components/Finance/Finance';
-import './App.css';
+import FinanceReportPage from './components/Finance/FinanceReportPage';
 
 function App() {
   return (
-    <div className="App">
-      <Finance />
-    </div>
+    <Router>
+      <Routes>
+        {/* Main Finance Page */}
+        <Route path="/" element={<Finance />} />
+
+        {/* Finance Report Page */}
+        <Route path="/finance-report" element={<FinanceReportPage />} />
+        <Route path="/finance" element={<Finance/>} />
+      </Routes>
+    </Router>
   );
 }
 
