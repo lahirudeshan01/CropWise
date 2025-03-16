@@ -3,19 +3,20 @@
     padding: 20px;
     font-family: 'Arial', sans-serif;
     background-color: #f9f9f9;
-    border-radius: 8px;
+    border-radius: 12px;
     max-width: 1200px;
     margin: 20px auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 /* Header Section */
 .finance-dashboard h1 {
-    font-size: 28px;
+    font-size: 32px;
     color: #333;
     margin-bottom: 20px;
     text-align: center;
-    margin-top: 20px; /* Added space between buttons and title */
+    margin-top: 20px;
+    font-weight: 600;
 }
 
 /* Buttons Section */
@@ -29,64 +30,62 @@
 .button {
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     color: #fff;
     font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .button.export-pdf {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #007bff, #0056b3);
 }
 
 .button.export-pdf:hover {
-    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .button.income {
-    background-color: #28a745;
+    background: linear-gradient(135deg, #28a745, #218838);
 }
 
 .button.income:hover {
-    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .button.outcome {
-    background-color: #dc3545;
+    background: linear-gradient(135deg, #dc3545, #c82333);
 }
 
 .button.outcome:hover {
-    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Back to Finance Button Styles */
 .button.back-button {
-    background-color: #f44336; /* Red color for the back button */
-    color: white; /* White text */
-    border: none; /* Remove default border */
-    padding: 10px 20px; /* Padding for better clickability */
-    cursor: pointer; /* Pointer cursor on hover */
-    border-radius: 5px; /* Rounded corners */
-    font-size: 14px; /* Font size */
-    font-weight: bold; /* Bold text */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
-    margin-left: 10px; /* Add some space between buttons */
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin-left: 10px;
 }
 
 .button.back-button:hover {
-    background-color: #d32f2f; /* Darker red on hover */
-    transform: scale(1.05); /* Slightly scale up on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .button.back-button:active {
-    background-color: #b71c1c; /* Even darker red when clicked */
-    transform: scale(0.95); /* Slightly scale down when clicked */
-}
-
-.button.back-button:focus {
-    outline: none; /* Remove default outline */
-    box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.5); /* Add a focus ring */
+    transform: scale(0.95);
 }
 
 /* Metrics Section */
@@ -100,21 +99,23 @@
 .metric {
     background-color: #ffffff;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     text-align: center;
     flex: 1;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .metric:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .metric h3 {
     margin: 0;
     font-size: 18px;
     color: #555;
+    font-weight: 600;
 }
 
 .metric p {
@@ -129,7 +130,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -196,9 +197,10 @@ td[data-status="Outcome"] {
   .report-page > div {
     max-width: 1200px;
     margin: auto;
-    box-shadow: 0 5px 10px #000;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     background-color: #fff;
+    border-radius: 12px;
   }
 }
 
@@ -216,63 +218,74 @@ td[data-status="Outcome"] {
     padding-bottom: 20px;
 }
 
-/* Form Container */
+/* Apply styles to the entire form container */
 .form-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
 }
 
-/* Form Title */
-.form-container h2 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 24px;
-}
-
-/* Form Inputs */
+/* Style for input fields */
 .form-container input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.form-container input:focus {
-  border-color: #007bff;
-}
-
-/* Form Button */
-.form-container button {
-    width: auto; /* Adjust width to fit content */
-    padding: 8px 16px; /* Smaller padding */
-    background-color: #007bff;
-    color: #fff;
-    border: none;
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 14px; /* Smaller font size */
+    font-size: 16px;
+}
+
+/* Style for Submit button */
+.form-container button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    display: block; /* Make the button a block element */
-    margin: 0 auto; /* Center the button horizontally */
+    transition: 0.3s;
 }
 
 .form-container button:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
 }
+
+/* ✅ Back Button Styling (Red) */
+.back-button1 {
+    background-color: #dc3545;  /* Red */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    margin: 10px;
+    display: inline-block;
+}
+
+.back-button1:hover {
+    background-color: #b02a37;  /* Darker Red */
+    transform: scale(1.05);
+}
+
+/* Align Back Button */
+.back-button1-container {
+    display: flex;
+    justify-content: flex-start;
+    margin: 20px;
+}
+
 
 /* Responsive Design for Forms */
 @media (max-width: 480px) {
   .form-container {
-    padding: 15px;
+    padding: 20px;
   }
 
   .form-container h2 {
@@ -286,4 +299,6 @@ td[data-status="Outcome"] {
   .form-container button {
     font-size: 14px;
   }
+
+
 }

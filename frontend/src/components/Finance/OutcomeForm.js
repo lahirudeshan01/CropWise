@@ -32,8 +32,17 @@ const OutcomeForm = () => {
       console.error("Error submitting transaction:", error);
     }
   };
+  const handleGoBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
+
 
   return (
+    <div>
+      {/* Back Button (Outside the Form Container) */}
+      <button className="back-button1" onClick={handleGoBack}>
+        Back
+      </button>
     <div className="form-container">
       <h2>Add Outcome</h2>
       <form onSubmit={handleSubmit}>
@@ -63,6 +72,7 @@ const OutcomeForm = () => {
         />
         <button type="submit">Submit</button>
       </form>
+    </div>
     </div>
   );
 };
