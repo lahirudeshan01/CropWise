@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa"; // Three-dots icon
 import { getTransactions, generateReport, deleteTransaction } from "../../api/financeApi";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"; // Import Recharts components
 import "./Finance.css";
 
 const Finance = () => {
@@ -97,6 +98,27 @@ const Finance = () => {
     setDeleteConfirmation(null); // Close modal
   };
 
+  // Prepare data for the line chart
+  const prepareLineChartData = () => {
+    const dataMap = {};
+
+    transactions.forEach((transaction) => {
+      const date = new Date(transaction.date).toISOString().split("T")[0]; // Extract date (YYYY-MM-DD)
+      if (!dataMap[date]) {
+        dataMap[date] = { date, income: 0, outcome: 0 };
+      }
+      if (transaction.status === "Income") {
+        dataMap[date].income += transaction.amount;
+      } else if (transaction.status === "Outcome") {
+        dataMap[date].outcome += transaction.amount;
+      }
+    });
+
+    return Object.values(dataMap);
+  };
+
+  const lineChartData = prepareLineChartData();
+
   return (
     <div className="finance-dashboard" onClick={handleClickOutside}>
       {/* Buttons Section at the Top */}
@@ -129,6 +151,22 @@ const Finance = () => {
           <h3>Profit</h3>
           <p>Rs.{report.profit.toLocaleString()}</p>
         </div>
+      </div>
+
+      {/* Income vs. Outcome Analysis Line Chart */}
+      <div className="chart-container">
+        <h3>Income vs. Outcome Analysis</h3>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={lineChartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="income" stroke="#28a745" name="Income" />
+            <Line type="monotone" dataKey="outcome" stroke="#dc3545" name="Outcome" />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
 
       {/* Transactions Table */}
