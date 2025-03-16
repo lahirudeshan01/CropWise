@@ -8,7 +8,7 @@ const OutcomeForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     amount: "",
-    reference: "other", // Set default value for reference
+    reference: "Other", // Set default value for reference
   });
 
   const handleInputChange = (e) => {
@@ -22,17 +22,16 @@ const OutcomeForm = () => {
       ...formData,
       date: new Date().toISOString(),
       status: "Outcome",
+      isUserAdded: true, // Add this flag
     };
-
+  
     try {
-      // Send the transaction data to the backend
       await logTransaction(newTransaction);
-      navigate("/finance"); // Redirect to the finance page after successful submission
+      navigate("/finance", { state: { newTransaction } }); // Pass the new transaction to the Finance page
     } catch (error) {
       console.error("Error submitting transaction:", error);
     }
   };
-
   const handleGoBack = () => {
     navigate(-1); // Go back to the previous page
   };
@@ -62,14 +61,7 @@ const OutcomeForm = () => {
             onChange={handleInputChange}
             required
           />
-          <input
-            type="text"
-            name="reference"
-            placeholder="Reference"
-            value={formData.reference} // Use formData.reference
-            readOnly // Make the field read-only
-            required
-          />
+         
           <button type="submit">Submit</button>
         </form>
       </div>

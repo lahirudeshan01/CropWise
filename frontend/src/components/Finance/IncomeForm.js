@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logTransaction } from "../../api/financeApi"; // Import the API function
-import './Finance.css'; // Ensure this line is present
+import "./Finance.css"; // Ensure this line is present
 
 const IncomeForm = () => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const IncomeForm = () => {
     try {
       // Send the transaction data to the backend
       await logTransaction(newTransaction);
-      navigate("/finance"); // Redirect to the finance page after successful submission
+      navigate("/finance"); // Redirect to the transaction table page
     } catch (error) {
       console.error("Error submitting transaction:", error);
     }
@@ -64,17 +64,6 @@ const IncomeForm = () => {
             onChange={handleInputChange}
             required
           />
-          {/* Display "Other" as text instead of an input field */}
-         < input
-         
-          type="text"
-          name="reference"
-          placeholder="Reference"
-          value={formData.reference}
-          readOnly
-          required
-        
-        />
           <button type="submit">Submit</button>
         </form>
       </div>

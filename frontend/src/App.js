@@ -3,6 +3,7 @@ import Finance from './components/Finance/Finance';
 import FinanceReportPage from './components/Finance/FinanceReportPage';
 import IncomeForm from './components/Finance/IncomeForm';
 import OutcomeForm from './components/Finance/OutcomeForm';
+import UpdateForm from './components/Finance/UpdateForm'; 
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/finance" element={<Finance/>} />
         <Route path="/income-form" element={<IncomeForm />} />
         <Route path="/outcome-form" element={<OutcomeForm />} />
+        <Route path="/update-form" element={<UpdateForm />} />
       </Routes>
     </Router>
   );

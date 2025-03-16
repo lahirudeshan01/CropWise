@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { getTransactions, generateReport } from '../../api/financeApi';
-import './Finance.css';
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FaEllipsisV } from "react-icons/fa"; // Three-dots icon
+import { getTransactions, generateReport, deleteTransaction } from "../../api/financeApi";
+import "./Finance.css";
 
 const Finance = () => {
   const [transactions, setTransactions] = useState([]);
   const [report, setReport] = useState({ totalIncome: 0, totalOutcome: 0, profit: 0 });
+  const [showMenu, setShowMenu] = useState(null); // Track which row's menu is open
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null); // Track delete confirmation
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Fetch transactions and report data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -17,7 +21,7 @@ const Finance = () => {
         setTransactions(transactions);
         setReport(report);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -33,20 +37,68 @@ const Finance = () => {
 
   // Handle Export PDF Button Click
   const handleExportPDF = () => {
-    // Redirect to the FinanceReportPage with data
-    navigate('/finance-report', { state: { transactions, report } });
+    navigate("/finance-report", { state: { transactions, report } });
   };
 
+  // Handle Income Button Click
   const handleIncome = () => {
-    navigate('/income-form');
+    navigate("/income-form");
   };
 
+  // Handle Outcome Button Click
   const handleOutcome = () => {
-    navigate('/outcome-form');
+    navigate("/outcome-form");
+  };
+
+  // Handle Three-Dots Menu Click
+  const handleMenuClick = (index, e) => {
+    e.stopPropagation(); // Prevent event bubbling
+    setShowMenu(showMenu === index ? null : index); // Toggle menu
+  };
+
+  // Close the menu when clicking outside
+  const handleClickOutside = () => {
+    setShowMenu(null);
+  };
+
+  // Handle Update Transaction
+  const handleUpdate = (index) => {
+    const transaction = transactions[index];
+    navigate("/update-form", { state: { transaction } }); // Redirect to UpdateForm with transaction data
+  };
+
+  // Open Delete Confirmation Modal
+  const confirmDelete = (index) => {
+    setDeleteConfirmation(index);
+  };
+
+  // Handle Delete Transaction
+  const handleDelete = async () => {
+    const transaction = transactions[deleteConfirmation];
+    try {
+      await deleteTransaction(transaction._id); // Delete the transaction
+
+      // Re-fetch transactions and report
+      const updatedTransactions = await getTransactions();
+      const updatedReport = await generateReport();
+
+      // Update the state
+      setTransactions(updatedTransactions);
+      setReport(updatedReport);
+
+      setDeleteConfirmation(null); // Close modal
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+    }
+  };
+
+  // Handle Cancel Action
+  const handleCancel = () => {
+    setDeleteConfirmation(null); // Close modal
   };
 
   return (
-    <div className="finance-dashboard">
+    <div className="finance-dashboard" onClick={handleClickOutside}>
       {/* Buttons Section at the Top */}
       <div className="buttons-section">
         <button className="button export-pdf" onClick={handleExportPDF}>
@@ -88,6 +140,7 @@ const Finance = () => {
             <th>AMOUNT</th>
             <th>STATUS</th>
             <th>REFERENCE</th>
+            <th>ACTIONS</th>
           </tr>
         </thead>
         <tbody>
@@ -98,10 +151,40 @@ const Finance = () => {
               <td>Rs.{transaction.amount}</td>
               <td data-status={transaction.status}>{transaction.status}</td>
               <td>{transaction.reference}</td>
+              <td>
+                <div className="actions-container">
+                  {/* Three-dots icon */}
+                  <button className="three-dots-button" onClick={(e) => handleMenuClick(index, e)}>
+                    <FaEllipsisV />
+                  </button>
+                  {/* Dropdown menu */}
+                  {showMenu === index && (
+                    <div className="dropdown-menu">
+                      <button onClick={() => handleUpdate(index)}>Update</button>
+                      <button onClick={() => confirmDelete(index)}>Delete</button>
+                    </div>
+                  )}
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmation !== null && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Are you sure you want to delete this transaction?</h3>
+            <button className="button delete" onClick={handleDelete}>
+              Delete
+            </button>
+            <button className="button cancel" onClick={handleCancel}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
