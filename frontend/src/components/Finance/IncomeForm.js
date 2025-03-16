@@ -66,12 +66,14 @@ const IncomeForm = () => {
           />
           {/* Display "Other" as text instead of an input field */}
          < input
+         
           type="text"
           name="reference"
           placeholder="Reference"
           value={formData.reference}
-          onChange={handleInputChange}
+          readOnly
           required
+        
         />
           <button type="submit">Submit</button>
         </form>

@@ -51,7 +51,7 @@ const FinanceReportPage = () => {
       {/* Metrics Section */}
       <div className="report-page">
         <div>
-          <h1>Financial Transactions</h1>
+          <h1>Financial Report</h1>
 
           {/* Display Date and Time Below the Title and Above the Table */}
           <div className="date-time">
