@@ -1,6 +1,6 @@
-const mongoose = reqiure("mongoose");
+const mongoose = require("mongoose");
 
-const dburl="";
+const dburl="mongodb+srv://u4656mee:4656377@cluster0.pqxma.mongodb.net/Inventory_&_Resource_Management?retryWrites=true&w=majority&appName=Cluster0";
 
 mongoose.set("strictQuery",true,"useNewUrlParser",true);
 
