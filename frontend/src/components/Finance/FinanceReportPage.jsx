@@ -1,20 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Finance.css";
-
-document.title = "Financial Report";
 
 const FinanceReportPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [monthlyReport, setMonthlyReport] = useState(null);
 
-  // Access the data passed via the `state` prop
   const { transactions, report } = location.state || {
     transactions: [],
     report: {},
   };
 
-  // Function to handle going back to the Finance page
   const handleGoBack = () => {
     navigate("/finance");
   };
@@ -23,7 +22,27 @@ const FinanceReportPage = () => {
     window.print();
   };
 
-  // Get the current date and time
+  const handleMonthChange = (e) => {
+    setSelectedMonth(e.target.value);
+  };
+
+  const generateMonthlyReport = async () => {
+    if (!selectedMonth) {
+      alert("Please select a month.");
+      return;
+    }
+
+    const [year, month] = selectedMonth.split("-");
+    try {
+      const response = await axios.get(`http://localhost:5002/api/monthly-report`, {
+        params: { month, year },
+      });
+      setMonthlyReport(response.data);
+    } catch (error) {
+      console.error("Error generating monthly report:", error);
+    }
+  };
+
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -38,7 +57,6 @@ const FinanceReportPage = () => {
 
   return (
     <div className="finance-dashboard">
-      {/* Title and Buttons Section */}
       <div className="buttons-section report-buttons no-print">
         <button className="button back-button" onClick={handleGoBack}>
           Back
@@ -48,12 +66,22 @@ const FinanceReportPage = () => {
         </button>
       </div>
 
-      {/* Metrics Section */}
       <div className="report-page">
         <div>
           <h1>Financial Report</h1>
 
-          {/* Display Date and Time Below the Title and Above the Table */}
+          {/* Month Selection */}
+          <div className="month-selection">
+            <label htmlFor="monthSelect">Select Month:</label>
+            <input
+              type="month"
+              id="monthSelect"
+              value={selectedMonth}
+              onChange={handleMonthChange}
+            />
+            <button onClick={generateMonthlyReport}>Generate Monthly Report</button>
+          </div>
+
           <div className="date-time">
             <p>Date - {formattedDate}</p>
             <p>Time - {formattedTime}</p>
@@ -71,17 +99,19 @@ const FinanceReportPage = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction) => (
+              {(monthlyReport ? monthlyReport.transactions : transactions).map((transaction) => (
                 <tr key={transaction._id}>
                   <td>{transaction.name}</td>
-                  <td>{new Date(transaction.date).toLocaleString("en-GB", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                  })}</td>
+                  <td>
+                    {new Date(transaction.date).toLocaleString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    })}
+                  </td>
                   <td>Rs.{transaction.amount.toLocaleString()}</td>
                   <td data-status={transaction.status}>{transaction.status}</td>
                   <td>{transaction.reference}</td>
@@ -90,18 +120,19 @@ const FinanceReportPage = () => {
             </tbody>
           </table>
 
+          {/* Metrics Section */}
           <div className="metrics">
             <div className="metric">
               <h3>Total Income</h3>
-              <p>Rs.{report.totalIncome?.toLocaleString()}</p>
+              <p>Rs.{(monthlyReport ? monthlyReport.totalIncome : report.totalIncome)?.toLocaleString()}</p>
             </div>
             <div className="metric">
               <h3>Total Outcome</h3>
-              <p>Rs.{report.totalOutcome?.toLocaleString()}</p>
+              <p>Rs.{(monthlyReport ? monthlyReport.totalOutcome : report.totalOutcome)?.toLocaleString()}</p>
             </div>
             <div className="metric">
               <h3>Profit</h3>
-              <p>Rs.{report.profit?.toLocaleString()}</p>
+              <p>Rs.{(monthlyReport ? monthlyReport.profit : report.profit)?.toLocaleString()}</p>
             </div>
           </div>
         </div>

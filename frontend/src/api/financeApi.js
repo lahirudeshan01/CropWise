@@ -20,6 +20,14 @@ export const generateReport = async () => {
   return response.data;
 };
 
+// Generate monthly financial report
+export const generateMonthlyReport = async (month, year) => {
+  const response = await axios.get(`${API_URL}/monthly-report`, {
+    params: { month, year }, // Pass month and year as query parameters
+  });
+  return response.data;
+};
+
 // Update a transaction
 export const updateTransaction = async (transaction) => {
   const response = await axios.put(`${API_URL}/transactions/${transaction.id}`, transaction);
@@ -30,4 +38,4 @@ export const updateTransaction = async (transaction) => {
 export const deleteTransaction = async (id) => {
   const response = await axios.delete(`${API_URL}/transactions/${id}`);
   return response.data;
-};   
+};
