@@ -1,192 +1,192 @@
 /* General Styles */
 .finance-dashboard {
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    max-width: 1200px;
-    margin: 20px auto;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  max-width: 1200px;
+  margin: 20px auto;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 /* Header Section */
 .finance-dashboard h1 {
-    font-size: 32px;
-    color: #333;
-    margin-bottom: 20px;
-    text-align: center;
-    margin-top: 20px;
-    font-weight: 600;
+  font-size: 32px;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+  margin-top: 20px;
+  font-weight: 600;
 }
 
 /* Buttons Section */
 .buttons-section {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .button.export-pdf {
-    background: linear-gradient(135deg, #007bff, #0056b3);
+  background: linear-gradient(135deg, #007bff, #0056b3);
 }
 
 .button.export-pdf:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .button.income {
-    background: linear-gradient(135deg, #28a745, #218838);
+  background: linear-gradient(135deg, #28a745, #218838);
 }
 
 .button.income:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .button.outcome {
-    background: linear-gradient(135deg, #dc3545, #c82333);
+  background: linear-gradient(135deg, #dc3545, #c82333);
 }
 
 .button.outcome:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Back to Finance Button Styles */
 .button.back-button {
-    background: linear-gradient(135deg, #f44336, #d32f2f);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    margin-left: 10px;
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  margin-left: 10px;
 }
 
 .button.back-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .button.back-button:active {
-    transform: scale(0.95);
+  transform: scale(0.95);
 }
 
 /* Metrics Section */
 .metrics {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
 .metric {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    flex: 1;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  flex: 1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .metric:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .metric h3 {
-    margin: 0;
-    font-size: 18px;
-    color: #555;
-    font-weight: 600;
+  margin: 0;
+  font-size: 18px;
+  color: #555;
+  font-weight: 600;
 }
 
 .metric p {
-    margin: 10px 0 0;
-    font-size: 28px;
-    font-weight: bold;
-    color: #007bff;
+  margin: 10px 0 0;
+  font-size: 28px;
+  font-weight: bold;
+  color: #007bff;
 }
 
 /* Table Styles */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
 th {
-    background-color: #007bff;
-    color: #fff;
-    font-weight: bold;
+  background-color: #007bff;
+  color: #fff;
+  font-weight: bold;
 }
 
 tr:hover {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 /* Status Colors */
 td[data-status="Income"] {
-    color: #28a745;
-    font-weight: bold;
+  color: #28a745;
+  font-weight: bold;
 }
 
 td[data-status="Outcome"] {
-    color: #dc3545;
-    font-weight: bold;
+  color: #dc3545;
+  font-weight: bold;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .metrics {
-        flex-direction: column;
-    }
+  .metrics {
+    flex-direction: column;
+  }
 
-    .buttons-section {
-        flex-direction: column;
-        align-items: flex-end;
-    }
+  .buttons-section {
+    flex-direction: column;
+    align-items: flex-end;
+  }
 
-    .button {
-        width: 100%;
-    }
+  .button {
+    width: 100%;
+  }
 }
 
 @media print {
-    .no-print, .no-print * {
-      display: none !important;
-    }
+  .no-print, .no-print * {
+    display: none !important;
+  }
 
-    .metrics {
-        display: flex !important;
-        flex-direction: row !important;
-    }
+  .metrics {
+    display: flex !important;
+    flex-direction: row !important;
+  }
 }
 
 @media not print {
@@ -211,144 +211,38 @@ td[data-status="Outcome"] {
 }
 
 .report-buttons {
-    justify-content: space-between;
-    width: 720px !important;
-    margin: auto;
-    padding-right: 10px;
-    padding-bottom: 20px;
+  justify-content: space-between;
+  width: 720px !important;
+  margin: auto;
+  padding-right: 10px;
+  padding-bottom: 20px;
 }
 
-/* Apply styles to the entire form container */
-.form-container {
-    width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #f8f9fa;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    text-align: center;
+/* Form Page Container */
+.form-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f9f9f9;
 }
 
-/* Style for input fields */
-.form-container input {
-    width: 90%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-/* Style for Submit button */
-.form-container button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.form-container button:hover {
-    background-color: #0056b3;
-}
-
-/* ✅ Back Button Styling (Red) */
-.back-button1 {
-    background-color: #dc3545;  /* Red */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-    margin: 10px;
-    display: inline-block;
-}
-
-.back-button1:hover {
-    background-color: #b02a37;  /* Darker Red */
-    transform: scale(1.05);
-}
-
-/* Align Back Button */
-.back-button1-container {
-    display: flex;
-    justify-content: flex-start;
-    margin: 20px;
-}
-
-
-/* Responsive Design for Forms */
-@media (max-width: 480px) {
-  .form-container {
-    padding: 20px;
-  }
-
-  .form-container h2 {
-    font-size: 20px;
-  }
-
-  .form-container input {
-    font-size: 14px;
-  }
-
-  .form-container button {
-    font-size: 14px;
-  }
-  
-/* Finance.css */
-.actions-container {
-    position: relative;
-  }
-  
-  .three-dots-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-  }
-  
-  .dropdown-menu {
-    position: absolute;
-    right: 0;
-    background: white;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-  }
-  
-  .dropdown-menu button {
-    display: block;
-    width: 100%;
-    padding: 8px 16px;
-    text-align: left;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .dropdown-menu button:hover {
-    background: #f0f0f0;
-  }
-/* Update Form Container */
+/* Form Container */
+.form-container,
 .update-form-container {
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 500px;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
+.form-container h2,
 .update-form-container h2 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
   font-size: 24px;
+  color: #333;
 }
 
 /* Form Group */
@@ -359,19 +253,19 @@ td[data-status="Outcome"] {
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 500;
+  font-size: 16px;
   color: #555;
+  font-weight: 500;
 }
 
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
   font-size: 16px;
-  color: #333;
-  background: #f9f9f9;
+  background-color: #f9f9f9;
   transition: border-color 0.3s ease;
 }
 
@@ -379,218 +273,184 @@ td[data-status="Outcome"] {
 .form-group select:focus {
   border-color: #007bff;
   outline: none;
-  background: #fff;
+  background-color: #fff;
 }
 
-/* Update Button */
-.update-button {
-  width: 100%;
-  padding: 12px;
-  background-color: #007bff;
-  color: #fff;
+/* Form Buttons */
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.back-button1 {
+  background-color: #dc3545;
+  color: white;
   border: none;
-  border-radius: 5px;
+  padding: 10px 20px;
   font-size: 16px;
-  font-weight: 500;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s, transform 0.2s;
 }
 
+.back-button1:hover {
+  background-color: #b02a37;
+  transform: scale(1.05);
+}
+
+.submit-button,
+.update-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.submit-button:hover,
 .update-button:hover {
   background-color: #0056b3;
-}
-}
-/* Update Form Container */
-.update-form-container {
-    max-width: 500px;
-    margin: 50px auto;
-    padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.update-form-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-    font-size: 24px;
-}
-
-/* Form Group */
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #555;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #333;
-    background: #f9f9f9;
-    transition: border-color 0.3s ease;
-    box-sizing: border-box; /* Ensure padding doesn't affect width */
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    border-color: #007bff;
-    outline: none;
-    background: #fff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Update Button */
-.update-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.update-button:hover {
-    background-color: #0056b3;
+  transform: scale(1.05);
 }
 
 /* Responsive Design for Forms */
 @media (max-width: 480px) {
-    .update-form-container {
-        padding: 15px;
-    }
+  .form-container,
+  .update-form-container {
+    width: 90%;
+    padding: 20px;
+  }
 
-    .update-form-container h2 {
-        font-size: 20px;
-    }
+  .form-container h2,
+  .update-form-container h2 {
+    font-size: 20px;
+  }
 
-    .form-group input,
-    .form-group select {
-        font-size: 14px;
-        padding: 10px;
-    }
+  .form-group input,
+  .form-group select {
+    font-size: 14px;
+  }
 
-    .update-button {
-        font-size: 14px;
-        padding: 10px;
-    }
+  .form-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .back-button1,
+  .submit-button,
+  .update-button {
+    width: 100%;
+  }
 }
+
 /* Modal Styles */
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
-  }
-  
-  .modal-content h3 {
-    margin-bottom: 20px;
-  }
-  
-  .modal-content .button {
-    margin: 0 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .modal-content .button.delete {
-    background-color: #dc3545;
-    color: white;
-  }
-  
-  .modal-content .button.cancel {
-    background-color: #6c757d;
-    color: white;
-  }
-  /* Three-dots button */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.modal-content h3 {
+  margin-bottom: 20px;
+}
+
+.modal-content .button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.modal-content .button.delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.modal-content .button.cancel {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* Three-dots button */
 .three-dots-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666; /* Default color */
-    transition: all 0.3s ease;
-    border-radius: 50%; /* Make it circular */
-    width: 32px; /* Fixed width */
-    height: 32px; /* Fixed height */
-  }
-  
-  .three-dots-button:hover {
-    background-color: #f0f0f0; /* Light gray background on hover */
-    color: #007bff; /* Change color to blue on hover */
-    transform: scale(1.1); /* Slightly enlarge on hover */
-  }
-  
-  .three-dots-button:active {
-    transform: scale(0.95); /* Slightly shrink when clicked */
-  }
-  
-  /* Dropdown menu */
-  .dropdown-menu {
-    position: absolute;
-    right: 10px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-    padding: 10px;
-    min-width: 120px;
-  }
-  
-  .dropdown-menu button {
-    display: block;
-    width: 100%;
-    padding: 8px 16px;
-    text-align: left;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #333;
-    font-size: 14px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    border-radius: 4px;
-  }
-  
-  .dropdown-menu button:hover {
-    background-color: #f0f0f0; /* Light gray background on hover */
-    color: #007bff; /* Blue text on hover */
-  }
-  /* Chart Container */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+}
+
+.three-dots-button:hover {
+  background-color: #f0f0f0;
+  color: #007bff;
+  transform: scale(1.1);
+}
+
+.three-dots-button:active {
+  transform: scale(0.95);
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  position: absolute;
+  right: 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  padding: 10px;
+  min-width: 120px;
+}
+
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 4px;
+}
+
+.dropdown-menu button:hover {
+  background-color: #f0f0f0;
+  color: #007bff;
+}
+
+/* Chart Container */
 .chart-container {
   margin: 20px 0;
   padding: 20px;
