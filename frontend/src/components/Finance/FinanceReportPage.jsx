@@ -10,6 +10,7 @@ const FinanceReportPage = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [monthlyReport, setMonthlyReport] = useState(null);
   const [dailyReport, setDailyReport] = useState(null);
+  const [reportTitle, setReportTitle] = useState(""); // New state for report title
 
   const { transactions, report } = location.state || {
     transactions: [],
@@ -45,6 +46,9 @@ const FinanceReportPage = () => {
       });
       setMonthlyReport(response.data);
       setDailyReport(null); // Clear daily report when generating monthly
+      // Log the month and year to ensure they're correct
+      console.log("Generating monthly report for:", new Date(year, month - 1).toLocaleString('default', { month: 'long' }));
+      setReportTitle(`${new Date(year, month - 1).toLocaleString('default', { month: 'long' })} Financial Report`); // Set report title for monthly
     } catch (error) {
       console.error("Error generating monthly report:", error);
     }
@@ -62,6 +66,10 @@ const FinanceReportPage = () => {
       });
       setDailyReport(response.data);
       setMonthlyReport(null); // Clear monthly report when generating daily
+      const date = new Date(selectedDate);
+      // Log the selected date to ensure it's correct
+      console.log("Generating daily report for:", date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }));
+      setReportTitle(`${date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })} Financial Report`); // Set report title for daily
     } catch (error) {
       console.error("Error generating daily report:", error);
     }
@@ -92,7 +100,7 @@ const FinanceReportPage = () => {
 
       <div className="report-page">
         <div>
-          <h1>Financial Report</h1>
+          <h1 class="no-print">Financial Overview</h1>
 
           {/* Month Selection */}
           <div className="report-selection no-print">
@@ -122,11 +130,12 @@ const FinanceReportPage = () => {
             </button>
           </div>
 
+          {/* Display Report Title */}
+          {reportTitle && <h2 className="report-title">{reportTitle}</h2>} {/* Conditional rendering of the title */}
           <div className="date-time">
-            <p>Date - {formattedDate}</p>
-            <p>Time - {formattedTime}</p>
-          </div>
-
+  <label>Generated at:</label>
+  <p>Date - {formattedDate} | Time - {formattedTime}</p>
+</div>
           {/* Transactions Table */}
           <table>
             <thead>

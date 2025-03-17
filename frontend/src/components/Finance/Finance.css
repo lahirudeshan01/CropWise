@@ -1,3 +1,9 @@
+@media print {
+ *{
+  box-shadow: none !important;
+ } 
+}
+
 /* General Styles */
 .finance-dashboard {
   padding: 20px;
@@ -196,6 +202,7 @@ td[data-status="Outcome"] {
 
   .report-page > div {
     max-width: 1200px;
+    width: 100%;
     margin: auto;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -212,7 +219,6 @@ td[data-status="Outcome"] {
 
 .report-buttons {
   justify-content: space-between;
-  width: 720px !important;
   margin: auto;
   padding-right: 10px;
   padding-bottom: 20px;
@@ -555,4 +561,35 @@ td[data-status="Outcome"] {
     width: 100%; /* Full width on mobile */
     text-align: center;
   }
+}
+/* Style for the report title */
+.report-title {
+  text-align: center; /* Center the title */
+  font-size: 2rem; /* Adjust the font size */
+  font-weight: bold; /* Make the title bold */
+  color: #0dc2ea; /* Dark color for the title */
+  margin-top: 20px; /* Add some space at the top */
+  margin-bottom: 20px; /* Add some space at the bottom */
+  padding: 10px;
+  border-bottom: 2px solid #ecf0f1; /* Optional: adds a line below the title */
+}
+
+/* Additional styles for the finance page */
+.report-page {
+  padding: 20px;
+}
+
+.buttons-section.report-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.date-time {
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+  gap: 8px; /* Add some spacing between the label and the date-time */
+}
+
+.date-time p {
+  margin: 0; /* Remove default margin for the paragraph */
 }
