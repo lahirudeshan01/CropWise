@@ -27,6 +27,13 @@ export const generateMonthlyReport = async (month, year) => {
   });
   return response.data;
 };
+// Generate daily financial report
+export const generateDailyReport = async (date) => {
+  const response = await axios.get(`${API_URL}/daily-report`, {
+    params: { date }, // Pass date as query parameter
+  });
+  return response.data;
+};
 
 // Update a transaction
 export const updateTransaction = async (transaction) => {

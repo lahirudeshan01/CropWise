@@ -124,7 +124,7 @@ const Finance = () => {
       {/* Buttons Section at the Top */}
       <div className="buttons-section">
         <button className="button export-pdf" onClick={handleExportPDF}>
-          Export PDF
+          Generate Report
         </button>
         <button className="button income" onClick={handleIncome}>
           Income

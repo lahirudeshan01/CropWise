@@ -85,6 +85,37 @@ const generateMonthlyReport = async (req, res) => {
     res.status(500).json({ message: 'Error generating monthly report', error: error.message });
   }
 };
+const generateDailyReport = async (req, res) => {
+  try {
+    const { date } = req.query; // Get the date from query params
+    if (!date) {
+      return res.status(400).json({ message: 'Date is required in YYYY-MM-DD format' });
+    }
+
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(selectedDate);
+    endDate.setHours(23, 59, 59, 999);
+
+    // Fetch transactions for the selected day
+    const transactions = await Transaction.find({
+      date: { $gte: selectedDate, $lte: endDate },
+    });
+
+    // Calculate totals
+    const totalIncome = transactions
+      .filter((t) => t.status === 'Income')
+      .reduce((sum, t) => sum + t.amount, 0);
+    const totalOutcome = transactions
+      .filter((t) => t.status === 'Outcome')
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+    const profit = totalIncome - totalOutcome;
+
+    res.status(200).json({ totalIncome, totalOutcome, profit, transactions });
+  } catch (error) {
+    res.status(500).json({ message: 'Error generating daily report', error: error.message });
+  }
+};
 
 // Update a transaction
 const updateTransaction = async (req, res) => {
@@ -134,6 +165,7 @@ module.exports = {
   addTransaction,
   generateReport,
   generateMonthlyReport,
+  generateDailyReport,
   updateTransaction, // Add this
   deleteTransaction, // Add this
 };

@@ -434,28 +434,125 @@ td[data-status="Outcome"] {
   color: #333;
   text-align: center;
 }
-/* Add this to your Finance.css */
-.month-selection {
-  margin: 20px 0;
+/* Style for the report selection container */
+.report-selection {
+  display: flex;
+  align-items: center; /* Align items in a row */
+  gap: 20px; /* Space between fields and buttons */
+  margin-bottom: 20px;
 }
 
-.month-selection label {
-  margin-right: 10px;
+/* Style for the labels */
+.report-selection label {
+  font-size: 14px; /* Smaller font size */
+  color: #555;
+  font-weight: 500;
+  margin-right: 8px; /* Smaller margin */
 }
 
-.month-selection input {
-  padding: 5px;
-  margin-right: 10px;
+/* Style for the date and month input fields */
+.report-selection input[type="month"],
+.report-selection input[type="date"] {
+  padding: 8px 12px; /* Smaller padding */
+  font-size: 14px; /* Smaller font size */
+  border: 2px solid #007bff; /* Blue border for monthly field */
+  border-radius: 6px; /* Slightly rounded corners */
+  width: 180px; /* Slightly narrower width */
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+  outline: none;
 }
 
-.month-selection button {
-  padding: 5px 10px;
-  background-color: #19e112;
+/* Green border for the daily date field */
+.report-selection input[type="date"] {
+  border-color: #28a745; /* Green border for daily field */
+}
+
+/* Hover and focus effects for input fields */
+.report-selection input[type="month"]:hover,
+.report-selection input[type="date"]:hover,
+.report-selection input[type="month"]:focus,
+.report-selection input[type="date"]:focus {
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+/* Blue border for monthly field on focus */
+.report-selection input[type="month"]:focus {
+  border-color: #0056b3;
+}
+
+/* Green border for daily field on focus */
+.report-selection input[type="date"]:focus {
+  border-color: #218838;
+}
+
+/* Style for the generate report buttons */
+.report-selection .generate-report-btn {
   color: white;
+  padding: 8px 16px; /* Smaller padding */
   border: none;
+  border-radius: 6px; /* Slightly rounded corners */
+  font-size: 14px; /* Smaller font size */
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.month-selection button:hover {
-  background-color: #0056b3;
+/* Blue theme for the monthly report button */
+.report-selection .generate-report-btn.monthly {
+  background-color: #007bff; /* Blue background */
+}
+
+/* Green theme for the daily report button */
+.report-selection .generate-report-btn.daily {
+  background-color: #28a745; /* Green background */
+}
+
+/* Hover effect for the generate report buttons */
+.report-selection .generate-report-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Blue button hover effect */
+.report-selection .generate-report-btn.monthly:hover {
+  background-color: #0056b3; /* Darker blue */
+}
+
+/* Green button hover effect */
+.report-selection .generate-report-btn.daily:hover {
+  background-color: #218838; /* Darker green */
+}
+
+/* Active effect for the generate report buttons */
+.report-selection .generate-report-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Focus effect for accessibility */
+.report-selection .generate-report-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .report-selection {
+    flex-direction: column; /* Stack the fields and buttons vertically on small screens */
+    align-items: flex-start;
+    gap: 12px; /* Smaller gap for mobile */
+  }
+
+  .report-selection input[type="month"],
+  .report-selection input[type="date"] {
+    width: 100%; /* Full width on mobile */
+  }
+
+  .report-selection .generate-report-btn {
+    width: 100%; /* Full width on mobile */
+    text-align: center;
+  }
 }

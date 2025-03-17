@@ -7,7 +7,9 @@ const FinanceReportPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
   const [monthlyReport, setMonthlyReport] = useState(null);
+  const [dailyReport, setDailyReport] = useState(null);
 
   const { transactions, report } = location.state || {
     transactions: [],
@@ -26,6 +28,10 @@ const FinanceReportPage = () => {
     setSelectedMonth(e.target.value);
   };
 
+  const handleDateChange = (e) => {
+    setSelectedDate(e.target.value);
+  };
+
   const generateMonthlyReport = async () => {
     if (!selectedMonth) {
       alert("Please select a month.");
@@ -38,8 +44,26 @@ const FinanceReportPage = () => {
         params: { month, year },
       });
       setMonthlyReport(response.data);
+      setDailyReport(null); // Clear daily report when generating monthly
     } catch (error) {
       console.error("Error generating monthly report:", error);
+    }
+  };
+
+  const generateDailyReport = async () => {
+    if (!selectedDate) {
+      alert("Please select a date.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:5002/api/daily-report`, {
+        params: { date: selectedDate },
+      });
+      setDailyReport(response.data);
+      setMonthlyReport(null); // Clear monthly report when generating daily
+    } catch (error) {
+      console.error("Error generating daily report:", error);
     }
   };
 
@@ -71,7 +95,7 @@ const FinanceReportPage = () => {
           <h1>Financial Report</h1>
 
           {/* Month Selection */}
-          <div className="month-selection">
+          <div className="report-selection no-print">
             <label htmlFor="monthSelect">Select Month:</label>
             <input
               type="month"
@@ -79,7 +103,23 @@ const FinanceReportPage = () => {
               value={selectedMonth}
               onChange={handleMonthChange}
             />
-            <button onClick={generateMonthlyReport}>Generate Monthly Report</button>
+            <button className="generate-report-btn monthly" onClick={generateMonthlyReport}>
+              Generate Monthly Report
+            </button>
+          </div>
+
+          {/* Date Selection for Daily Report */}
+          <div className="report-selection no-print">
+            <label htmlFor="dateSelect">Select Date:</label>
+            <input
+              type="date"
+              id="dateSelect"
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
+            <button className="generate-report-btn daily" onClick={generateDailyReport}>
+              Generate Daily Report
+            </button>
           </div>
 
           <div className="date-time">
@@ -99,7 +139,7 @@ const FinanceReportPage = () => {
               </tr>
             </thead>
             <tbody>
-              {(monthlyReport ? monthlyReport.transactions : transactions).map((transaction) => (
+              {(monthlyReport ? monthlyReport.transactions : dailyReport ? dailyReport.transactions : transactions).map((transaction) => (
                 <tr key={transaction._id}>
                   <td>{transaction.name}</td>
                   <td>
@@ -124,15 +164,15 @@ const FinanceReportPage = () => {
           <div className="metrics">
             <div className="metric">
               <h3>Total Income</h3>
-              <p>Rs.{(monthlyReport ? monthlyReport.totalIncome : report.totalIncome)?.toLocaleString()}</p>
+              <p>Rs.{(monthlyReport ? monthlyReport.totalIncome : dailyReport ? dailyReport.totalIncome : report.totalIncome)?.toLocaleString()}</p>
             </div>
             <div className="metric">
               <h3>Total Outcome</h3>
-              <p>Rs.{(monthlyReport ? monthlyReport.totalOutcome : report.totalOutcome)?.toLocaleString()}</p>
+              <p>Rs.{(monthlyReport ? monthlyReport.totalOutcome : dailyReport ? dailyReport.totalOutcome : report.totalOutcome)?.toLocaleString()}</p>
             </div>
             <div className="metric">
               <h3>Profit</h3>
-              <p>Rs.{(monthlyReport ? monthlyReport.profit : report.profit)?.toLocaleString()}</p>
+              <p>Rs.{(monthlyReport ? monthlyReport.profit : dailyReport ? dailyReport.profit : report.profit)?.toLocaleString()}</p>
             </div>
           </div>
         </div>

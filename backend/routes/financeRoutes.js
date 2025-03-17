@@ -15,6 +15,9 @@ router.get('/report', financeController.generateReport);
 // Generate monthly financial report
 router.get('/monthly-report', financeController.generateMonthlyReport); 
 
+// Generate daily financial report
+router.get('/daily-report', financeController.generateDailyReport); 
+
 //Add transactions
 router.post('/transactions', financeController.addTransaction);
 
