@@ -333,6 +333,14 @@ td[data-status="Outcome"] {
   background-color: #0056b3;
   transform: scale(1.05);
 }
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+
 
 /* Modal Styles */
 .modal {

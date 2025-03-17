@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateTransaction } from "../../api/financeApi"; // Ensure this function is correctly implemented
+import { updateTransaction } from "../../api/financeApi";
 import "./Finance.css";
 
 const UpdateForm = () => {
@@ -12,7 +12,10 @@ const UpdateForm = () => {
     status: "",
   });
 
-  // Pre-fill the form with the transaction data passed via location.state
+  const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
+
+  // Pre-fill form with transaction data
   useEffect(() => {
     if (location.state?.transaction) {
       setFormData({
@@ -23,34 +26,66 @@ const UpdateForm = () => {
     }
   }, [location.state]);
 
-  // Handle input change
+  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    // Clear error when user types
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  // Form validation
+  const validateForm = () => {
+    let newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!formData.amount) {
+      newErrors.amount = "Amount is required";
+    } else if (isNaN(formData.amount) || Number(formData.amount) <= 0) {
+      newErrors.amount = "Amount must be a positive number";
+    }
+
+    if (!formData.status) {
+      newErrors.status = "Status is required";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return; // Stop submission if validation fails
+
     try {
       await updateTransaction({
-        id: location.state.transaction._id, // Include the transaction ID
-        ...formData, // Include updated fields
+        id: location.state.transaction._id,
+        ...formData,
       });
-      navigate("/finance"); // Redirect to the Finance page after successful update
+      navigate("/finance");
     } catch (error) {
       console.error("Error updating transaction:", error);
+      setApiError("Failed to update transaction. Please try again.");
     }
   };
 
+  // Go back to the previous page
   const handleGoBack = () => {
-    navigate(-1); // Go back to the previous page
+    navigate(-1);
   };
 
   return (
     <div className="form-page-container">
       <div className="update-form-container">
         <h2>Update Transaction</h2>
+        {apiError && <p className="error-message">{apiError}</p>}
         <form onSubmit={handleSubmit} className="update-form">
           <div className="form-group">
             <label htmlFor="name">Name</label>
@@ -60,8 +95,9 @@ const UpdateForm = () => {
               placeholder="Enter name"
               value={formData.name}
               onChange={handleInputChange}
-              required
+              
             />
+            {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
           <div className="form-group">
             <label htmlFor="amount">Amount</label>
@@ -71,8 +107,9 @@ const UpdateForm = () => {
               placeholder="Enter amount"
               value={formData.amount}
               onChange={handleInputChange}
-              required
+              
             />
+            {errors.amount && <span className="error-message">{errors.amount}</span>}
           </div>
           <div className="form-group">
             <label htmlFor="status">Status</label>
@@ -80,12 +117,13 @@ const UpdateForm = () => {
               name="status"
               value={formData.status}
               onChange={handleInputChange}
-              required
+         
             >
               <option value="" disabled>Select status</option>
               <option value="Income">Income</option>
               <option value="Outcome">Outcome</option>
             </select>
+            {errors.status && <span className="error-message">{errors.status}</span>}
           </div>
           <div className="form-buttons">
             <button type="button" className="back-button1" onClick={handleGoBack}>

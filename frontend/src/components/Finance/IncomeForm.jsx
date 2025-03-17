@@ -11,13 +11,38 @@ const IncomeForm = () => {
     reference: "Other",
   });
 
+  const [errors, setErrors] = useState({});
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    // Clear error when user types
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  const validateForm = () => {
+    let newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+    if (!formData.amount) {
+      newErrors.amount = "Amount is required";
+    } else if (isNaN(formData.amount) || Number(formData.amount) <= 0) {
+      newErrors.amount = "Amount must be a positive number";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return; // Stop submission if errors exist
+
     const newTransaction = {
       ...formData,
       date: new Date().toISOString(),
@@ -49,8 +74,9 @@ const IncomeForm = () => {
               placeholder="Enter name"
               value={formData.name}
               onChange={handleInputChange}
-              required
+              
             />
+            {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
           <div className="form-group">
             <label htmlFor="amount">Amount</label>
@@ -60,8 +86,9 @@ const IncomeForm = () => {
               placeholder="Enter amount"
               value={formData.amount}
               onChange={handleInputChange}
-              required
+             
             />
+            {errors.amount && <span className="error-message">{errors.amount}</span>}
           </div>
           <div className="form-buttons">
             <button type="button" className="back-button1" onClick={handleGoBack}>
