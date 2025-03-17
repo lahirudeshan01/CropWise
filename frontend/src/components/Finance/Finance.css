@@ -231,7 +231,7 @@ td[data-status="Outcome"] {
 .form-container,
 .update-form-container {
   width: 500px;
-  padding: 30px;
+  padding: 70px;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
@@ -241,7 +241,7 @@ td[data-status="Outcome"] {
 .update-form-container h2 {
   text-align: center;
   margin-bottom: 20px;
-  font-size: 24px;
+  font-size: 30px;
   color: #333;
 }
 
@@ -316,37 +316,6 @@ td[data-status="Outcome"] {
   background-color: #0056b3;
   transform: scale(1.05);
 }
-
-/* Responsive Design for Forms */
-@media (max-width: 480px) {
-  .form-container,
-  .update-form-container {
-    width: 90%;
-    padding: 20px;
-  }
-
-  .form-container h2,
-  .update-form-container h2 {
-    font-size: 20px;
-  }
-
-  .form-group input,
-  .form-group select {
-    font-size: 14px;
-  }
-
-  .form-buttons {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .back-button1,
-  .submit-button,
-  .update-button {
-    width: 100%;
-  }
-}
-
 /* Modal Styles */
 .modal {
   position: fixed;
