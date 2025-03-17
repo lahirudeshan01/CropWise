@@ -1,7 +1,7 @@
 @media print {
- *{
-  box-shadow: none !important;
- } 
+  * {
+    box-shadow: none !important;
+  }
 }
 
 /* General Styles */
@@ -45,7 +45,7 @@
 }
 
 .button.export-pdf {
-  background: linear-gradient(135deg, #007bff, #0056b3);
+  background: linear-gradient(135deg, #0056b3, #003366);
 }
 
 .button.export-pdf:hover {
@@ -128,6 +128,17 @@
   margin: 10px 0 0;
   font-size: 28px;
   font-weight: bold;
+}
+
+.income1 {
+  color: #008000;
+}
+
+.outcome1 {
+  color: #ff0000;
+}
+
+.profit {
   color: #007bff;
 }
 
@@ -322,6 +333,7 @@ td[data-status="Outcome"] {
   background-color: #0056b3;
   transform: scale(1.05);
 }
+
 /* Modal Styles */
 .modal {
   position: fixed;
@@ -440,30 +452,69 @@ td[data-status="Outcome"] {
   color: #333;
   text-align: center;
 }
+/* Add this to your Finance.css file */
+.charts-container {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.chart-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.line-chart {
+  flex: 2; /* Takes 2/3 of the space */
+}
+
+.pie-chart {
+  flex: 1; /* Takes 1/3 of the space */
+}
+
+@media (max-width: 768px) {
+  .charts-container {
+    flex-direction: column;
+  }
+
+  .line-chart,
+  .pie-chart {
+    flex: 1;
+  }
+}
+
+.report-selection-container{
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+}
+
 /* Style for the report selection container */
 .report-selection {
   display: flex;
-  align-items: center; /* Align items in a row */
-  gap: 20px; /* Space between fields and buttons */
+  align-items: center;
+  gap: 20px;
   margin-bottom: 20px;
 }
 
 /* Style for the labels */
 .report-selection label {
-  font-size: 14px; /* Smaller font size */
+  font-size: 14px;
   color: #555;
   font-weight: 500;
-  margin-right: 8px; /* Smaller margin */
+  margin-right: 8px;
 }
 
 /* Style for the date and month input fields */
 .report-selection input[type="month"],
 .report-selection input[type="date"] {
-  padding: 8px 12px; /* Smaller padding */
-  font-size: 14px; /* Smaller font size */
-  border: 2px solid #007bff; /* Blue border for monthly field */
-  border-radius: 6px; /* Slightly rounded corners */
-  width: 180px; /* Slightly narrower width */
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 2px solid #007bff;
+  border-radius: 6px;
+  width: 180px;
   background-color: #f9f9f9;
   transition: all 0.3s ease;
   outline: none;
@@ -471,7 +522,7 @@ td[data-status="Outcome"] {
 
 /* Green border for the daily date field */
 .report-selection input[type="date"] {
-  border-color: #28a745; /* Green border for daily field */
+  border-color: #28a745;
 }
 
 /* Hover and focus effects for input fields */
@@ -496,10 +547,10 @@ td[data-status="Outcome"] {
 /* Style for the generate report buttons */
 .report-selection .generate-report-btn {
   color: white;
-  padding: 8px 16px; /* Smaller padding */
+  padding: 8px 16px;
   border: none;
-  border-radius: 6px; /* Slightly rounded corners */
-  font-size: 14px; /* Smaller font size */
+  border-radius: 6px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -508,12 +559,12 @@ td[data-status="Outcome"] {
 
 /* Blue theme for the monthly report button */
 .report-selection .generate-report-btn.monthly {
-  background-color: #007bff; /* Blue background */
+  background-color: #007bff;
 }
 
 /* Green theme for the daily report button */
 .report-selection .generate-report-btn.daily {
-  background-color: #28a745; /* Green background */
+  background-color: #28a745;
 }
 
 /* Hover effect for the generate report buttons */
@@ -524,12 +575,12 @@ td[data-status="Outcome"] {
 
 /* Blue button hover effect */
 .report-selection .generate-report-btn.monthly:hover {
-  background-color: #0056b3; /* Darker blue */
+  background-color: #0056b3;
 }
 
 /* Green button hover effect */
 .report-selection .generate-report-btn.daily:hover {
-  background-color: #218838; /* Darker green */
+  background-color: #218838;
 }
 
 /* Active effect for the generate report buttons */
@@ -547,31 +598,32 @@ td[data-status="Outcome"] {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .report-selection {
-    flex-direction: column; /* Stack the fields and buttons vertically on small screens */
+    flex-direction: column;
     align-items: flex-start;
-    gap: 12px; /* Smaller gap for mobile */
+    gap: 12px;
   }
 
   .report-selection input[type="month"],
   .report-selection input[type="date"] {
-    width: 100%; /* Full width on mobile */
+    width: 100%;
   }
 
   .report-selection .generate-report-btn {
-    width: 100%; /* Full width on mobile */
+    width: 100%;
     text-align: center;
   }
 }
+
 /* Style for the report title */
 .report-title {
-  text-align: center; /* Center the title */
-  font-size: 2rem; /* Adjust the font size */
-  font-weight: bold; /* Make the title bold */
-  color: #0dc2ea; /* Dark color for the title */
-  margin-top: 20px; /* Add some space at the top */
-  margin-bottom: 20px; /* Add some space at the bottom */
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #0dc2ea;
+  margin-top: 20px;
+  margin-bottom: 20px;
   padding: 10px;
-  border-bottom: 2px solid #ecf0f1; /* Optional: adds a line below the title */
+  border-bottom: 2px solid #ecf0f1;
 }
 
 /* Additional styles for the finance page */
@@ -584,12 +636,24 @@ td[data-status="Outcome"] {
   justify-content: space-between;
   margin-bottom: 20px;
 }
+
 .date-time {
   display: flex;
-  align-items: center; /* Align items vertically in the center */
-  gap: 8px; /* Add some spacing between the label and the date-time */
+  align-items: center;
+  gap: 8px;
 }
 
 .date-time p {
-  margin: 0; /* Remove default margin for the paragraph */
+  margin: 0;
+}
+
+h1 {
+  font-family: 'Arial', sans-serif;
+  font-size: 32px;
+  font-weight: bold;
+  color: #2e8b57;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #eadc15;
 }

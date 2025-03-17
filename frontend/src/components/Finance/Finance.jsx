@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa"; // Three-dots icon
 import { getTransactions, generateReport, deleteTransaction } from "../../api/financeApi";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"; // Import Recharts components
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"; // Import Recharts components
 import "./Finance.css";
 
 const Finance = () => {
@@ -119,6 +119,14 @@ const Finance = () => {
 
   const lineChartData = prepareLineChartData();
 
+  // Prepare data for the pie chart
+  const pieChartData = [
+    { name: "Income", value: report.totalIncome },
+    { name: "Outcome", value: report.totalOutcome },
+  ];
+
+  const COLORS = ["#008000", "#dc3545"]; // Colors for Income and Outcome
+
   return (
     <div className="finance-dashboard" onClick={handleClickOutside}>
       {/* Buttons Section at the Top */}
@@ -135,45 +143,74 @@ const Finance = () => {
       </div>
 
       {/* Title Below Buttons */}
-      <h1>Financial Transactions</h1>
+      <h1 className="heading">Financial Overview</h1>
 
       {/* Metrics Section */}
       <div className="metrics">
         <div className="metric">
           <h3>Total Income</h3>
-          <p>Rs.{report.totalIncome.toLocaleString()}</p>
+          <p className="income1">Rs.{report.totalIncome.toLocaleString()}</p>
         </div>
         <div className="metric">
           <h3>Total Outcome</h3>
-          <p>Rs.{report.totalOutcome.toLocaleString()}</p>
+          <p className="outcome1">Rs.{report.totalOutcome.toLocaleString()}</p>
         </div>
         <div className="metric">
           <h3>Profit</h3>
-          <p>Rs.{report.profit.toLocaleString()}</p>
+          <p className="profit">Rs.{report.profit.toLocaleString()}</p>
         </div>
       </div>
 
-      {/* Income vs. Outcome Analysis Line Chart */}
-      <div className="chart-container">
-        <h3>Income vs. Outcome Analysis</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={lineChartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="income" stroke="#28a745" name="Income" />
-            <Line type="monotone" dataKey="outcome" stroke="#dc3545" name="Outcome" />
-          </LineChart>
-        </ResponsiveContainer>
+      {/* Charts Section */}
+      <div className="charts-container">
+        {/* Line Chart */}
+        <div className="chart-container line-chart">
+          <h3>Income vs. Outcome Analysis</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={lineChartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="income" stroke="#008000" name="Income" />
+              <Line type="monotone" dataKey="outcome" stroke="#dc3545" name="Outcome" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Pie Chart */}
+        <div className="chart-container pie-chart">
+          <h3>Income and Outcome Distribution</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={pieChartData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+                nameKey="name"
+                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+              >
+                {pieChartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       {/* Transactions Table */}
       <table>
         <thead>
           <tr>
-            <th>NAME</th>
+            <th>TRANSACTION NAME</th>
             <th>DATE & TIME</th>
             <th>AMOUNT</th>
             <th>STATUS</th>

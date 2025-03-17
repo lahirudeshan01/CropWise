@@ -100,8 +100,8 @@ const FinanceReportPage = () => {
 
       <div className="report-page">
         <div>
-          <h1 class="no-print">Financial Overview</h1>
-
+          <h1 class="no-print">Financial Summary</h1>
+              <div className="report-selection-container">
           {/* Month Selection */}
           <div className="report-selection no-print">
             <label htmlFor="monthSelect">Select Month:</label>
@@ -129,11 +129,12 @@ const FinanceReportPage = () => {
               Generate Daily Report
             </button>
           </div>
+          </div>
 
           {/* Display Report Title */}
           {reportTitle && <h2 className="report-title">{reportTitle}</h2>} {/* Conditional rendering of the title */}
           <div className="date-time">
-  <label>Generated at:</label>
+  <label>Generated on:</label>
   <p>Date - {formattedDate} | Time - {formattedTime}</p>
 </div>
           {/* Transactions Table */}
