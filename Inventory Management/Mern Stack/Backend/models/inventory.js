@@ -10,7 +10,8 @@ const InventorySchema = new mongoose.Schema({
             "Seeds",
             "Farm Machinery & Tools",
             "Packaging Materials",
-            "Pest Control & Storage Protection"
+            "Pest Control & Storage Protection",
+            "Other",
         ],
         default: "Fertilizers"
     },
@@ -18,10 +19,15 @@ const InventorySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    availableKilograms: {
+    availableAmount: {
         type: Number,
         required: true,
         min: 0, // Ensures the value is not negative
+    },
+    unit: {
+        type: String,
+        required: true,
+        enum: ["Kg", "Liters", "Units"],
     },
     unitPrice: {
         type: Number,
@@ -30,7 +36,9 @@ const InventorySchema = new mongoose.Schema({
     },
     expirationDate: {
         type: Date,
-        required: true,
+        required: function() {
+            return this.category !== "Farm Machinery & Tools" && this.category !== "Packaging Materials";
+        },
         validate: {
             validator: function (value) {
                 // Ensure the expiration date is in the future
