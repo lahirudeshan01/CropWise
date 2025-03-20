@@ -81,11 +81,6 @@ const Finance = () => {
     setFilters(prevFilters => ({ ...prevFilters, [name]: value }));
   };
 
-  // Apply filters
-  const applyFilters = () => {
-    setFilters({ ...filters }); // Force a state update
-    setApplyFiltersTrigger((prev) => !prev); // Toggle the trigger
-  };
 
   // Reset filters
   const resetFilters = () => {
@@ -247,86 +242,85 @@ const Finance = () => {
       </div>
 
       {/* Filter Section */}
-      <div className="filter-section">
-        <h3>Filter Transactions</h3>
-        <div className="filters">
-          {/* Date Range Filter */}
-          <div className="date-range-filter">
-            <label>Date Range</label>
-            <div className="date-inputs">
-              <input
-                type="date"
-                name="startDate"
-                value={filters.startDate}
-                onChange={handleFilterChange}
-                placeholder="Start Date"
-                max={filters.endDate || undefined} // Ensure start date is not after end date
-              />
-              <span>to</span>
-              <input
-                type="date"
-                name="endDate"
-                value={filters.endDate}
-                onChange={handleFilterChange}
-                placeholder="End Date"
-                min={filters.startDate || undefined} // Ensure end date is not before start date
-              />
-            </div>
-          </div>
-
-          {/* Type Filter */}
-          <div className="type-filter">
-            <label>Type</label>
-            <select name="type" value={filters.type} onChange={handleFilterChange}>
-              <option value="">All Types</option>
-              <option value="Income">Income</option>
-              <option value="Outcome">Outcome</option>
-            </select>
-          </div>
-
-          {/* Reference Filter */}
-          <div className="reference-filter">
-            <label>Reference</label>
-            <select name="reference" value={filters.reference} onChange={handleFilterChange}>
-              <option value="">All References</option>
-              <option value="Inventory Expense">Inventory Expense</option>
-              <option value="Salary Payment">Salary Payment</option>
-              <option value="Sales Income">Sales Income</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          {/* Amount Range Filter */}
-          <div className="amount-range-filter">
-            <label>Amount Range</label>
-            <div className="amount-inputs">
-              <input
-                type="number"
-                name="minAmount"
-                value={filters.minAmount}
-                onChange={handleFilterChange}
-                placeholder="Min Amount"
-              />
-              <span>to</span>
-              <input
-                type="number"
-                name="maxAmount"
-                value={filters.maxAmount}
-                onChange={handleFilterChange}
-                placeholder="Max Amount"
-              />
-            </div>
-          </div>
-
-          {/* Apply and Reset Buttons */}
-          <div className="filter-buttons">
-            
-            <button className="button reset" onClick={resetFilters}>
-              Reset Filters
-            </button>
-          </div>
-        </div>
+<div className="filter-section">
+  <h3>Filter Transactions</h3>
+  <div className="filters">
+    {/* Date Range Filter */}
+    <div className="date-range-filter">
+      <label>Date Range</label>
+      <div className="date-inputs">
+        <input
+          type="date"
+          name="startDate"
+          value={filters.startDate}
+          onChange={handleFilterChange}
+          placeholder="Start Date"
+          max={filters.endDate || undefined} // Ensure start date is not after end date
+        />
+        <span>to</span>
+        <input
+          type="date"
+          name="endDate"
+          value={filters.endDate}
+          onChange={handleFilterChange}
+          placeholder="End Date"
+          min={filters.startDate || undefined} // Ensure end date is not before start date
+        />
       </div>
+    </div>
+
+    {/* Type Filter */}
+    <div className="type-filter">
+      <label>Type</label>
+      <select name="type" value={filters.type} onChange={handleFilterChange}>
+        <option value="">All Types</option>
+        <option value="Income">Income</option>
+        <option value="Outcome">Outcome</option>
+      </select>
+    </div>
+
+    {/* Reference Filter */}
+    <div className="reference-filter">
+      <label>Reference</label>
+      <select name="reference" value={filters.reference} onChange={handleFilterChange}>
+        <option value="">All References</option>
+        <option value="Inventory Expense">Inventory Expense</option>
+        <option value="Salary Payment">Salary Payment</option>
+        <option value="Sales Income">Sales Income</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    {/* Amount Range Filter */}
+    <div className="amount-range-filter">
+      <label>Amount Range</label>
+      <div className="amount-inputs">
+        <input
+          type="number"
+          name="minAmount"
+          value={filters.minAmount}
+          onChange={handleFilterChange}
+          placeholder="Min Amount"
+        />
+        <span>to</span>
+        <input
+          type="number"
+          name="maxAmount"
+          value={filters.maxAmount}
+          onChange={handleFilterChange}
+          placeholder="Max Amount"
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* Apply and Reset Buttons */}
+  <div className="filter-buttons">
+    <button className="button reset" onClick={resetFilters}>
+      Reset Filters
+    </button>
+  </div>
+</div>
 
       {/* Charts Section */}
       <div className="charts-container">
