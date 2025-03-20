@@ -38,16 +38,21 @@ const SeeDetails = () => {
     };
 
     const getExpirationStatus = (expirationDate) => {
-        if (!expirationDate) return { status: null, daysLeft: null };
+        if (!expirationDate) return { status: null, timeLeft: null };
         const today = new Date();
         const expDate = new Date(expirationDate);
-        const daysLeft = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+        const timeDiff = expDate - today;
+        const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-        if (daysLeft < 0) return { status: "expired", daysLeft: Math.abs(daysLeft) };
-        if (daysLeft === 0) return { status: "expires-today", daysLeft: 0 };
-        if (daysLeft <= 7) return { status: "expires-soon", daysLeft };
-        if (daysLeft <= 30) return { status: "expires-near", daysLeft };
-        return { status: null, daysLeft };
+        if (daysLeft < 0) return { status: "expired", timeLeft: `${Math.abs(daysLeft)} day${Math.abs(daysLeft) !== 1 ? 's' : ''} ago` };
+        if (daysLeft === 0) return { status: "expires-today", timeLeft: "Today" };
+        if (daysLeft <= 7) return { status: "expires-soon", timeLeft: `${daysLeft} Day${daysLeft !== 1 ? 's' : ''}` };
+        if (daysLeft <= 30) return { status: "expires-near", timeLeft: `${daysLeft} Day${daysLeft !== 1 ? 's' : ''}` };
+
+        // Calculate months and days for more than 30 days
+        const monthsLeft = Math.floor(daysLeft / 30);
+        const remainingDays = daysLeft % 30;
+        return { status: "expires-far", timeLeft: `${monthsLeft} Month${monthsLeft !== 1 ? 's' : ''} and ${remainingDays} Day${remainingDays !== 1 ? 's' : ''}` };
     };
 
     const getStockStatus = (availableAmount) => {
@@ -99,10 +104,11 @@ const SeeDetails = () => {
                 <div className="item-detail-row">
                     <div className="detail-label">Expires in</div>
                     <div className={`detail-value ${expirationStatus.status}`}>
-                        {expirationStatus.status === "expired" ? `Item expired ${expirationStatus.daysLeft} day${expirationStatus.daysLeft !== 1 ? 's' : ''} ago` :
+                        {expirationStatus.status === "expired" ? `Item expired ${expirationStatus.timeLeft}` :
                          expirationStatus.status === "expires-today" ? "Item expires today" :
-                         expirationStatus.status === "expires-soon" ? `Expires in ${expirationStatus.daysLeft} day${expirationStatus.daysLeft !== 1 ? 's' : ''}` :
-                         expirationStatus.status === "expires-near" ? `Expires in ${expirationStatus.daysLeft} day${expirationStatus.daysLeft !== 1 ? 's' : ''}` :
+                         expirationStatus.status === "expires-soon" ? ` ${expirationStatus.timeLeft}` :
+                         expirationStatus.status === "expires-near" ? ` ${expirationStatus.timeLeft}` :
+                         expirationStatus.status === "expires-far" ? ` ${expirationStatus.timeLeft}` :
                          "No expiration date"}
                     </div>
                 </div>

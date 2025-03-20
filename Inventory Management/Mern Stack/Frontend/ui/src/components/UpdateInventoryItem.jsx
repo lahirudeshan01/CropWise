@@ -107,15 +107,15 @@ const UpdateInventoryItem = () => {
     }
 
     if (errors.fetchError) {
-        return <div className="text-red-500">{errors.fetchError}</div>;
+        return <div className="update-error-message">{errors.fetchError}</div>;
     }
 
     return (
-        <div className="update-inventory-item-container p-4">
-            <h1 className="text-2xl font-bold mb-4">Update Item</h1>
-            <form onSubmit={handleSubmit}>
-                <label>Item Category</label>
-                <select name="category" value={formData.category} onChange={handleChange}>
+        <div className="update-inventory-item-container">
+            <h1 className="update-title">Update Item</h1>
+            <form onSubmit={handleSubmit} className="update-form">
+                <label className="update-label">Item Category</label>
+                <select name="category" value={formData.category} onChange={handleChange} className="update-select">
                     <option value="Fertilizers">Fertilizers</option>
                     <option value="Pesticides">Pesticides</option>
                     <option value="Seeds">Seeds</option>
@@ -127,52 +127,53 @@ const UpdateInventoryItem = () => {
 
                 {formData.category === "Other" && (
                     <>
-                        <label>Custom Category</label>
+                        <label className="update-label">Custom Category</label>
                         <input
                             type="text"
                             name="customCategory"
                             value={formData.customCategory}
                             onChange={handleChange}
+                            className="update-input"
                         />
                     </>
                 )}
 
-                <label>Item Name</label>
-                <input name="itemName" value={formData.itemName} onChange={handleChange} />
-                {errors.itemName && <p className="text-red-500">{errors.itemName}</p>}
+                <label className="update-label">Item Name</label>
+                <input name="itemName" value={formData.itemName} onChange={handleChange} className="update-input" />
+                {errors.itemName && <p className="update-error-message">{errors.itemName}</p>}
 
-                <label>Available Amount</label>
-                <input type="number" name="availableAmount" value={formData.availableAmount} onChange={handleChange} />
-                <select name="unit" value={formData.unit} onChange={handleChange}>
+                <label className="update-label">Available Amount</label>
+                <input type="number" name="availableAmount" value={formData.availableAmount} onChange={handleChange} className="update-input" />
+                <select name="unit" value={formData.unit} onChange={handleChange} className="update-select">
                     <option value="Kg">Kg</option>
                     <option value="Liters">Liters</option>
                     <option value="Units">Units</option>
                 </select>
-                {errors.availableAmount && <p className="text-red-500">{errors.availableAmount}</p>}
+                {errors.availableAmount && <p className="update-error-message">{errors.availableAmount}</p>}
 
                 {!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (
                     <>
-                        <label>Expiration Date</label>
-                        <input type="date" name="expirationDate" value={formData.expirationDate} onChange={handleChange} />
-                        {errors.expirationDate && <p className="text-red-500">{errors.expirationDate}</p>}
+                        <label className="update-label">Expiration Date</label>
+                        <input type="date" name="expirationDate" value={formData.expirationDate} onChange={handleChange} className="update-input" />
+                        {errors.expirationDate && <p className="update-error-message">{errors.expirationDate}</p>}
                     </>
                 )}
 
                 {!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (
                     <>
-                        <label>Unit Price (RS.)</label>
-                        <input type="number" name="unitPrice" value={formData.unitPrice} onChange={handleChange} />
-                        {errors.unitPrice && <p className="text-red-500">{errors.unitPrice}</p>}
+                        <label className="update-label">Unit Price (RS.)</label>
+                        <input type="number" name="unitPrice" value={formData.unitPrice} onChange={handleChange} className="update-input" />
+                        {errors.unitPrice && <p className="update-error-message">{errors.unitPrice}</p>}
                     </>
                 )}
 
-                <label>Notes</label>
-                <textarea name="notes" value={formData.notes} onChange={handleChange} />
+                <label className="update-label">Notes</label>
+                <textarea name="notes" value={formData.notes} onChange={handleChange} className="update-textarea" />
 
-                <button type="submit">Update Item</button>
-                <button type="button" onClick={() => navigate("/")}>Cancel</button>
+                <button type="submit" className="update-submit-button">Update Item</button>
+                <button type="button" onClick={() => navigate("/")} className="update-cancel-button">Cancel</button>
             </form>
-            {errors.submitError && <p className="text-red-500">{errors.submitError}</p>}
+            {errors.submitError && <p className="update-error-message">{errors.submitError}</p>}
         </div>
     );
 };

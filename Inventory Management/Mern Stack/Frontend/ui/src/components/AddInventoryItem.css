@@ -1,11 +1,11 @@
 /* Container styling */
 .add-inventory-item-container {
-  max-width: 650px;
-  margin: 0 auto;
+  max-width: 700px;
+  margin: 2rem auto;
   padding: 2rem;
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Form styling */
@@ -17,18 +17,18 @@ form {
 
 /* Heading styling */
 h1 {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: #333;
+  margin-bottom: 2rem;
+  color: #2d3748;
 }
 
 /* Label styling */
 label {
   display: block;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #333;
+  color: #2d3748;
   font-size: 1rem;
 }
 
@@ -36,17 +36,19 @@ label {
 input, select, textarea {
   width: 100%;
   padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
   box-sizing: border-box;
+  background-color: #f7fafc;
+  transition: border-color 0.2s;
 }
 
-/* Make select dropdowns look consistent with other inputs */
+/* Select dropdown styling */
 select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   padding-right: 2.5rem;
@@ -55,90 +57,41 @@ select {
 /* Date input styling */
 input[type="date"] {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
 }
 
 /* Textarea styling */
 textarea {
-  min-height: 100px;
+  min-height: 120px;
   resize: vertical;
 }
 
 /* Error message styling */
 p {
-  color: #e53e3e;
-  font-size: 0.8rem;
-  margin-top: -0.5rem;
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: -1rem;
   margin-bottom: 1rem;
 }
 
 /* Input with error styling */
-input:invalid, 
-select:invalid,
-textarea:invalid,
 input.error,
 select.error,
-textarea.error {
-  border-color: #e53e3e;
+textarea.error,
+input:invalid:focus,
+select:invalid:focus,
+textarea:invalid:focus {
+  border-color: #dc2626;
+  background-color: #fef2f2;
 }
 
-/* Unit price layout */
-.unit-price-container {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.unit-price-container span {
-  white-space: nowrap;
-  font-weight: 500;
-}
-
-/* Button styling */
-button {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-button[type="submit"] {
-  background-color: #4299e1;
-  color: white;
-  margin-right: 0.75rem;
-}
-
-button[type="submit"]:hover {
-  background-color: #3182ce;
-}
-
-button[type="button"] {
-  background-color: #f7fafc;
-  color: #4a5568;
-  border: 1px solid #e2e8f0;
-}
-
-button[type="button"]:hover {
-  background-color: #edf2f7;
-}
-
-/* Button container */
-form > div:last-child {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-}
-
-/* Unit selection layout */
+/* Amount and unit container */
 .amount-unit-container {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
 }
 
 .amount-unit-container input {
@@ -149,6 +102,55 @@ form > div:last-child {
 .amount-unit-container select {
   flex: 1;
   margin-bottom: 0;
+}
+
+/* Button styling */
+button {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+button[type="submit"] {
+  background-color: #2563eb;
+  color: white;
+  margin-right: 0.75rem;
+}
+
+button[type="submit"]:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+button[type="button"] {
+  background-color: #f1f5f9;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+button[type="button"]:hover {
+  background-color: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+/* Button container */
+form > div:last-child {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+/* Focus states */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 /* Utility classes */
@@ -168,51 +170,30 @@ form > div:last-child {
   font-weight: 700;
 }
 
-/* For the RS. prefix */
-.unit-price-wrapper {
-  position: relative;
-}
-
-.unit-price-wrapper input {
-  padding-left: 3rem;
-}
-
-.unit-price-prefix {
-  position: absolute;
-  left: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #4a5568;
-}
-
-/* Custom styling for the error message */
-.error-message {
-  color: #e53e3e;
-  font-size: 0.8rem;
-  margin-top: -0.5rem;
-  margin-bottom: 1rem;
-}
-
-/* For the required fields indicator */
-.required-indicator {
-  color: #e53e3e;
-  font-size: 0.8rem;
-}
-
 /* Mobile responsiveness */
 @media (max-width: 640px) {
   .add-inventory-item-container {
-    padding: 1rem;
+    margin: 1rem;
+    padding: 1.5rem;
   }
-  
+
   form > div:last-child {
     flex-direction: column;
+    gap: 0.5rem;
   }
-  
+
   button[type="submit"],
   button[type="button"] {
     width: 100%;
     margin-right: 0;
-    margin-bottom: 0.5rem;
+  }
+
+  .amount-unit-container {
+    flex-direction: column;
+  }
+
+  .amount-unit-container input,
+  .amount-unit-container select {
+    flex: none;
   }
 }

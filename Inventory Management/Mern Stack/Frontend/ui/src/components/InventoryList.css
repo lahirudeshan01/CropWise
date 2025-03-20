@@ -172,7 +172,7 @@ select:focus {
 
 /* Stock status colors */
 .low-stock {
-  color: #FF8C00; /* Orange for low stock */
+  color: #c4c708; /* Orange for low stock */
 }
 
 .out-of-stock {
