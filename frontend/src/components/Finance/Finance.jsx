@@ -21,7 +21,7 @@ const Finance = () => {
   const [applyFiltersTrigger, setApplyFiltersTrigger] = useState(false); // State to trigger filter application
   const [loading, setLoading] = useState(false); // Loading state for data fetching
   const [error, setError] = useState(null); // Error state for data fetching issues
-  
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -38,13 +38,23 @@ const Finance = () => {
             cleanFilters[key] = filters[key];
           }
         });
-        
+
         console.log("Fetching transactions with filters:", cleanFilters);
         const transactions = await getTransactions(cleanFilters);
-        const report = await generateReport();
-        
+
+        // Calculate total income, outcome, and profit based on filtered transactions
+        const totalIncome = transactions
+          .filter(t => t.status === "Income")
+          .reduce((sum, t) => sum + t.amount, 0);
+
+        const totalOutcome = transactions
+          .filter(t => t.status === "Outcome")
+          .reduce((sum, t) => sum + t.amount, 0);
+
+        const profit = totalIncome - totalOutcome;
+
         setTransactions(transactions);
-        setReport(report);
+        setReport({ totalIncome, totalOutcome, profit });
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to fetch data. Please try again.");
@@ -76,6 +86,7 @@ const Finance = () => {
     setFilters({ ...filters }); // Force a state update
     setApplyFiltersTrigger((prev) => !prev); // Toggle the trigger
   };
+
   // Reset filters
   const resetFilters = () => {
     setFilters({
@@ -130,11 +141,11 @@ const Finance = () => {
   // Handle Delete Transaction
   const handleDelete = async () => {
     if (deleteConfirmation === null) return;
-    
+
     const transaction = transactions[deleteConfirmation];
     try {
       await deleteTransaction(transaction._id); // Make sure to use _id not id
-      
+
       // Re-fetch transactions and report with current filters
       const cleanFilters = {};
       Object.keys(filters).forEach(key => {
@@ -142,12 +153,22 @@ const Finance = () => {
           cleanFilters[key] = filters[key];
         }
       });
-      
+
       const updatedTransactions = await getTransactions(cleanFilters);
-      const updatedReport = await generateReport();
-      
+
+      // Recalculate total income, outcome, and profit
+      const totalIncome = updatedTransactions
+        .filter(t => t.status === "Income")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const totalOutcome = updatedTransactions
+        .filter(t => t.status === "Outcome")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const profit = totalIncome - totalOutcome;
+
       setTransactions(updatedTransactions);
-      setReport(updatedReport);
+      setReport({ totalIncome, totalOutcome, profit });
       setDeleteConfirmation(null); // Close modal
     } catch (error) {
       console.error("Error deleting transaction:", error);
@@ -225,51 +246,6 @@ const Finance = () => {
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div className="charts-container">
-        {/* Line Chart */}
-        <div className="chart-container line-chart">
-          <h3>Income vs. Outcome Analysis</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={lineChartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="income" stroke="#008000" name="Income" />
-              <Line type="monotone" dataKey="outcome" stroke="#dc3545" name="Outcome" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Pie Chart */}
-        <div className="chart-container pie-chart">
-          <h3>Income and Outcome Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={pieChartData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-                nameKey="name"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-              >
-                {pieChartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
       {/* Filter Section */}
       <div className="filter-section">
         <h3>Filter Transactions</h3>
@@ -344,11 +320,56 @@ const Finance = () => {
 
           {/* Apply and Reset Buttons */}
           <div className="filter-buttons">
-           
+            
             <button className="button reset" onClick={resetFilters}>
               Reset Filters
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* Charts Section */}
+      <div className="charts-container">
+        {/* Line Chart */}
+        <div className="chart-container line-chart">
+          <h3>Income vs. Outcome Analysis</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={lineChartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="income" stroke="#008000" name="Income" />
+              <Line type="monotone" dataKey="outcome" stroke="#dc3545" name="Outcome" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Pie Chart */}
+        <div className="chart-container pie-chart">
+          <h3>Income and Outcome Distribution</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={pieChartData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+                nameKey="name"
+                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+              >
+                {pieChartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
         </div>
       </div>
 

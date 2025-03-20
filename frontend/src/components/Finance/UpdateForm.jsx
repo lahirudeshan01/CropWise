@@ -66,8 +66,10 @@ const UpdateForm = () => {
 
     try {
       await updateTransaction({
-        id: location.state.transaction._id,
+        _id: location.state.transaction._id,
         ...formData,
+        reference: location.state.transaction.reference, // Include reference
+        date: location.state.transaction.date, // Include date
       });
       navigate("/finance");
     } catch (error) {
@@ -95,7 +97,6 @@ const UpdateForm = () => {
               placeholder="Enter name"
               value={formData.name}
               onChange={handleInputChange}
-              
             />
             {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
@@ -107,17 +108,15 @@ const UpdateForm = () => {
               placeholder="Enter amount"
               value={formData.amount}
               onChange={handleInputChange}
-              
             />
             {errors.amount && <span className="error-message">{errors.amount}</span>}
           </div>
           <div className="form-group">
-            <label htmlFor="status">Status</label>
+            <label htmlFor="status">Type</label>
             <select
               name="status"
               value={formData.status}
               onChange={handleInputChange}
-         
             >
               <option value="" disabled>Select status</option>
               <option value="Income">Income</option>
