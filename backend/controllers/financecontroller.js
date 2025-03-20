@@ -1,23 +1,42 @@
 const Transaction = require('../models/finance');
 
-// Log a transaction
-const logTransaction = async (req, res) => {
-  try {
-    const { name, amount, status, reference } = req.body;
-    const newTransaction = new Transaction({ name, amount, status, reference });
-    await newTransaction.save();
-    res.status(201).json({ message: 'Transaction logged successfully!' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error logging transaction', error: error.message });
-  }
-};
-
-// Get all transactions
+// Get transactions with filters
 const getTransactions = async (req, res) => {
   try {
-    const transactions = await Transaction.find();
+    const { startDate, endDate, type, reference, minAmount, maxAmount } = req.query;
+    console.log("Received filters:", { startDate, endDate, type, reference, minAmount, maxAmount }); // Debugging line
+
+    // Build the filter object
+    const filter = {};
+    if (startDate && endDate) {
+      filter.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
+    } else if (startDate) {
+      filter.date = { $gte: new Date(startDate) };
+    } else if (endDate) {
+      filter.date = { $lte: new Date(endDate) };
+    }
+    if (type) {
+      filter.status = type;
+    }
+    if (reference) {
+      filter.reference = reference;
+    }
+    if (minAmount && maxAmount) {
+      filter.amount = { $gte: parseFloat(minAmount), $lte: parseFloat(maxAmount) };
+    } else if (minAmount) {
+      filter.amount = { $gte: parseFloat(minAmount) };
+    } else if (maxAmount) {
+      filter.amount = { $lte: parseFloat(maxAmount) };
+    }
+
+    console.log("Filter object being used:", filter); // Debugging line
+
+    // Fetch transactions with filters
+    const transactions = await Transaction.find(filter);
+    console.log("Filtered transactions:", transactions); // Debugging line
     res.status(200).json(transactions);
   } catch (error) {
+    console.error("Error fetching transactions:", error); // Debugging line
     res.status(500).json({ message: 'Error fetching transactions', error: error.message });
   }
 };
@@ -57,10 +76,15 @@ const generateReport = async (req, res) => {
     res.status(500).json({ message: 'Error generating report', error: error.message });
   }
 };
+
 // Generate monthly financial report
 const generateMonthlyReport = async (req, res) => {
   try {
-    const { month, year } = req.query; // Get month and year from query params
+    const { month, year } = req.query;
+    
+    if (!month || !year) {
+      return res.status(400).json({ message: 'Month and year are required' });
+    }
 
     // Create start and end dates for the selected month
     const startDate = new Date(year, month - 1, 1);
@@ -85,9 +109,11 @@ const generateMonthlyReport = async (req, res) => {
     res.status(500).json({ message: 'Error generating monthly report', error: error.message });
   }
 };
+
+// Generate daily financial report
 const generateDailyReport = async (req, res) => {
   try {
-    const { date } = req.query; // Get the date from query params
+    const { date } = req.query;
     if (!date) {
       return res.status(400).json({ message: 'Date is required in YYYY-MM-DD format' });
     }
@@ -120,14 +146,13 @@ const generateDailyReport = async (req, res) => {
 // Update a transaction
 const updateTransaction = async (req, res) => {
   try {
-    const { id } = req.params; // Get the transaction ID from the URL
-    const { name, amount, reference, status, date } = req.body; // Get updated fields from the request body
+    const { id } = req.params;
+    const { name, amount, reference, status, date } = req.body;
 
-    // Find the transaction by ID and update it
     const updatedTransaction = await Transaction.findByIdAndUpdate(
       id,
       { name, amount, reference, status, date },
-      { new: true } // Return the updated transaction
+      { new: true }
     );
 
     if (!updatedTransaction) {
@@ -143,9 +168,8 @@ const updateTransaction = async (req, res) => {
 // Delete a transaction
 const deleteTransaction = async (req, res) => {
   try {
-    const { id } = req.params; // Get the transaction ID from the URL
+    const { id } = req.params;
 
-    // Find the transaction by ID and delete it
     const deletedTransaction = await Transaction.findByIdAndDelete(id);
 
     if (!deletedTransaction) {
@@ -160,12 +184,13 @@ const deleteTransaction = async (req, res) => {
 
 // Export all functions
 module.exports = {
-  logTransaction,
   getTransactions,
   addTransaction,
   generateReport,
   generateMonthlyReport,
   generateDailyReport,
-  updateTransaction, // Add this
-  deleteTransaction, // Add this
+  updateTransaction,
+  deleteTransaction,
+  // Keep logTransaction for backward compatibility
+  logTransaction: addTransaction,
 };
