@@ -1,125 +1,156 @@
 .see-details-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .see-details-container h1 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 16px;
-    color: #111;
-  }
-  
-  .item-header {
-    background-color: #f1f1f1;
-    padding: 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-  }
-  
-  .item-header h2 {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0;
-    text-align: center;
-  }
-  
-  .item-details {
-    margin-bottom: 20px;
-  }
-  
-  .item-detail-row {
-    display: flex;
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .detail-label {
-    font-weight: bold;
-    width: 150px;
-    flex-shrink: 0;
-  }
-  
-  .detail-value {
-    flex-grow: 1;
-  }
-  
-  .note-value {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 12px;
-    margin-top: 4px;
-    border: 1px solid #e0e0e0;
-  }
-  
-  .action-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .update-button {
-    background-color: #3b82f6;
-    color: white;
-    padding: 10px 24px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  }
-  
-  .update-button:hover {
-    background-color: #2563eb;
-  }
-  
-  .delete-button {
-    background-color: #ef4444;
-    color: white;
-    padding: 10px 24px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  }
-  
-  .delete-button:hover {
-    background-color: #dc2626;
-  }
-  
-  .confirmation-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-  }
-  
-  .confirmation-dialog {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 400px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .confirmation-dialog p {
-    margin-bottom: 20px;
-  }
-  
-  .confirmation-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
-  
-  .expired-text {
-    color: #ef4444;
-    font-weight: 500;
-  }
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.see-details-container h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #111;
+}
+
+.item-header {
+  background-color: #f1f1f1;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.item-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+.item-details {
+  margin-bottom: 20px;
+}
+
+.item-detail-row {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-label {
+  font-weight: bold;
+  width: 150px;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  flex-grow: 1;
+}
+
+.note-value {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 4px;
+  border: 1px solid #e0e0e0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.update-button {
+  background-color: #3b82f6;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.update-button:hover {
+  background-color: #2563eb;
+}
+
+.delete-button {
+  background-color: #ef4444;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+  background-color: #dc2626;
+}
+
+.confirmation-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.confirmation-dialog {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.confirmation-dialog p {
+  margin-bottom: 20px;
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.expired {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.expires-today {
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+.expires-soon {
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+.expires-near {
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+.back-button {
+  background-color: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.back-button:hover {
+  background-color: #2563eb;
+}

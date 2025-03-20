@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import "./SeeDetails.css"; // Import the CSS file
+import "./SeeDetails.css";
 
 const SeeDetails = () => {
     const { id } = useParams();
@@ -37,6 +37,25 @@ const SeeDetails = () => {
         }
     };
 
+    const getExpirationStatus = (expirationDate) => {
+        if (!expirationDate) return { status: null, daysLeft: null };
+        const today = new Date();
+        const expDate = new Date(expirationDate);
+        const daysLeft = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+
+        if (daysLeft < 0) return { status: "expired", daysLeft: Math.abs(daysLeft) };
+        if (daysLeft === 0) return { status: "expires-today", daysLeft: 0 };
+        if (daysLeft <= 7) return { status: "expires-soon", daysLeft };
+        if (daysLeft <= 30) return { status: "expires-near", daysLeft };
+        return { status: null, daysLeft };
+    };
+
+    const getStockStatus = (availableAmount) => {
+        if (availableAmount === 0) return "out-of-stock"; // Out of stock
+        if (availableAmount < 3) return "low-stock"; // Low stock
+        return null; // No stock issue
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -49,20 +68,29 @@ const SeeDetails = () => {
         return <div>Item not found.</div>;
     }
 
-    const daysLeft = item.expirationDate
-        ? Math.ceil((new Date(item.expirationDate) - new Date()) / (1000 * 60 * 60 * 24))
-        : null;
+    const expirationStatus = getExpirationStatus(item.expirationDate);
+    const stockStatus = getStockStatus(item.availableAmount);
 
     return (
         <div className="see-details-container">
+            <button
+                className="back-button"
+                onClick={() => navigate("/")}
+            >
+                ← Back
+            </button>
             <h1>{item.category}</h1>
             <div className="item-header">
-                <h2>{item.itemName}</h2>
+                <h2>{item.itemName}</h2> {/* Item name remains black */}
             </div>
             <div className="item-details">
                 <div className="item-detail-row">
                     <div className="detail-label">Available Amount</div>
-                    <div className="detail-value">{item.availableAmount} {item.unit}</div>
+                    <div className={`detail-value ${stockStatus}`}>
+                        {item.availableAmount} {item.unit}
+                        {stockStatus === "low-stock" && " ⚠️"}
+                        {stockStatus === "out-of-stock" && " ❗"}
+                    </div>
                 </div>
                 <div className="item-detail-row">
                     <div className="detail-label">Unit price</div>
@@ -70,12 +98,12 @@ const SeeDetails = () => {
                 </div>
                 <div className="item-detail-row">
                     <div className="detail-label">Expires in</div>
-                    <div className="detail-value">
-                        {daysLeft !== null ? 
-                            (daysLeft < 0 ? 
-                                <span className="expired-text">{Math.abs(daysLeft)} days ago</span> : 
-                                `${daysLeft} days left`) : 
-                            "No expiration date"}
+                    <div className={`detail-value ${expirationStatus.status}`}>
+                        {expirationStatus.status === "expired" ? `Item expired ${expirationStatus.daysLeft} day${expirationStatus.daysLeft !== 1 ? 's' : ''} ago` :
+                         expirationStatus.status === "expires-today" ? "Item expires today" :
+                         expirationStatus.status === "expires-soon" ? `Expires in ${expirationStatus.daysLeft} day${expirationStatus.daysLeft !== 1 ? 's' : ''}` :
+                         expirationStatus.status === "expires-near" ? `Expires in ${expirationStatus.daysLeft} day${expirationStatus.daysLeft !== 1 ? 's' : ''}` :
+                         "No expiration date"}
                     </div>
                 </div>
                 <div className="item-detail-row">

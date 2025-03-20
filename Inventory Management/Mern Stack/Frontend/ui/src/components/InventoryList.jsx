@@ -29,6 +29,27 @@ const InventoryList = () => {
         return matchesSearchTerm && matchesCategory;
     });
 
+    // Get expiration status
+    const getExpirationStatus = (expirationDate) => {
+        if (!expirationDate) return null;
+        const today = new Date();
+        const expDate = new Date(expirationDate);
+        const daysLeft = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+
+        if (daysLeft < 0) return "expired"; // Expired
+        if (daysLeft === 0) return "expires-today"; // Expires today
+        if (daysLeft <= 7) return "expires-soon"; // Expires within 7 days
+        if (daysLeft <= 30) return "expires-near"; // Expires within 30 days
+        return null; // No expiration issue
+    };
+
+    // Get stock status
+    const getStockStatus = (availableAmount) => {
+        if (availableAmount === 0) return "out-of-stock"; // Out of stock
+        if (availableAmount < 3) return "low-stock"; // Low stock
+        return null; // No stock issue
+    };
+
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Stock Management</h1>
@@ -56,45 +77,61 @@ const InventoryList = () => {
             <table className="w-full border-collapse">
                 <thead>
                     <tr className="bg-gray-200">
-                                <th className="p-2 border">
-                <div className="flex items-center">
-                    <select
-                        value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="ml-2 p-1 border border-gray-300 rounded"
-                    >
-                        <option value="All Categories">All Categories</option>
-                        <option value="Fertilizers">Fertilizers</option>
-                        <option value="Pesticides">Pesticides</option>
-                        <option value="Seeds">Seeds</option>
-                        <option value="Farm Machinery & Tools">Farm Machinery & Tools</option>
-                        <option value="Packaging Materials">Packaging Materials</option>
-                        <option value="Pest Control & Storage Protection">Pest Control & Storage Protection</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-            </th>
+                        <th className="p-2 border">
+                            <div className="flex items-center">
+                                <span>Category</span>
+                                <select
+                                    value={selectedCategory}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                    className="ml-2 p-1 border border-gray-300 rounded"
+                                >
+                                    <option value="All Categories">All</option>
+                                    <option value="Fertilizers">Fertilizers</option>
+                                    <option value="Pesticides">Pesticides</option>
+                                    <option value="Seeds">Seeds</option>
+                                    <option value="Farm Machinery & Tools">Farm Machinery & Tools</option>
+                                    <option value="Packaging Materials">Packaging Materials</option>
+                                    <option value="Pest Control & Storage Protection">Pest Control & Storage Protection</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </th>
                         <th className="p-2 border">Item</th>
                         <th className="p-2 border">Available Amount</th>
                         <th className="p-2 border">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredInventory.map((item) => (
-                        <tr key={item._id} className="hover:bg-gray-100">
-                            <td className="p-2 border">{item.category}</td>
-                            <td className="p-2 border">{item.itemName}</td>
-                            <td className="p-2 border">{item.availableAmount} {item.unit}</td>
-                            <td className="p-2 border">
-                                <button
-                                    className="text-blue-500 hover:underline"
-                                    onClick={() => navigate(`/item/${item._id}`)}
-                                >
-                                    See Details
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
+                    {filteredInventory.map((item) => {
+                        const expirationStatus = getExpirationStatus(item.expirationDate);
+                        const stockStatus = getStockStatus(item.availableAmount);
+
+                        return (
+                            <tr key={item._id} className="hover:bg-gray-100">
+                                <td className="p-2 border">{item.category}</td>
+                                <td className={`p-2 border ${expirationStatus}`}>
+                                    {item.itemName}
+                                    {expirationStatus === "expires-near" && " ⚠️"}
+                                    {expirationStatus === "expires-soon" && " ⚠️"}
+                                    {expirationStatus === "expires-today" && " ❗"}
+                                    {expirationStatus === "expired" && " ❗"}
+                                </td>
+                                <td className={`p-2 border ${stockStatus}`}>
+                                    {item.availableAmount} {item.unit}
+                                    {stockStatus === "low-stock" && " ⚠️"}
+                                    {stockStatus === "out-of-stock" && " ❗"}
+                                </td>
+                                <td className="p-2 border">
+                                    <button
+                                        className="text-blue-500 hover:underline"
+                                        onClick={() => navigate(`/item/${item._id}`)}
+                                    >
+                                        See Details
+                                    </button>
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>

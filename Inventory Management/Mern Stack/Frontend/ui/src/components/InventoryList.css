@@ -157,3 +157,24 @@ select:focus {
   border-color: #3182ce;
   box-shadow: 0 0 0 1px #3182ce;
 }
+/* Expiration status colors */
+.expires-near {
+  color: #FFD700; /* Dark yellow for items expiring within 30 days */
+}
+
+.expires-soon {
+  color: #FF8C00; /* Orange for items expiring within 7 days */
+}
+
+.expires-today, .expired {
+  color: #8B0000; /* Dark red for items expiring today or expired */
+}
+
+/* Stock status colors */
+.low-stock {
+  color: #FF8C00; /* Orange for low stock */
+}
+
+.out-of-stock {
+  color: #8B0000; /* Dark red for out of stock */
+}
