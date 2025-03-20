@@ -6,6 +6,7 @@ import './App.css'
 import InventoryList from './components/InventoryList'
 import AddInventoryItem from './components/AddInventoryItem'
 import SeeDetails from './components/Seedetails';
+import UpdateInventoryItem from './components/UpdateInventoryItem';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<InventoryList />} />
         <Route path="/add-item" element={<AddInventoryItem />} />
         <Route path="/item/:id" element={<SeeDetails />} />
+        <Route path="/edit-item/:id" element={< UpdateInventoryItem/>} />
       </Routes>
     </Router>
   );

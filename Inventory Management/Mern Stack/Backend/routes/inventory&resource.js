@@ -63,7 +63,7 @@ router.post("/", async (req, res) => {
 // @desc    Update an inventory item
 // @access  Public
 router.put("/:id", async (req, res) => {
-    const { category, itemName, availableKilograms, unitPrice, expirationDate, notes } = req.body;
+    const { category, itemName, availableAmount, unit, unitPrice, expirationDate, notes } = req.body;
 
     try {
         let item = await Inventory.findById(req.params.id);
@@ -74,7 +74,8 @@ router.put("/:id", async (req, res) => {
 
         item.category = category;
         item.itemName = itemName;
-        item.availableKilograms = availableKilograms;
+        item.availableAmount = availableAmount;
+        item.unit = unit;
         item.unitPrice = unitPrice;
         item.expirationDate = expirationDate;
         item.notes = notes;
