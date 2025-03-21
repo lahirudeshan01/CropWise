@@ -111,7 +111,7 @@ function Updatedetails() {
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="farmerId">Farmer ID:</label>
+            <label htmlFor="farmerId">Listing ID:</label>
             <input
               type="text"
               id="farmerId"

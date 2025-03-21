@@ -73,14 +73,14 @@ function Detailsview() {
 
         <table className="custom-table">
           <tbody>
-            <tr>
+            {/* <tr>
               <th>ID</th>
               <td>{farmer._id || "N/A"}</td>
-            </tr>
-            {/* <tr>
-              <th>Farmer ID</th>
-              <td>{farmer.farmerId || "N/A"}</td>
             </tr> */}
+            <tr>
+              <th>Listing ID</th>
+              <td>{farmer.farmerId || "N/A"}</td>
+            </tr>
             <tr>
               <th>Character</th>
               <td>{farmer.Character || "N/A"}</td>
@@ -110,10 +110,10 @@ function Detailsview() {
 
         <div className="button-container">
           <Link to={`/updatedetails/${farmer._id}`} className="edit-button">
-            Edit Details
+            Update Listing
           </Link>
           <button onClick={handleDelete} className="delete-button">
-            Delete Farmer
+            Remove Listing
           </button>
         </div>
       </div>

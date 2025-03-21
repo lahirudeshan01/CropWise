@@ -13,7 +13,7 @@ const FarmerList = ({ farmers }) => {
         <thead>
           <tr>
           
-            <th>Farmer ID</th>
+            <th>Listing ID</th>
             <th>Character</th>
             <th>Verity</th>
             <th>Quantity</th>

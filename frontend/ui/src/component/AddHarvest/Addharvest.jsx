@@ -52,7 +52,7 @@ const AddHarvest = () => {
       <form className="harvest-form" onSubmit={handleSubmit}>
         <div className="form-grid">
           <div className="form-group">
-            <label className="form-label">Farmer ID</label>
+            <label className="form-label">Listing ID</label>
             <input
               type="text"
               name="farmerId"
