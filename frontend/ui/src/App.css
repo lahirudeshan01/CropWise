@@ -1,0 +1,58 @@
+/* #root {
+  width: 100vw;
+  height: 100vh;
+  
+  } */
+  
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* App.css */
+  
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+  
+.content-area {
+  flex: 1;
+  padding: 20px;
+}
+  
+.Sidebar {
+  width: 260px;
+  background-color: #f0f0f0;
+  min-height: 100vh;
+}
+
+.Sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+  
+.sidebar-item {
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 15px;
+  color: #333;
+  transition: background-color 0.2s;
+}
+  
+/* Styling for the active tab */
+.sidebar-item.active {
+  background-color: #16a21a; /* Blue color matching your example */
+  color: white;
+}
+  
+.sidebar-item div:first-child {
+  margin-right: 10px;
+}
+
+/* Hover effect for non-active tabs */
+.sidebar-item:not(.active):hover {
+  background-color: #e0e0e0;
+}
