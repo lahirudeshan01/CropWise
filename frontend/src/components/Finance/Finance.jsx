@@ -211,15 +211,19 @@ const Finance = () => {
     <div className="finance-dashboard" onClick={handleClickOutside}>
       {/* Buttons Section at the Top */}
       <div className="buttons-section">
-        <button className="button export-pdf" onClick={handleExportPDF}>
-          Generate Report
-        </button>
+      <div class="button-group-left">
         <button className="button income" onClick={handleIncome}>
           Income
         </button>
         <button className="button outcome" onClick={handleOutcome}>
           Outcome
         </button>
+        </div>
+        <div class="button-group-right">
+        <button className="button export-pdf" onClick={handleExportPDF}>
+          Generate Report
+        </button>
+      </div>
       </div>
 
       {/* Title Below Buttons */}

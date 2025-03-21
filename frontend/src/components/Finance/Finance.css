@@ -28,11 +28,24 @@
 /* Buttons Section */
 .buttons-section {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  justify-content: space-between; /* Push left and right groups to the edges */
+  align-items: center; /* Vertically center the buttons */
   margin-bottom: 20px;
 }
 
+/* Group for Income and Outcome buttons */
+.button-group-left {
+  display: flex;
+  gap: 10px; /* Space between Income and Outcome buttons */
+}
+
+/* Group for Export PDF button */
+.button-group-right {
+  display: flex;
+  gap: 10px; /* Space between Export PDF and other buttons (if any) */
+}
+
+/* General Button Styles */
 .button {
   padding: 10px 20px;
   border: none;
@@ -42,8 +55,11 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center; /* Ensure text is centered */
+  min-width: 100px; /* Set a minimum width for all buttons */
 }
 
+/* Export PDF Button */
 .button.export-pdf {
   background: linear-gradient(135deg, #0056b3, #003366);
 }
@@ -53,8 +69,10 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Income Button */
 .button.income {
   background: linear-gradient(135deg, #28a745, #218838);
+  width: 100px; /* Fixed width for Income button */
 }
 
 .button.income:hover {
@@ -62,8 +80,10 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Outcome Button */
 .button.outcome {
   background: linear-gradient(135deg, #dc3545, #c82333);
+  width: 100px; /* Fixed width for Outcome button */
 }
 
 .button.outcome:hover {
