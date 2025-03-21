@@ -8,75 +8,67 @@ function Detailsview() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id } = useParams();
-  const navigate = useNavigate(); // Add this for navigation after delete
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if id is defined before making the API call
     if (id) {
-      console.log("Fetching farmer with ID:", id); // Debug log
-
       axios
         .get(`http://localhost:3000/api/farmers/${id}`)
         .then((res) => {
-          console.log("API response:", res.data); // Debug log
           setFarmer(res.data);
           setLoading(false);
         })
-        .catch((error) => {
-          console.error("Error fetching farmer details:", error);
+        .catch(() => {
           setError("Failed to load farmer data. Please try again later.");
           setLoading(false);
         });
     } else {
-      console.error("Farmer ID is undefined");
       setError("Farmer ID is missing or invalid");
       setLoading(false);
     }
   }, [id]);
 
-  // Add the delete function
   const handleDelete = () => {
-    // Show confirmation dialog
     if (window.confirm("Are you sure you want to delete this farmer?")) {
-      // Proceed with deletion
       axios
         .delete(`http://localhost:3000/api/farmers/${id}`)
-        .then((res) => {
-          console.log("Delete response:", res.data);
-          // Redirect to the farmers list page after successful deletion
-          navigate("/showall"); // Change this to your actual route for showing all farmers
+        .then(() => {
+          navigate("/showall");
         })
-        .catch((error) => {
-          console.error("Error deleting farmer:", error);
+        .catch(() => {
           setError("Failed to delete farmer. Please try again later.");
         });
     }
   };
 
-  if (loading) {
-    return <div>Loading farmer details...</div>;
-  }
+  if (loading)
+    return <div className="loading">Loading farmer details...</div>;
 
-  if (error) {
+  if (error)
     return <div className="error-message">{error}</div>;
-  }
 
-  if (!farmer) {
-    return <div>No farmer data found for this ID.</div>;
-  }
+  if (!farmer)
+    return <div className="no-data">No farmer data found for this ID.</div>;
 
   return (
-    <div className="show-farmer-details">
-      <div className="content">
+    <div className="farmer-details-container">
+      <div className="farmer-card">
         <h1 className="title">Farmer Details</h1>
-        <p className="subtitle">This is the full detail of the farmer</p>
 
-        <table className="custom-table">
+        {/* Image Display */}
+        {farmer.image && (
+          <div className="image-container">
+            <img
+              src={`http://localhost:3000/uploads/${farmer.image}`}
+              alt="Harvest"
+              className="farmer-image"
+            />
+          </div>
+        )}
+
+        {/* Farmer Details in Table Format */}
+        <table className="farmer-details-table">
           <tbody>
-            {/* <tr>
-              <th>ID</th>
-              <td>{farmer._id || "N/A"}</td>
-            </tr> */}
             <tr>
               <th>Listing ID</th>
               <td>{farmer.farmerId || "N/A"}</td>

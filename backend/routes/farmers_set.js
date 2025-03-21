@@ -1,59 +1,80 @@
 const express = require("express");
-
 const router = express.Router();
-
 const Farmers = require("../models/farmers");
+const upload = require("../middleware/upload"); // Import multer middleware
 
-//test
+// Test route
 router.get("/test", (req, res) => res.send("routes working..."));
 
-//post metod
-router.post("/", (req, res) => {
-  Farmers.create(req.body)
-    .then(() => res.json({ msg: "harvest add complete" }))
-    .catch(() => res.status(400).json({ msg: "harvest add fail" }));
+// POST method - Add a new farmer with image upload
+router.post("/", upload.single("image"), async (req, res) => {
+  try {
+    const { farmerId, Character, verity, quantity, price, address, location } = req.body;
+    
+    // Construct farmer data
+    const newFarmer = new Farmers({
+      farmerId,
+      Character,
+      verity,
+      quantity,
+      price,
+      address,
+      location,
+      image: req.file ? req.file.filename : null, // Save image filename if uploaded
+    });
+
+    await newFarmer.save();
+    res.json({ msg: "Harvest added successfully", data: newFarmer });
+  } catch (error) {
+    console.error("Error adding harvest:", error);
+    res.status(400).json({ msg: "Harvest add failed" });
+  }
 });
 
-//get metod
-router.get("/", (req, res) => {
-    Farmers.find()
-        .then((Farmers) => res.json(Farmers))
-        .catch(() => res.status(404).json({ msg: "No Farmers found" }));
+// GET method - Fetch all farmers
+router.get("/", async (req, res) => {
+  try {
+    const farmers = await Farmers.find();
+    res.json(farmers);
+  } catch (error) {
+    res.status(404).json({ msg: "No Farmers found" });
+  }
 });
 
-
-//find by id
-router.get("/:id", (req, res) => {
-    Farmers.findById(req.params.id)
-        .then(Farmers => {
-            if (!Farmers) {
-                return res.status(404).json({ msg: "Farmers not found" });
-            }
-            res.json(Farmers);
-        })
-        .catch(() => res.status(400).json({ msg: "Invalid Farmers ID" }));
+// GET by ID - Fetch a single farmer by ID
+router.get("/:id", async (req, res) => {
+  try {
+    const farmer = await Farmers.findById(req.params.id);
+    if (!farmer) {
+      return res.status(404).json({ msg: "Farmer not found" });
+    }
+    res.json(farmer);
+  } catch (error) {
+    res.status(400).json({ msg: "Invalid Farmer ID" });
+  }
 });
 
-//update using id
-router.put("/:id", (req, res) => {
-    Farmers.findByIdAndUpdate(req.params.id, req.body)
-        .then(() => {
-            res.json({ msg: "Update successfully" });
-        })
-        .catch(() => res.status(400).json({ msg: "Update failed" }));
+// UPDATE by ID - Update a farmer
+router.put("/:id", async (req, res) => {
+  try {
+    await Farmers.findByIdAndUpdate(req.params.id, req.body);
+    res.json({ msg: "Update successful" });
+  } catch (error) {
+    res.status(400).json({ msg: "Update failed" });
+  }
 });
 
-//delete
-router.delete("/:id", (req, res) => {
-    Farmers.findByIdAndDelete(req.params.id)
-        .then((Farmers) => {
-            if (!Farmers) {
-                return res.status(404).json({ msg: "Farmers not found" });
-            }
-            res.json({ msg: "Farmers deleted successfully" });
-        })
-        .catch(() => res.status(400).json({ msg: "Delete failed" }));
+// DELETE by ID - Remove a farmer
+router.delete("/:id", async (req, res) => {
+  try {
+    const farmer = await Farmers.findByIdAndDelete(req.params.id);
+    if (!farmer) {
+      return res.status(404).json({ msg: "Farmer not found" });
+    }
+    res.json({ msg: "Farmer deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ msg: "Delete failed" });
+  }
 });
-
 
 module.exports = router;
