@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import './updatedetails.css';
 
+
 function Updatedetails() {
   const [farmer, setFarmer] = useState({
     farmerId: "",

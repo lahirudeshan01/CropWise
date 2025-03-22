@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./viewdetail.css";
 
+
 function Detailsview() {
   const [farmer, setFarmer] = useState(null);
   const [loading, setLoading] = useState(true);

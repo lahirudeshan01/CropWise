@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarDate } from "./SidebarDate";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import "./sidebar.css"; 
+// import "../App.css";
 
 const Sidebar = () => {
   const navigate = useNavigate();

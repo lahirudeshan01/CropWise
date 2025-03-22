@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./showlist.css";
 
+
 const FarmerList = ({ farmers }) => {
   if (!farmers || farmers.length === 0) {
     return <div className="no-borrowers">No farmers found!</div>;
