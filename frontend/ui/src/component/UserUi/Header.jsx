@@ -18,7 +18,7 @@ const Header = () => {
       </div>
       <ul>
         <li>
-          <Link to="/userui">Home</Link> {/* Use Link for navigation */}
+          <Link to="/">Home</Link> {/* Use Link for navigation */}
         </li>
         <li>
           <Link to="/about">About</Link> {/* Use Link for navigation */}
