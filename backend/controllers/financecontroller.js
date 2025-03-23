@@ -4,7 +4,7 @@ const Transaction = require('../models/finance');
 const getTransactions = async (req, res) => {
   try {
     const { startDate, endDate, type, reference, minAmount, maxAmount } = req.query;
-    console.log("Received filters:", { startDate, endDate, type, reference, minAmount, maxAmount }); // Debugging line
+   
 
     // Build the filter object
     const filter = {};
@@ -29,11 +29,11 @@ const getTransactions = async (req, res) => {
       filter.amount = { $lte: parseFloat(maxAmount) };
     }
 
-    console.log("Filter object being used:", filter); // Debugging line
+    
 
     // Fetch transactions with filters
     const transactions = await Transaction.find(filter);
-    console.log("Filtered transactions:", transactions); // Debugging line
+    
     res.status(200).json(transactions);
   } catch (error) {
     console.error("Error fetching transactions:", error); // Debugging line

@@ -1,10 +1,10 @@
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dotenv = require('dotenv');
+// Import routes
+const financeRoutes = require('./routes/financeRoutes');
 
-// Load environment variables
-dotenv.config();
 
 // Create Express app
 const app = express();
@@ -20,8 +20,7 @@ mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
-// Import routes
-const financeRoutes = require('./routes/financeRoutes');
+
 
 // Use finance routes
 app.use('/api', financeRoutes);
