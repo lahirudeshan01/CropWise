@@ -33,7 +33,7 @@ const getTransactions = async (req, res) => {
 
     // Fetch transactions with filters
     const transactions = await Transaction.find(filter);
-    
+
     res.status(200).json(transactions);
   } catch (error) {
     console.error("Error fetching transactions:", error); // Debugging line

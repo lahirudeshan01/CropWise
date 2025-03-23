@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5002/api'; // Replace with your backend URL
+const API_URL = 'http://localhost:5000/api'; // Replace with your backend URL
 
 // Get transactions with optional filters
 export const getTransactions = async (filters = {}) => {
