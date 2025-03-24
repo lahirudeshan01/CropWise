@@ -122,7 +122,7 @@ const AddInventoryItem = () => {
                 <label>Notes</label>
                 <textarea name="notes" value={formData.notes} onChange={handleChange} />
 
-                <button type="submit">Add Item</button>
+                <button type="submit">Add Item</button><br></br>
                 <button type="button" onClick={() => navigate("/")}>Cancel</button>
             </form>
         </div>

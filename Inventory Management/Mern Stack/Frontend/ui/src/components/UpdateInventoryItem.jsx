@@ -125,18 +125,7 @@ const UpdateInventoryItem = () => {
                     <option value="Other">Other</option>
                 </select>
 
-                {formData.category === "Other" && (
-                    <>
-                        <label className="update-label">Custom Category</label>
-                        <input
-                            type="text"
-                            name="customCategory"
-                            value={formData.customCategory}
-                            onChange={handleChange}
-                            className="update-input"
-                        />
-                    </>
-                )}
+
 
                 <label className="update-label">Item Name</label>
                 <input name="itemName" value={formData.itemName} onChange={handleChange} className="update-input" />

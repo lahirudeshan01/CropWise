@@ -10,6 +10,9 @@ const SeeDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [showQuickUpdateModal, setShowQuickUpdateModal] = useState(false);
+    const [quickUpdateAmount, setQuickUpdateAmount] = useState("");
+    const [validationError, setValidationError] = useState("");
 
     useEffect(() => {
         const fetchItem = async () => {
@@ -37,6 +40,45 @@ const SeeDetails = () => {
         }
     };
 
+    const handleQuickUpdate = async () => {
+        if (!quickUpdateAmount || isNaN(quickUpdateAmount)) {
+            setValidationError("Please enter a valid amount.");
+            return;
+        }
+
+        if (parseFloat(quickUpdateAmount) < 0) {
+            setValidationError("Amount cannot be negative.");
+            return;
+        }
+
+        if (item.unit === "Units" && !Number.isInteger(parseFloat(quickUpdateAmount))) {
+            setValidationError("Units cannot be a decimal number.");
+            return;
+        }
+
+        try {
+            const updatedItem = { 
+                ...item, 
+                availableAmount: parseFloat(quickUpdateAmount), // Ensure it's a number
+                unit: item.unit // Keep the existing unit
+            };
+
+            // Only include expirationDate if the category requires it
+            if (item.category !== "Farm Machinery & Tools" && item.category !== "Packaging Materials") {
+                updatedItem.expirationDate = item.expirationDate;
+            }
+
+            await axios.put(`http://localhost:3000/api/inventory/${id}`, updatedItem);
+            setItem(updatedItem);
+            setShowQuickUpdateModal(false);
+            setQuickUpdateAmount("");
+            setValidationError("");
+        } catch (err) {
+            console.error("Error updating item:", err);
+            setError("Failed to update item. Please try again later.");
+        }
+    };
+
     const getExpirationStatus = (expirationDate) => {
         if (!expirationDate) return { status: null, timeLeft: null };
         const today = new Date();
@@ -49,16 +91,15 @@ const SeeDetails = () => {
         if (daysLeft <= 7) return { status: "expires-soon", timeLeft: `${daysLeft} Day${daysLeft !== 1 ? 's' : ''}` };
         if (daysLeft <= 30) return { status: "expires-near", timeLeft: `${daysLeft} Day${daysLeft !== 1 ? 's' : ''}` };
 
-        // Calculate months and days for more than 30 days
         const monthsLeft = Math.floor(daysLeft / 30);
         const remainingDays = daysLeft % 30;
         return { status: "expires-far", timeLeft: `${monthsLeft} Month${monthsLeft !== 1 ? 's' : ''} and ${remainingDays} Day${remainingDays !== 1 ? 's' : ''}` };
     };
 
     const getStockStatus = (availableAmount) => {
-        if (availableAmount === 0) return "out-of-stock"; // Out of stock
-        if (availableAmount < 3) return "low-stock"; // Low stock
-        return null; // No stock issue
+        if (availableAmount === 0) return "out-of-stock";
+        if (availableAmount < 3) return "low-stock";
+        return null;
     };
 
     if (loading) {
@@ -78,15 +119,12 @@ const SeeDetails = () => {
 
     return (
         <div className="see-details-container">
-            <button
-                className="back-button"
-                onClick={() => navigate("/")}
-            >
+            <button className="back-button" onClick={() => navigate("/")}>
                 ← Back
             </button>
             <h1>{item.category}</h1>
             <div className="item-header">
-                <h2>{item.itemName}</h2> {/* Item name remains black */}
+                <h2>{item.itemName}</h2>
             </div>
             <div className="item-details">
                 <div className="item-detail-row">
@@ -95,6 +133,16 @@ const SeeDetails = () => {
                         {item.availableAmount} {item.unit}
                         {stockStatus === "low-stock" && " ⚠️"}
                         {stockStatus === "out-of-stock" && " ❗"}
+                        <button
+                            className="quick-update-button"
+                            onClick={() => {
+                                setQuickUpdateAmount(item.availableAmount.toString());
+                                setShowQuickUpdateModal(true);
+                                setValidationError("");
+                            }}
+                        >
+                            ✏️
+                        </button>
                     </div>
                 </div>
                 <div className="item-detail-row">
@@ -120,16 +168,10 @@ const SeeDetails = () => {
                 </div>
             </div>
             <div className="action-buttons">
-                <button
-                    className="update-button"
-                    onClick={() => navigate(`/edit-item/${id}`)}
-                >
+                <button className="update-button" onClick={() => navigate(`/edit-item/${id}`)}>
                     Update
                 </button>
-                <button
-                    className="delete-button"
-                    onClick={() => setShowDeleteConfirmation(true)}
-                >
+                <button className="delete-button" onClick={() => setShowDeleteConfirmation(true)}>
                     Delete
                 </button>
             </div>
@@ -139,16 +181,38 @@ const SeeDetails = () => {
                     <div className="confirmation-dialog">
                         <p>Are you sure you want to permanently remove this item?</p>
                         <div className="confirmation-buttons">
-                            <button
-                                className="delete-button"
-                                onClick={handleDelete}
-                            >
+                            <button className="delete-button" onClick={handleDelete}>
                                 Yes, Delete
                             </button>
-                            <button
-                                className="update-button"
-                                onClick={() => setShowDeleteConfirmation(false)}
-                            >
+                            <button className="update-button" onClick={() => setShowDeleteConfirmation(false)}>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showQuickUpdateModal && (
+                <div className="confirmation-overlay">
+                    <div className="confirmation-dialog">
+                        <p>Quick Update Available Amount</p>
+                        <input
+                            type="number"
+                            value={quickUpdateAmount}
+                            onChange={(e) => {
+                                setQuickUpdateAmount(e.target.value);
+                                setValidationError("");
+                            }}
+                            className={`update-input ${validationError ? "input-error" : ""}`}
+                            placeholder="Enter amount"
+                            step={item.unit === "Units" ? "1" : "0.01"} // Allow decimals for Kg and Liters, but not for Units
+                        />
+                        {validationError && <p className="text-red-500 text-sm">{validationError}</p>}
+                        <div className="confirmation-buttons">
+                            <button className="update-button" onClick={handleQuickUpdate}>
+                                Update
+                            </button>
+                            <button className="delete-button" onClick={() => setShowQuickUpdateModal(false)}>
                                 Cancel
                             </button>
                         </div>

@@ -221,4 +221,97 @@
   .update-button, .delete-button {
     flex: 1;
   }
+
+  .quick-update-button {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.quick-update-button:hover {
+    background-color: #2563eb;
+}
+
+.update-input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.text-red-500 {
+  color: #ef4444;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.update-input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.input-error {
+  border-color: #ef4444; /* Red border for negative values */
+}
+
+.text-red-500 {
+  color: #ef4444;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.input-error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 1px #ef4444;
+}
+
+.text-red-500 {
+  color: #ef4444;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-red-500 {
+  color: #ef4444; /* This is the standard red-500 color in Tailwind CSS */
+}
+
+/* In case you need more customization for the error message */
+.text-sm {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+}
+
+/* If you're not using Tailwind or need to ensure the error message is red */
+p.validation-error, 
+p.text-red-500 {
+  color: #ef4444;
+  font-weight: 500; /* Medium weight for better visibility */
+}
+
+/* For the input error styling, which you're already handling with the input-error class */
+.input-error {
+  border: 1px solid #ef4444;
+  outline-color: #ef4444;
+}
 }
