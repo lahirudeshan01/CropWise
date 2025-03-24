@@ -99,7 +99,7 @@ const HomePage = () => {
             <li>Enhance data-driven farming.</li>
           </ul>
           <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="more-about-btn" onClick={() => navigate("/about")}>
-            MORE ABOUT US
+            MORE ABOUT US.
           </motion.button>
         </motion.div>
       </div>

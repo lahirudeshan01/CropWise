@@ -10,6 +10,8 @@ import Detailsview from './component/viewdetails_farmers/Detailsview'
 import Updatedetails from './component/viewdetails_farmers/Updatedetails'
 import HomePage from './component/UserUi/HomePage'
 import AboutUs from './component/UserUi/AboutUs'
+import Buyers from './component/UserUi/Buyers'
+import FarmerList from './component/Showdetails/FarmerList'
 
 // Create a layout component for dashboard pages
 function DashboardLayout({ children }) {
@@ -35,6 +37,10 @@ function App() {
               {/* Public routes */}
               <Route path="/about" element={<AboutUs/>} />
               <Route path="/" element={<HomePage/>} />
+              <Route path="/buy" element={<Buyers/>} />
+             
+              
+
               
               {/* Dashboard routes with sidebar */}
               <Route path="/dashboard" element={<DashboardLayout><Home /></DashboardLayout>} />
@@ -43,6 +49,8 @@ function App() {
               <Route path="/showall" element={<DashboardLayout><Showall /></DashboardLayout>} />
               <Route path="/Show/:id" element={<DashboardLayout><Detailsview /></DashboardLayout>} />
               <Route path="/updatedetails/:id" element={<DashboardLayout><Updatedetails /></DashboardLayout>} />
+           
+              
             </Routes>
           </div>
         </Router>
