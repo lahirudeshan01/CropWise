@@ -94,7 +94,7 @@ const FinanceReportPage = () => {
           Back
         </button>
         <button className="button export-pdf" onClick={printReport}>
-          Export PDF
+          Print
         </button>
       </div>
 

@@ -105,6 +105,185 @@ const Finance = () => {
   const handleExportPDF = () => {
     navigate("/finance-report", { state: { transactions, report } });
   };
+  const generateAiReport = () => {
+    // Generate CSV data from transactions
+    const csvData = generateCSV(transactions);
+
+    sendRequest(csvData);
+  };
+
+  function sendRequest(data) {
+    const ai_pdf_button = document.getElementById("ai-pdf-button");
+
+    ai_pdf_button.setAttribute("disabled", "true");
+    ai_pdf_button.innerHTML = "Generating...";
+
+    console.log("generating report...");
+      const prompt = `Create a financial report. Follow these rules. 1.Put the topic 'Financial Report' on the head of document. 2.Use bullet lists, paragraphs, headings and sub-headings. 3.Need 1 page report. 4.Use simple grammar. 5.Use html formatting for create the report(pharagraphs, headings and sub-headings). 6.Use below financial transactions for create the report. 7.Don't calculate income, outcome and profit. Those data mentioned below. Document format 1.Introduction 2.Financial Profits and losses 3.How to increase profit. 4.How to recover financial loss (Budget Plan) 5.SummaryInstructions 1.Use some transaction data in report content when explaining how to increase profit and how to recover loss. 2.In response don't give any other sentences which are not relevant to the report(examples:-This is your repot, need other help) 3.In response give only report content. 4.Give paragraph for each topic in document format with 70 words for each paragraph (Need 5 paragraphs for 5 topics also create paragraph for Financial Profits and losses).|` + 
+      + `|| Total Income=Rs.${report.totalIncome} ||| Total Outcome=Rs.${report.totalOutcome}  ||| Profit=Rs.${report.profit} |||` +
+      data;
+
+      console.log(prompt);
+
+      // Prepare the request payload
+      const requestBody = {
+"contents": [{
+"parts":[{"text": prompt}]
+}]
+};
+
+      fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCyJK4KvR31gC1a3jUU9p3BrIIIDexOPrY', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+      })
+      .then(response => response.json())
+      .then(data => {
+          // Extract the content from the response
+          const content = data.candidates[0].content.parts[0].text;
+
+          const contentStyles = `
+          <style>
+          /* Global Styles */
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 20px;
+background-color: #f4f4f9;
+}
+
+h1, h2 {
+color: #333;
+margin-bottom: 10px;
+}
+
+h1 {
+font-size: 32px;
+text-align: center;
+}
+
+h2 {
+font-size: 24px;
+margin-top: 20px;
+}
+
+/* Table Styles */
+table {
+width: 100%;
+border-collapse: collapse;
+margin: 20px 0;
+background-color: #fff;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+padding: 12px 15px;
+text-align: left;
+border-bottom: 1px solid #ddd;
+}
+
+th {
+background-color: #4CAF50;
+color: white;
+font-weight: bold;
+}
+
+td {
+background-color: #f9f9f9;
+}
+
+tr:hover td {
+background-color: #f1f1f1;
+}
+
+/* Additional Styling for Paragraphs */
+p {
+font-size: 16px;
+line-height: 1.6;
+color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+table, th, td {
+  font-size: 14px;
+}
+th, td {
+  padding: 10px 12px;
+}
+}
+
+
+@media print {
+  .no-print, .no-print * {
+    display: none !important;
+  }
+
+  .metrics {
+    display: flex !important;
+    flex-direction: row !important;
+  }
+}
+</style>
+          `;
+        
+          const accesbilityControls = ` <button className="button back-button" onclick="window.close()">
+          Back
+        </button>
+          <button onclick="window.print()" class="btn-print">Print</button><hr>
+          </div>`;
+
+          const reportContent = accesbilityControls + contentStyles + content.replace("```html", "").replace("```", "").replace("Losses", `
+            Losses<table>
+  <tbody><tr>
+    <th>Total Income</th>
+    <th>Total Outcome</th>
+    <th>Total Profit</th>
+  </tr>
+  <tr>
+    <td>Rs. ${report.totalIncome}</td>
+    <td>Rs. ${report.totalOutcome}</td>
+    <td>Rs. ${report.profit}</td>
+  </tr>
+</tbody></table>`);
+
+          let newWindow = window.open('', '_blank');
+           if (newWindow) {
+           newWindow.document.write(reportContent);
+           newWindow.document.close();
+          } else {
+              console.error('Failed to open the new window. It might be blocked by the browser.');
+          }
+          ai_pdf_button.removeAttribute("disabled");
+          ai_pdf_button.innerHTML = "Generate AI Report";
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while sending the request.');
+      });
+  }
+
+  // Generate CSV content
+  const generateCSV = (transactions) => {
+    // Prepare CSV header
+    const header = ["TRANSACTION NAME", "DATE & TIME", "AMOUNT", "TYPE", "REFERENCE"];
+
+    // Prepare rows for CSV
+    const rows = transactions.map(transaction => [
+      transaction.name,
+      new Date(transaction.date).toLocaleString(),
+      `Rs.${transaction.amount.toLocaleString()}`,
+      transaction.status,
+      transaction.reference,
+    ]);
+
+    // Combine header and rows into CSV format
+    const csvContent = [header, ...rows].map(row => row.join(',')).join('|');
+    return csvContent;
+  };
+
 
   // Handle Income Button Click
   const handleIncome = () => {
@@ -220,6 +399,9 @@ const Finance = () => {
         </button>
         </div>
         <div class="button-group-right">
+        <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>
+          Generate AI Report
+        </button>
         <button className="button export-pdf" onClick={handleExportPDF}>
           Generate Report
         </button>

@@ -64,7 +64,17 @@
   background: linear-gradient(135deg, #0056b3, #003366);
 }
 
-.button.export-pdf:hover {
+/* Export PDF Button */
+.button.ai-pdf {
+  background: linear-gradient(135deg, #3f92e9, #1b6cbe);
+}
+
+/* Export PDF Button */
+.button.ai-pdf:disabled {
+  opacity: 0.5;
+}
+
+.button.export-pdf:hover, .button.ai-pdf:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
