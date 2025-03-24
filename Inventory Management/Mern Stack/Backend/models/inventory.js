@@ -42,7 +42,10 @@ const InventorySchema = new mongoose.Schema({
         validate: {
             validator: function (value) {
                 // Ensure the expiration date is in the future
-                return value > Date.now();
+                if (this.category !== "Farm Machinery & Tools" && this.category !== "Packaging Materials") {
+                    return value > Date.now();
+                }
+                return true; // Skip validation for categories that don't require expirationDate
             },
             message: "Expiration date must be in the future.",
         },

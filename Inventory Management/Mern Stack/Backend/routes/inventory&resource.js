@@ -43,12 +43,16 @@ router.post("/", async (req, res) => {
         const newItem = new Inventory({
             category,
             itemName,
-            availableAmount, // Corrected field name
-            unit, // Added missing field
+            availableAmount,
+            unit,
             unitPrice,
-            expirationDate,
             notes,
         });
+
+        // Only set expirationDate if the category requires it
+        if (category !== "Farm Machinery & Tools" && category !== "Packaging Materials") {
+            newItem.expirationDate = expirationDate;
+        }
 
         const item = await newItem.save();
         res.json(item);
