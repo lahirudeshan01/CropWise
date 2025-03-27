@@ -12,11 +12,14 @@ function Updatedetails() {
     quantity: "",
     price: "",
     address: "",
-    location: ""
+    location: "",
+    image: null
   });
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -36,8 +39,15 @@ function Updatedetails() {
           quantity: res.data.quantity || "",
           price: res.data.price || "",
           address: res.data.address || "",
-          location: res.data.location || ""
+          location: res.data.location || "",
+          image: res.data.image || null
         });
+        
+        // Set image preview if image exists
+        if (res.data.image) {
+          setImagePreview(`http://localhost:3000/uploads/${res.data.image}`);
+        }
+        
         setLoading(false);
       })
       .catch((err) => {
@@ -54,6 +64,21 @@ function Updatedetails() {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  // Handle file input change
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      
+      // Create image preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   // Optional validation - since your schema uses strings, this is a gentle validation
@@ -83,8 +108,27 @@ function Updatedetails() {
     
     console.log("Submitting updated farmer data:", farmer);
     
+    // Create form data to handle file upload
+    const formData = new FormData();
+    
+    // Append all farmer details
+    Object.keys(farmer).forEach(key => {
+      if (key !== 'image') {
+        formData.append(key, farmer[key]);
+      }
+    });
+    
+    // Append image if a new file is selected
+    if (selectedFile) {
+      formData.append('image', selectedFile);
+    }
+    
     axios
-      .put(`http://localhost:3000/api/farmers/${id}`, farmer)
+      .put(`http://localhost:3000/api/farmers/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
       .then((res) => {
         console.log("Update response:", res.data);
         // Navigate to the farmer details page after successful update
@@ -111,6 +155,34 @@ function Updatedetails() {
         <h2 className="form-title">Update Farmer</h2>
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
+          {/* Image Upload Section */}
+          <div className="image-upload-section">
+            <div className="image-preview-container">
+              {imagePreview ? (
+                <img 
+                  src={imagePreview} 
+                  alt="Preview" 
+                  className="image-preview" 
+                />
+              ) : (
+                <span className="image-placeholder">No image selected</span>
+              )}
+            </div>
+            <div className="file-input-wrapper">
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/jpeg,image/png,image/jpg"
+                className="file-input"
+                onChange={handleFileChange}
+              />
+              <label htmlFor="image" className="file-input-label">
+                Choose Image
+              </label>
+            </div>
+          </div>
+          
           <div className="form-group">
             <label htmlFor="farmerId">Listing ID:</label>
             <input
@@ -123,6 +195,7 @@ function Updatedetails() {
             />
           </div>
           
+          {/* Rest of the form remains the same as in your original code */}
           <div className="form-group">
             <label htmlFor="Character">Character:</label>
             <input

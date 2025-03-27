@@ -22,7 +22,18 @@ const AddHarvest = () => {
   // Handling Input Changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prevData) => ({ 
+      ...prevData, 
+      [name]: value 
+    }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }));
+    }
   };
 
   // Handling Image Upload
@@ -36,12 +47,31 @@ const AddHarvest = () => {
 
   // Form Validation
   const validateForm = () => {
-    let newErrors = {};
-    Object.keys(formData).forEach((key) => {
-      if (!formData[key]) {
-        newErrors[key] = `${key} is required`;
-      }
-    });
+    const newErrors = {};
+    
+    // Specific validations
+    if (!formData.farmerId.trim()) newErrors.farmerId = "Listing ID is required";
+    if (!formData.Character.trim()) newErrors.Character = "Character is required";
+    if (!formData.quantity.trim()) newErrors.quantity = "Quantity is required";
+    if (!formData.price.trim()) newErrors.price = "Price is required";
+    if (!formData.verity.trim()) newErrors.verity = "Verity is required";
+    if (!formData.address.trim()) newErrors.address = "Address is required";
+    if (!formData.location.trim()) newErrors.location = "Location is required";
+    
+    // Numeric validations
+    if (formData.quantity && isNaN(Number(formData.quantity))) {
+      newErrors.quantity = "Quantity must be a number";
+    }
+    
+    if (formData.price && isNaN(Number(formData.price))) {
+      newErrors.price = "Price must be a number";
+    }
+
+    // Image validation (optional)
+    if (!image) {
+      newErrors.image = "Please upload an image";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -49,6 +79,7 @@ const AddHarvest = () => {
   // Handling Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!validateForm()) {
       return;
     }
@@ -80,7 +111,6 @@ const AddHarvest = () => {
       <h1 className="page-title">Add Your Harvest</h1>
 
       <form className="harvest-form" onSubmit={handleSubmit} encType="multipart/form-data">
-        
         {/* Image Upload Section */}
         <div className="form-group image-upload">
           <label className="form-label">Upload Image</label>
@@ -91,27 +121,44 @@ const AddHarvest = () => {
               <div className="placeholder-icon">📷</div>
             )}
           </div>
-          <input type="file" accept="image/*" onChange={handleImageChange} className="form-input" />
+          <input 
+            type="file" 
+            accept="image/*" 
+            onChange={handleImageChange} 
+            className="form-input"
+            required
+          />
+          {errors.image && <p className="error-message">{errors.image}</p>}
         </div>
 
         <div className="form-grid">
-          {["Listing ID", "Character", "verity", "quantity", "price", "address", "location"].map((field) => (
-            <div className="form-group" key={field}>
-              <label className="form-label">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+          {[
+            { name: "farmerId", label: "Listing ID" },
+            { name: "Character", label: "Character" },
+            { name: "verity", label: "Verity" },
+            { name: "quantity", label: "Quantity", type: "number" },
+            { name: "price", label: "Price", type: "number" },
+            { name: "address", label: "Address" },
+            { name: "location", label: "Location" }
+          ].map(({ name, label, type = "text" }) => (
+            <div className="form-group" key={name}>
+              <label className="form-label">{label}</label>
               <input
-                type={field === "quantity" || field === "price" ? "number" : "text"}
-                name={field}
-                value={formData[field]}
+                type={type}
+                name={name}
+                value={formData[name]}
                 onChange={handleChange}
-                className={`form-input ${errors[field] ? "error" : ""}`}
+                className={`form-input ${errors[name] ? "error" : ""}`}
                 required
+                min={type === "number" ? "0" : undefined}
+                step={type === "number" ? "0.01" : undefined}
               />
-              {errors[field] && <p className="error-message">{errors[field]}</p>}
+              {errors[name] && <p className="error-message">{errors[name]}</p>}
             </div>
           ))}
         </div>
 
-        <button type="submit" className="submit-button">ADD</button>
+        <button type="submit" className="submit-button">ADD HARVEST</button>
       </form>
     </div>
   );

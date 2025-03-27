@@ -136,7 +136,7 @@ const Buyers = () => {
 
                 {/* View Details Button */}
                 <Link to={`/viewdetails/${farmer._id}`} className="btn">
-                  View Details
+                  Buy Product
                 </Link>
               </motion.div>
             ))}

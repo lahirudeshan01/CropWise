@@ -2,6 +2,67 @@ const express = require("express");
 const router = express.Router();
 const Farmers = require("../models/farmers");
 const upload = require("../middleware/upload"); // Import multer middleware
+const fs = require('fs');
+const path = require('path');
+
+
+router.put("/:id", upload.single("image"), async (req, res) => {
+  try {
+    // Find the existing farmer to handle potential image replacement
+    const existingFarmer = await Farmers.findById(req.params.id);
+    
+    if (!existingFarmer) {
+      return res.status(404).json({ msg: "Farmer not found" });
+    }
+
+    // Prepare update data
+    const updateData = {
+      farmerId: req.body.farmerId,
+      Character: req.body.Character,
+      verity: req.body.verity,
+      quantity: req.body.quantity,
+      price: req.body.price,
+      address: req.body.address,
+      location: req.body.location
+    };
+
+    // Handle image update
+    if (req.file) {
+      // If there was a previous image, delete it
+      if (existingFarmer.image) {
+        const oldImagePath = path.join(__dirname, '../uploads', existingFarmer.image);
+        
+        // Check if file exists before trying to delete
+        try {
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+          }
+        } catch (err) {
+          console.error("Error deleting old image:", err);
+        }
+      }
+      
+      // Add new image filename to update data
+      updateData.image = req.file.filename;
+    }
+
+    // Update the farmer
+    const updatedFarmer = await Farmers.findByIdAndUpdate(
+      req.params.id, 
+      updateData, 
+      { new: true }
+    );
+
+    res.json({ 
+      msg: "Update successful", 
+      data: updatedFarmer 
+    });
+  } catch (error) {
+    console.error("Update error:", error);
+    res.status(400).json({ msg: "Update failed", error: error.message });
+  }
+});
+
 
 // Test route
 router.get("/test", (req, res) => res.send("routes working..."));

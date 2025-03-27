@@ -54,7 +54,7 @@ function Detailsview() {
   return (
     <div className="farmer-details-container">
       <div className="farmer-card">
-        <h1 className="title">Farmer Details</h1>
+        <h1 className="title">Listing Details</h1>
 
         {/* Image Display */}
         {farmer.image && (
