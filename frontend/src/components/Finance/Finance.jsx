@@ -145,91 +145,133 @@ const Finance = () => {
           const content = data.candidates[0].content.parts[0].text;
 
           const contentStyles = `
-          <style>
-          /* Global Styles */
-body {
-font-family: Arial, sans-serif;
-margin: 0;
-padding: 20px;
-background-color: #f4f4f9;
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f9;
+    }
+
+    h1, h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 32px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+    }
+
+    td {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover td {
+      background-color: #f1f1f1;
+    }
+
+    /* Additional Styling for Paragraphs */
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #555;
+    }
+
+    /* Back Button Styles (Red) */
+.button.back-button {
+  background-color: #dc3545; /* Red background */
+  color: white; /* White text */
+  padding: 10px 20px; /* Padding */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 16px; /* Font size */
+  margin-right: 10px; /* Margin to separate from other buttons */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
-h1, h2 {
-color: #333;
-margin-bottom: 10px;
+.button.back-button:hover {
+  background-color: #c82333; /* Darker red on hover */
 }
 
-h1 {
-font-size: 32px;
-text-align: center;
+/* Print Button Styles (Blue) */
+.btn-print {
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  padding: 10px 20px; /* Padding */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 16px; /* Font size */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  margin-left: 50px;
 }
 
-h2 {
-font-size: 24px;
-margin-top: 20px;
+.btn-print:hover {
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Table Styles */
-table {
-width: 100%;
-border-collapse: collapse;
-margin: 20px 0;
-background-color: #fff;
-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+    /* Accessibility Controls Container */
+    .accesbility-controls {
+      display: flex;
+      justify-content: flex-end; /* Align buttons to the right */
+      margin-bottom: 20px; /* Margin below the buttons */
+    }
 
-th, td {
-padding: 12px 15px;
-text-align: left;
-border-bottom: 1px solid #ddd;
-}
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      table, th, td {
+        font-size: 14px;
+      }
+      th, td {
+        padding: 10px 12px;
+      }
 
-th {
-background-color: #4CAF50;
-color: white;
-font-weight: bold;
-}
+    
+    }
 
-td {
-background-color: #f9f9f9;
-}
+    @media print {
+      .no-print, .no-print * {
+        display: none !important;
+      }
 
-tr:hover td {
-background-color: #f1f1f1;
-}
-
-/* Additional Styling for Paragraphs */
-p {
-font-size: 16px;
-line-height: 1.6;
-color: #555;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-table, th, td {
-  font-size: 14px;
-}
-th, td {
-  padding: 10px 12px;
-}
-}
-
-
-@media print {
-  .no-print, .no-print * {
-    display: none !important;
-  }
-
-  .metrics {
-    display: flex !important;
-    flex-direction: row !important;
-  }
-}
-</style>
-          `;
+      .metrics {
+        display: flex !important;
+        flex-direction: row !important;
+      }
+    }
+  </style>
+`;
         
-          const accesbilityControls = ` <button className="button back-button" onclick="window.close()">
+          const accesbilityControls = ` <button class="button back-button" onclick="window.close()">
           Back
         </button>
           <button onclick="window.print()" class="btn-print">Print</button><hr>

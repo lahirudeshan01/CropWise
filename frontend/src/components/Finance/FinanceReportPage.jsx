@@ -10,12 +10,25 @@ const FinanceReportPage = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [monthlyReport, setMonthlyReport] = useState(null);
   const [dailyReport, setDailyReport] = useState(null);
-  const [reportTitle, setReportTitle] = useState(""); // New state for report title
+  const [reportTitle, setReportTitle] = useState("");
+  const [dateError, setDateError] = useState("");
+  const [monthError, setMonthError] = useState("");
 
   const { transactions, report } = location.state || {
     transactions: [],
     report: {},
   };
+
+  // Get current date in required formats
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const currentDay = String(currentDate.getDate()).padStart(2, '0');
+
+  // Format for month input (YYYY-MM)
+  const maxMonth = `${currentYear}-${currentMonth}`;
+  // Format for date input (YYYY-MM-DD)
+  const maxDate = `${currentYear}-${currentMonth}-${currentDay}`;
 
   const handleGoBack = () => {
     navigate("/finance");
@@ -26,16 +39,39 @@ const FinanceReportPage = () => {
   };
 
   const handleMonthChange = (e) => {
-    setSelectedMonth(e.target.value);
+    const [year, month] = e.target.value.split('-').map(Number);
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    
+    if (year > currentYear || (year === currentYear && month > currentMonth)) {
+      setMonthError("Cannot select future months");
+      setSelectedMonth("");
+    } else {
+      setMonthError("");
+      setSelectedMonth(e.target.value);
+    }
   };
 
   const handleDateChange = (e) => {
-    setSelectedDate(e.target.value);
+    const selected = new Date(e.target.value);
+    const today = new Date();
+    
+    // Reset time components for accurate comparison
+    today.setHours(0, 0, 0, 0);
+    selected.setHours(0, 0, 0, 0);
+    
+    if (selected > today) {
+      setDateError("Cannot select future dates");
+      setSelectedDate("");
+    } else {
+      setDateError("");
+      setSelectedDate(e.target.value);
+    }
   };
 
   const generateMonthlyReport = async () => {
     if (!selectedMonth) {
-      alert("Please select a month.");
+      alert("Please select a valid month.");
       return;
     }
 
@@ -45,18 +81,17 @@ const FinanceReportPage = () => {
         params: { month, year },
       });
       setMonthlyReport(response.data);
-      setDailyReport(null); // Clear daily report when generating monthly
-      // Log the month and year to ensure they're correct
-      console.log("Generating monthly report for:", new Date(year, month - 1).toLocaleString('default', { month: 'long' }));
-      setReportTitle(`${new Date(year, month - 1).toLocaleString('default', { month: 'long' })} Financial Report`); // Set report title for monthly
+      setDailyReport(null);
+      setReportTitle(`${new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })} Financial Report`);
     } catch (error) {
       console.error("Error generating monthly report:", error);
+      alert(error.response?.data?.error || "Error generating monthly report");
     }
   };
 
   const generateDailyReport = async () => {
     if (!selectedDate) {
-      alert("Please select a date.");
+      alert("Please select a valid date.");
       return;
     }
 
@@ -65,17 +100,15 @@ const FinanceReportPage = () => {
         params: { date: selectedDate },
       });
       setDailyReport(response.data);
-      setMonthlyReport(null); // Clear monthly report when generating daily
+      setMonthlyReport(null);
       const date = new Date(selectedDate);
-      // Log the selected date to ensure it's correct
-      console.log("Generating daily report for:", date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }));
-      setReportTitle(`${date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })} Financial Report`); // Set report title for daily
+      setReportTitle(`${date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })} Financial Report`);
     } catch (error) {
       console.error("Error generating daily report:", error);
+      alert(error.response?.data?.error || "Error generating daily report");
     }
   };
 
-  const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "2-digit",
@@ -100,43 +133,48 @@ const FinanceReportPage = () => {
 
       <div className="report-page">
         <div>
-          <h1 class="no-print">Financial Summary</h1>
-              <div className="report-selection-container">
-          {/* Month Selection */}
-          <div className="report-selection no-print">
-            <label htmlFor="monthSelect">Select Month:</label>
-            <input
-              type="month"
-              id="monthSelect"
-              value={selectedMonth}
-              onChange={handleMonthChange}
-            />
-            <button className="generate-report-btn monthly" onClick={generateMonthlyReport}>
-              Generate Monthly Report
-            </button>
-          </div>
+          <h1 className="no-print">Financial Summary</h1>
+          <div className="report-selection-container">
+            {/* Month Selection */}
+            <div className="report-selection no-print">
+              <label htmlFor="monthSelect">Select Month:</label>
+              <input
+                type="month"
+                id="monthSelect"
+                value={selectedMonth}
+                onChange={handleMonthChange}
+                max={maxMonth}
+              />
+              <button className="generate-report-btn monthly" onClick={generateMonthlyReport}>
+                Generate Monthly Report
+              </button>
+              {monthError && <p className="error-message">{monthError}</p>}
+            </div>
 
-          {/* Date Selection for Daily Report */}
-          <div className="report-selection no-print">
-            <label htmlFor="dateSelect">Select Date:</label>
-            <input
-              type="date"
-              id="dateSelect"
-              value={selectedDate}
-              onChange={handleDateChange}
-            />
-            <button className="generate-report-btn daily" onClick={generateDailyReport}>
-              Generate Daily Report
-            </button>
-          </div>
+            {/* Date Selection for Daily Report */}
+            <div className="report-selection no-print">
+              <label htmlFor="dateSelect">Select Date:</label>
+              <input
+                type="date"
+                id="dateSelect"
+                value={selectedDate}
+                onChange={handleDateChange}
+                max={maxDate}
+              />
+              <button className="generate-report-btn daily" onClick={generateDailyReport}>
+                Generate Daily Report
+              </button>
+              {dateError && <p className="error-message">{dateError}</p>}
+            </div>
           </div>
 
           {/* Display Report Title */}
-          {reportTitle && <h2 className="report-title">{reportTitle}</h2>} {/* Conditional rendering of the title */}
+          {reportTitle && <h2 className="report-title">{reportTitle}</h2>}
           <div className="date-time">
-  <label>Generated on:</label>
-  <p>Date - {formattedDate} | Time - {formattedTime}</p>
-</div>
+            <label>Generated on:</label>
+            <p>Date - {formattedDate} | Time - {formattedTime}</p>
+          </div>
+
           {/* Transactions Table */}
           <table>
             <thead>
