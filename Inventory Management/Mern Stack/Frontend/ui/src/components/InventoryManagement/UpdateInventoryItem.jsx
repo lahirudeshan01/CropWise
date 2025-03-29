@@ -54,16 +54,21 @@ const UpdateInventoryItem = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleAmountChange = (e) => {
+        const value = e.target.value;
+        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+            setFormData({ ...formData, availableAmount: value });
+        }
+    };
+
     const handleUnitPriceChange = (e) => {
         const value = e.target.value;
-        // Allow only numbers and decimal points
         if (value === '' || /^\d*\.?\d*$/.test(value)) {
             setFormData({ ...formData, unitPrice: value });
         }
     };
 
     const handleUnitPriceBlur = () => {
-        // Format the value to 2 decimal places when field loses focus
         if (formData.unitPrice) {
             const num = parseFloat(formData.unitPrice);
             if (!isNaN(num)) {
@@ -72,14 +77,23 @@ const UpdateInventoryItem = () => {
         }
     };
 
+    const adjustAmount = (increment) => {
+        let currentValue = parseFloat(formData.availableAmount) || 0;
+        const decimalPart = currentValue % 1;
+        currentValue = Math.floor(currentValue) + increment + decimalPart;
+        
+        if (currentValue < 0) currentValue = 0;
+        
+        // If decimal part is 0, show as integer, otherwise keep decimal
+        const newValue = decimalPart === 0 ? currentValue.toString() : currentValue.toFixed(3).replace(/\.?0+$/, '');
+        setFormData({ ...formData, availableAmount: newValue });
+    };
+
     const adjustUnitPrice = (increment) => {
         let currentValue = parseFloat(formData.unitPrice) || 0;
         currentValue += increment;
         
-        // Prevent going below 0
-        if (currentValue < 0) {
-            currentValue = 0;
-        }
+        if (currentValue < 0) currentValue = 0;
         
         setFormData({ ...formData, unitPrice: currentValue.toFixed(2) });
     };
@@ -165,12 +179,36 @@ const UpdateInventoryItem = () => {
                 {errors.itemName && <p className="update-error-message">{errors.itemName}</p>}
 
                 <label className="update-label">Available Amount</label>
-                <input type="number" name="availableAmount" value={formData.availableAmount} onChange={handleChange} className="update-input" />
-                <select name="unit" value={formData.unit} onChange={handleChange} className="update-select">
-                    <option value="Kg">Kg</option>
-                    <option value="Liters">Liters</option>
-                    <option value="Units">Units</option>
-                </select>
+                <div className="unit-price-container">
+                    <button 
+                        type="button" 
+                        className="unit-price-button" 
+                        onClick={() => adjustAmount(-1)}
+                        disabled={!formData.availableAmount || parseFloat(formData.availableAmount) <= 0}
+                    >
+                        -
+                    </button>
+                    <input 
+                        type="text" 
+                        name="availableAmount" 
+                        value={formData.availableAmount} 
+                        onChange={handleAmountChange}
+                        className="update-input unit-price-input"
+                        placeholder="0"
+                    />
+                    <button 
+                        type="button" 
+                        className="unit-price-button" 
+                        onClick={() => adjustAmount(1)}
+                    >
+                        +
+                    </button>
+                    <select name="unit" value={formData.unit} onChange={handleChange} className="update-select">
+                        <option value="Kg">Kg</option>
+                        <option value="Liters">Liters</option>
+                        <option value="Units">Units</option>
+                    </select>
+                </div>
                 {errors.availableAmount && <p className="update-error-message">{errors.availableAmount}</p>}
 
                 {!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (

@@ -40,6 +40,17 @@ const SeeDetails = () => {
         }
     };
 
+    const adjustQuickUpdateAmount = (increment) => {
+        let currentValue = parseFloat(quickUpdateAmount) || 0;
+        const decimalPart = currentValue % 1;
+        currentValue = Math.floor(currentValue) + increment + decimalPart;
+        
+        if (currentValue < 0) currentValue = 0;
+        
+        const newValue = decimalPart === 0 ? currentValue.toString() : currentValue.toFixed(3).replace(/\.?0+$/, '');
+        setQuickUpdateAmount(newValue);
+    };
+
     const handleQuickUpdate = async () => {
         if (!quickUpdateAmount || isNaN(quickUpdateAmount)) {
             setValidationError("Please enter a valid amount.");
@@ -196,33 +207,57 @@ const SeeDetails = () => {
                 </div>
             )}
 
-            {showQuickUpdateModal && (
-                <div className="confirmation-overlay">
-                    <div className="confirmation-dialog">
-                        <p>Quick Update Available Amount</p>
-                        <input
-                            type="number"
-                            value={quickUpdateAmount}
-                            onChange={(e) => {
-                                setQuickUpdateAmount(e.target.value);
-                                setValidationError("");
-                            }}
-                            className={`update-input ${validationError ? "input-error" : ""}`}
-                            placeholder="Enter amount"
-                            step={item.unit === "Units" ? "1" : "0.01"}
-                        />
-                        {validationError && <p className="text-red-500 text-sm">{validationError}</p>}
-                        <div className="confirmation-buttons">
-                            <button className="update-button" onClick={handleQuickUpdate}>
-                                Update
-                            </button>
-                            <button className="delete-button" onClick={() => setShowQuickUpdateModal(false)}>
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+{showQuickUpdateModal && (
+    <div className="confirmation-overlay">
+        <div className="confirmation-dialog">
+            <p>Quick Update Available Amount</p>
+            <div className="quick-update-controls">
+                <button 
+                    className="amount-adjust-button"
+                    onClick={() => adjustQuickUpdateAmount(-1)}
+                    disabled={!quickUpdateAmount || parseFloat(quickUpdateAmount) <= 0}
+                >
+                    -
+                </button>
+                <input
+                    type="number"
+                    value={quickUpdateAmount}
+                    onChange={(e) => {
+                        setQuickUpdateAmount(e.target.value);
+                        setValidationError("");
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            adjustQuickUpdateAmount(1);
+                        } else if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            adjustQuickUpdateAmount(-1);
+                        }
+                    }}
+                    className={`amount-input ${validationError ? "input-error" : ""}`}
+                    placeholder="0"
+                    step="any"
+                />
+                <button 
+                    className="amount-adjust-button"
+                    onClick={() => adjustQuickUpdateAmount(1)}
+                >
+                    +
+                </button>
+            </div>
+            {validationError && <p className="text-red-500 text-sm">{validationError}</p>}
+            <div className="confirmation-buttons">
+                <button className="update-button" onClick={handleQuickUpdate}>
+                    Update
+                </button>
+                <button className="delete-button" onClick={() => setShowQuickUpdateModal(false)}>
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+)}
         </div>
     );
 };
