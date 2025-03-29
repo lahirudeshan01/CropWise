@@ -59,11 +59,10 @@ const SeeDetails = () => {
         try {
             const updatedItem = { 
                 ...item, 
-                availableAmount: parseFloat(quickUpdateAmount), // Ensure it's a number
-                unit: item.unit // Keep the existing unit
+                availableAmount: parseFloat(quickUpdateAmount),
+                unit: item.unit
             };
 
-            // Only include expirationDate if the category requires it
             if (item.category !== "Farm Machinery & Tools" && item.category !== "Packaging Materials") {
                 updatedItem.expirationDate = item.expirationDate;
             }
@@ -100,6 +99,11 @@ const SeeDetails = () => {
         if (availableAmount === 0) return "out-of-stock";
         if (availableAmount < 3) return "low-stock";
         return null;
+    };
+
+    const formatCurrency = (value) => {
+        const num = parseFloat(value || 0);
+        return `Rs. ${num.toFixed(2)}`;
     };
 
     if (loading) {
@@ -147,7 +151,7 @@ const SeeDetails = () => {
                 </div>
                 <div className="item-detail-row">
                     <div className="detail-label">Unit price</div>
-                    <div className="detail-value">{item.unitPrice} Rs</div>
+                    <div className="detail-value">{formatCurrency(item.unitPrice)}</div>
                 </div>
                 <div className="item-detail-row">
                     <div className="detail-label">Expires in</div>
@@ -205,7 +209,7 @@ const SeeDetails = () => {
                             }}
                             className={`update-input ${validationError ? "input-error" : ""}`}
                             placeholder="Enter amount"
-                            step={item.unit === "Units" ? "1" : "0.01"} // Allow decimals for Kg and Liters, but not for Units
+                            step={item.unit === "Units" ? "1" : "0.01"}
                         />
                         {validationError && <p className="text-red-500 text-sm">{validationError}</p>}
                         <div className="confirmation-buttons">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { format } from 'date-fns';
 import "./UpdateInventoryItem.css";
 
 const UpdateInventoryItem = () => {
@@ -19,6 +20,10 @@ const UpdateInventoryItem = () => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(true);
 
+    const getCurrentDate = () => {
+        return format(new Date(), 'yyyy-MM-dd');
+    };
+
     useEffect(() => {
         const fetchItem = async () => {
             try {
@@ -30,8 +35,8 @@ const UpdateInventoryItem = () => {
                     itemName: item.itemName,
                     availableAmount: item.availableAmount,
                     unit: item.unit,
-                    expirationDate: item.expirationDate ? new Date(item.expirationDate).toISOString().split('T')[0] : "",
-                    unitPrice: item.unitPrice,
+                    expirationDate: item.expirationDate ? format(new Date(item.expirationDate), 'yyyy-MM-dd') : "",
+                    unitPrice: item.unitPrice ? parseFloat(item.unitPrice).toFixed(2) : "",
                     notes: item.notes
                 });
                 setLoading(false);
@@ -47,6 +52,36 @@ const UpdateInventoryItem = () => {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleUnitPriceChange = (e) => {
+        const value = e.target.value;
+        // Allow only numbers and decimal points
+        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+            setFormData({ ...formData, unitPrice: value });
+        }
+    };
+
+    const handleUnitPriceBlur = () => {
+        // Format the value to 2 decimal places when field loses focus
+        if (formData.unitPrice) {
+            const num = parseFloat(formData.unitPrice);
+            if (!isNaN(num)) {
+                setFormData({ ...formData, unitPrice: num.toFixed(2) });
+            }
+        }
+    };
+
+    const adjustUnitPrice = (increment) => {
+        let currentValue = parseFloat(formData.unitPrice) || 0;
+        currentValue += increment;
+        
+        // Prevent going below 0
+        if (currentValue < 0) {
+            currentValue = 0;
+        }
+        
+        setFormData({ ...formData, unitPrice: currentValue.toFixed(2) });
     };
 
     const validateForm = () => {
@@ -125,8 +160,6 @@ const UpdateInventoryItem = () => {
                     <option value="Other">Other</option>
                 </select>
 
-
-
                 <label className="update-label">Item Name</label>
                 <input name="itemName" value={formData.itemName} onChange={handleChange} className="update-input" />
                 {errors.itemName && <p className="update-error-message">{errors.itemName}</p>}
@@ -143,7 +176,14 @@ const UpdateInventoryItem = () => {
                 {!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (
                     <>
                         <label className="update-label">Expiration Date</label>
-                        <input type="date" name="expirationDate" value={formData.expirationDate} onChange={handleChange} className="update-input" />
+                        <input 
+                            type="date" 
+                            name="expirationDate" 
+                            value={formData.expirationDate} 
+                            onChange={handleChange} 
+                            className="update-input"
+                            min={getCurrentDate()}
+                        />
                         {errors.expirationDate && <p className="update-error-message">{errors.expirationDate}</p>}
                     </>
                 )}
@@ -151,7 +191,32 @@ const UpdateInventoryItem = () => {
                 {!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (
                     <>
                         <label className="update-label">Unit Price (RS.)</label>
-                        <input type="number" name="unitPrice" value={formData.unitPrice} onChange={handleChange} className="update-input" />
+                        <div className="unit-price-container">
+                            <button 
+                                type="button" 
+                                className="unit-price-button" 
+                                onClick={() => adjustUnitPrice(-1)}
+                                disabled={!formData.unitPrice || parseFloat(formData.unitPrice) <= 0}
+                            >
+                                -
+                            </button>
+                            <input 
+                                type="text" 
+                                name="unitPrice" 
+                                value={formData.unitPrice} 
+                                onChange={handleUnitPriceChange}
+                                onBlur={handleUnitPriceBlur}
+                                className="update-input unit-price-input"
+                                placeholder="0.00"
+                            />
+                            <button 
+                                type="button" 
+                                className="unit-price-button" 
+                                onClick={() => adjustUnitPrice(1)}
+                            >
+                                +
+                            </button>
+                        </div>
                         {errors.unitPrice && <p className="update-error-message">{errors.unitPrice}</p>}
                     </>
                 )}

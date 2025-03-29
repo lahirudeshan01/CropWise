@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { format } from 'date-fns';
 import "./AddInventoryItem.css";
 
 const AddInventoryItem = () => {
@@ -19,8 +20,42 @@ const AddInventoryItem = () => {
 
     const [errors, setErrors] = useState({});
 
+    const getCurrentDate = () => {
+        return format(new Date(), 'yyyy-MM-dd');
+    };
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleUnitPriceChange = (e) => {
+        const value = e.target.value;
+        // Allow only numbers and decimal points
+        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+            setFormData({ ...formData, unitPrice: value });
+        }
+    };
+
+    const handleUnitPriceBlur = () => {
+        // Format the value to 2 decimal places when field loses focus
+        if (formData.unitPrice) {
+            const num = parseFloat(formData.unitPrice);
+            if (!isNaN(num)) {
+                setFormData({ ...formData, unitPrice: num.toFixed(2) });
+            }
+        }
+    };
+
+    const adjustUnitPrice = (increment) => {
+        let currentValue = parseFloat(formData.unitPrice) || 0;
+        currentValue += increment;
+        
+        // Prevent going below 0
+        if (currentValue < 0) {
+            currentValue = 0;
+        }
+        
+        setFormData({ ...formData, unitPrice: currentValue.toFixed(2) });
     };
 
     const validateForm = () => {
@@ -106,7 +141,13 @@ const AddInventoryItem = () => {
                 {!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (
                     <>
                         <label>Expiration Date</label>
-                        <input type="date" name="expirationDate" value={formData.expirationDate} onChange={handleChange} />
+                        <input 
+                            type="date" 
+                            name="expirationDate" 
+                            value={formData.expirationDate} 
+                            onChange={handleChange} 
+                            min={getCurrentDate()}
+                        />
                         {errors.expirationDate && <p>{errors.expirationDate}</p>}
                     </>
                 )}
@@ -114,7 +155,32 @@ const AddInventoryItem = () => {
                 {!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (
                     <>
                         <label>Unit Price (RS.)</label>
-                        <input type="number" name="unitPrice" value={formData.unitPrice} onChange={handleChange} />
+                        <div className="unit-price-container">
+                            <button 
+                                type="button" 
+                                className="unit-price-button" 
+                                onClick={() => adjustUnitPrice(-1)}
+                                disabled={!formData.unitPrice || parseFloat(formData.unitPrice) <= 0}
+                            >
+                                -
+                            </button>
+                            <input 
+                                type="text" 
+                                name="unitPrice" 
+                                value={formData.unitPrice} 
+                                onChange={handleUnitPriceChange}
+                                onBlur={handleUnitPriceBlur}
+                                className="unit-price-input"
+                                placeholder="0.00"
+                            />
+                            <button 
+                                type="button" 
+                                className="unit-price-button" 
+                                onClick={() => adjustUnitPrice(1)}
+                            >
+                                +
+                            </button>
+                        </div>
                         {errors.unitPrice && <p>{errors.unitPrice}</p>}
                     </>
                 )}

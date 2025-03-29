@@ -196,4 +196,187 @@ textarea:focus {
   .amount-unit-container select {
     flex: none;
   }
+
+  /* Container styling */
+.add-inventory-item-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* Form styling */
+.add-inventory-item-container form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Heading styling */
+.add-inventory-item-container h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #2d3748;
+}
+
+/* Label styling */
+.add-inventory-item-container label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+  font-size: 1rem;
+}
+
+/* Input styling */
+.add-inventory-item-container input,
+.add-inventory-item-container select,
+.add-inventory-item-container textarea {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  background-color: #f7fafc;
+  transition: border-color 0.2s;
+}
+
+/* Make unit price field narrower */
+.add-inventory-item-container input[type="number"][name="unitPrice"] {
+  width: 60%;
+}
+
+/* Select dropdown styling */
+.add-inventory-item-container select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+}
+
+/* Enhanced Date Picker Styling */
+.add-inventory-item-container input[type="date"] {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  min-height: 44px;
+}
+
+/* Textarea styling */
+.add-inventory-item-container textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Error message styling */
+.add-inventory-item-container p {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+}
+
+/* Button styling */
+.add-inventory-item-container button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.add-inventory-item-container button[type="submit"] {
+  background-color: #3b82f6;
+  color: white;
+  margin-right: 0.75rem;
+}
+
+.add-inventory-item-container button[type="submit"]:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.add-inventory-item-container button[type="button"] {
+  background-color: #f1f5f9;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+.add-inventory-item-container button[type="button"]:hover {
+  background-color: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+/* Button container */
+.add-inventory-item-container form > div:last-child {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+/* Focus states */
+.add-inventory-item-container input:focus,
+.add-inventory-item-container select:focus,
+.add-inventory-item-container textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .add-inventory-item-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .add-inventory-item-container form > div:last-child {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .add-inventory-item-container button {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  /* Make unit price full width on mobile */
+  .add-inventory-item-container input[type="number"][name="unitPrice"] {
+    width: 100%;
+  }
+}
+
+.unit-price-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.unit-price-input {
+  flex: 1;
+  text-align: center;
+}
+
+.unit-price-button {
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.unit-price-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 }
