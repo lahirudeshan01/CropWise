@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Finance.css";
@@ -13,6 +13,8 @@ const FinanceReportPage = () => {
   const [reportTitle, setReportTitle] = useState("");
   const [dateError, setDateError] = useState("");
   const [monthError, setMonthError] = useState("");
+  const [minDate, setMinDate] = useState("");
+  const [minMonth, setMinMonth] = useState("");
 
   const { transactions, report } = location.state || {
     transactions: [],
@@ -30,6 +32,23 @@ const FinanceReportPage = () => {
   // Format for date input (YYYY-MM-DD)
   const maxDate = `${currentYear}-${currentMonth}-${currentDay}`;
 
+  // Calculate minimum date and month based on transactions
+  useEffect(() => {
+    if (transactions.length > 0) {
+      // Find the earliest transaction date
+      const dates = transactions.map(t => new Date(t.date));
+      const minTransactionDate = new Date(Math.min(...dates));
+      
+      // Set minimum date (YYYY-MM-DD)
+      const minDateStr = minTransactionDate.toISOString().split('T')[0];
+      setMinDate(minDateStr);
+      
+      // Set minimum month (YYYY-MM)
+      const minMonthStr = `${minTransactionDate.getFullYear()}-${String(minTransactionDate.getMonth() + 1).padStart(2, '0')}`;
+      setMinMonth(minMonthStr);
+    }
+  }, [transactions]);
+
   const handleGoBack = () => {
     navigate("/finance");
   };
@@ -46,10 +65,18 @@ const FinanceReportPage = () => {
     if (year > currentYear || (year === currentYear && month > currentMonth)) {
       setMonthError("Cannot select future months");
       setSelectedMonth("");
-    } else {
-      setMonthError("");
-      setSelectedMonth(e.target.value);
+      return;
     }
+    
+    // Check if selected month is before first transaction
+    if (minMonth && e.target.value < minMonth) {
+      setMonthError(`No data available before ${minMonth}`);
+      setSelectedMonth("");
+      return;
+    }
+    
+    setMonthError("");
+    setSelectedMonth(e.target.value);
   };
 
   const handleDateChange = (e) => {
@@ -63,10 +90,18 @@ const FinanceReportPage = () => {
     if (selected > today) {
       setDateError("Cannot select future dates");
       setSelectedDate("");
-    } else {
-      setDateError("");
-      setSelectedDate(e.target.value);
+      return;
     }
+    
+    // Check if selected date is before first transaction
+    if (minDate && e.target.value < minDate) {
+      setDateError(`No data available before ${minDate}`);
+      setSelectedDate("");
+      return;
+    }
+    
+    setDateError("");
+    setSelectedDate(e.target.value);
   };
 
   const generateMonthlyReport = async () => {
@@ -143,6 +178,7 @@ const FinanceReportPage = () => {
                 id="monthSelect"
                 value={selectedMonth}
                 onChange={handleMonthChange}
+                min={minMonth}
                 max={maxMonth}
               />
               <button className="generate-report-btn monthly" onClick={generateMonthlyReport}>
@@ -159,6 +195,7 @@ const FinanceReportPage = () => {
                 id="dateSelect"
                 value={selectedDate}
                 onChange={handleDateChange}
+                min={minDate}
                 max={maxDate}
               />
               <button className="generate-report-btn daily" onClick={generateDailyReport}>

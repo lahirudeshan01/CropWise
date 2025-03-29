@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FaEllipsisV } from "react-icons/fa"; // Three-dots icon
+import { FaEllipsisV } from "react-icons/fa";
 import { getTransactions, generateReport, deleteTransaction } from "../../api/financeApi";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"; // Import Recharts components
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import "./Finance.css";
 
 const Finance = () => {
   const [transactions, setTransactions] = useState([]);
   const [report, setReport] = useState({ totalIncome: 0, totalOutcome: 0, profit: 0 });
-  const [showMenu, setShowMenu] = useState(null); // Track which row's menu is open
-  const [deleteConfirmation, setDeleteConfirmation] = useState(null); // Track delete confirmation
+  const [showMenu, setShowMenu] = useState(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
@@ -18,12 +18,18 @@ const Finance = () => {
     minAmount: "",
     maxAmount: "",
   });
-  const [applyFiltersTrigger, setApplyFiltersTrigger] = useState(false); // State to trigger filter application
-  const [loading, setLoading] = useState(false); // Loading state for data fetching
-  const [error, setError] = useState(null); // Error state for data fetching issues
+  const [applyFiltersTrigger, setApplyFiltersTrigger] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [dateError, setDateError] = useState("");
+  const [minTransactionDate, setMinTransactionDate] = useState("");
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Get current date in YYYY-MM-DD format
+  const currentDate = new Date();
+  const currentDateString = currentDate.toISOString().split('T')[0];
 
   // Fetch transactions and report data
   useEffect(() => {
@@ -31,7 +37,6 @@ const Finance = () => {
       setLoading(true);
       setError(null);
       try {
-        // Create a clean filter object without empty values
         const cleanFilters = {};
         Object.keys(filters).forEach(key => {
           if (filters[key] !== "" && filters[key] !== null && filters[key] !== undefined) {
@@ -39,10 +44,15 @@ const Finance = () => {
           }
         });
 
-        console.log("Fetching transactions with filters:", cleanFilters);
         const transactions = await getTransactions(cleanFilters);
 
-        // Calculate total income, outcome, and profit based on filtered transactions
+        // Find the earliest transaction date
+        if (transactions.length > 0) {
+          const dates = transactions.map(t => new Date(t.date));
+          const minDate = new Date(Math.min(...dates)).toISOString().split('T')[0];
+          setMinTransactionDate(minDate);
+        }
+
         const totalIncome = transactions
           .filter(t => t.status === "Income")
           .reduce((sum, t) => sum + t.amount, 0);
@@ -64,13 +74,12 @@ const Finance = () => {
     };
 
     fetchData();
-  }, [filters, applyFiltersTrigger]); // Re-fetch when filters or applyFiltersTrigger changes
+  }, [filters, applyFiltersTrigger]);
 
   // Handle new transaction from form pages
   useEffect(() => {
     if (location.state?.newTransaction) {
       setTransactions((prevTransactions) => [...prevTransactions, location.state.newTransaction]);
-      // Clear the location state to prevent duplicate additions
       navigate(location.pathname, { replace: true });
     }
   }, [location.state, navigate, location.pathname]);
@@ -78,9 +87,26 @@ const Finance = () => {
   // Handle filter change
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
+    
+    // For date fields, validate they're within valid range
+    if (name === "startDate" || name === "endDate") {
+      // Check if date is in the future
+      if (value > currentDateString) {
+        setDateError(`Cannot select future dates. Today is ${currentDateString}`);
+        return;
+      }
+      
+      // Check if date is before first transaction
+      if (minTransactionDate && value < minTransactionDate) {
+        setDateError(`No transactions available before ${minTransactionDate}`);
+        return;
+      }
+      
+      setDateError("");
+    }
+    
     setFilters(prevFilters => ({ ...prevFilters, [name]: value }));
   };
-
 
   // Reset filters
   const resetFilters = () => {
@@ -92,7 +118,7 @@ const Finance = () => {
       minAmount: "",
       maxAmount: "",
     });
-    // Also trigger a re-fetch with empty filters
+    setDateError("");
     setApplyFiltersTrigger(prev => !prev);
   };
 
@@ -105,214 +131,178 @@ const Finance = () => {
   const handleExportPDF = () => {
     navigate("/finance-report", { state: { transactions, report } });
   };
-  const generateAiReport = () => {
-    // Generate CSV data from transactions
-    const csvData = generateCSV(transactions);
 
+  const generateAiReport = () => {
+    const csvData = generateCSV(transactions);
     sendRequest(csvData);
   };
 
   function sendRequest(data) {
     const ai_pdf_button = document.getElementById("ai-pdf-button");
-
     ai_pdf_button.setAttribute("disabled", "true");
     ai_pdf_button.innerHTML = "Generating...";
 
-    console.log("generating report...");
-      const prompt = `Create a financial report. Follow these rules. 1.Put the topic 'Financial Report' on the head of document. 2.Use bullet lists, paragraphs, headings and sub-headings. 3.Need 1 page report. 4.Use simple grammar. 5.Use html formatting for create the report(pharagraphs, headings and sub-headings). 6.Use below financial transactions for create the report. 7.Don't calculate income, outcome and profit. Those data mentioned below. Document format 1.Introduction 2.Financial Profits and losses 3.How to increase profit. 4.How to recover financial loss (Budget Plan) 5.SummaryInstructions 1.Use some transaction data in report content when explaining how to increase profit and how to recover loss. 2.In response don't give any other sentences which are not relevant to the report(examples:-This is your repot, need other help) 3.In response give only report content. 4.Give paragraph for each topic in document format with 70 words for each paragraph (Need 5 paragraphs for 5 topics also create paragraph for Financial Profits and losses).|` + 
-      + `|| Total Income=Rs.${report.totalIncome} ||| Total Outcome=Rs.${report.totalOutcome}  ||| Profit=Rs.${report.profit} |||` +
+    const prompt = `Create a financial report. Follow these rules. 1.Put the topic 'Financial Report' on the head of document. 2.Use bullet lists, paragraphs, headings and sub-headings. 3.Need 1 page report. 4.Use simple grammar. 5.Use html formatting for create the report(pharagraphs, headings and sub-headings). 6.Use below financial transactions for create the report. 7.Don't calculate income, outcome and profit. Those data mentioned below. Document format 1.Introduction 2.Financial Profits and losses 3.How to increase profit. 4.How to recover financial loss (Budget Plan) 5.SummaryInstructions 1.Use some transaction data in report content when explaining how to increase profit and how to recover loss. 2.In response don't give any other sentences which are not relevant to the report(examples:-This is your repot, need other help) 3.In response give only report content. 4.Give paragraph for each topic in document format with 70 words for each paragraph (Need 5 paragraphs for 5 topics also create paragraph for Financial Profits and losses).|` + 
+      `|| Total Income=Rs.${report.totalIncome} ||| Total Outcome=Rs.${report.totalOutcome}  ||| Profit=Rs.${report.profit} |||` +
       data;
 
-      console.log(prompt);
+    const requestBody = {
+      "contents": [{
+        "parts":[{"text": prompt}]
+      }]
+    };
 
-      // Prepare the request payload
-      const requestBody = {
-"contents": [{
-"parts":[{"text": prompt}]
-}]
-};
-
-      fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCyJK4KvR31gC1a3jUU9p3BrIIIDexOPrY', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestBody),
-      })
-      .then(response => response.json())
-      .then(data => {
-          // Extract the content from the response
-          const content = data.candidates[0].content.parts[0].text;
-
-          const contentStyles = `
-  <style>
-    /* Global Styles */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f4f4f9;
-    }
-
-    h1, h2 {
-      color: #333;
-      margin-bottom: 10px;
-    }
-
-    h1 {
-      font-size: 32px;
-      text-align: center;
-    }
-
-    h2 {
-      font-size: 24px;
-      margin-top: 20px;
-    }
-
-    /* Table Styles */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-      background-color: #fff;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #4CAF50;
-      color: white;
-      font-weight: bold;
-    }
-
-    td {
-      background-color: #f9f9f9;
-    }
-
-    tr:hover td {
-      background-color: #f1f1f1;
-    }
-
-    /* Additional Styling for Paragraphs */
-    p {
-      font-size: 16px;
-      line-height: 1.6;
-      color: #555;
-    }
-
-    /* Back Button Styles (Red) */
-.button.back-button {
-  background-color: #dc3545; /* Red background */
-  color: white; /* White text */
-  padding: 10px 20px; /* Padding */
-  border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-size: 16px; /* Font size */
-  margin-right: 10px; /* Margin to separate from other buttons */
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
-}
-
-.button.back-button:hover {
-  background-color: #c82333; /* Darker red on hover */
-}
-
-/* Print Button Styles (Blue) */
-.btn-print {
-  background-color: #007bff; /* Blue background */
-  color: white; /* White text */
-  padding: 10px 20px; /* Padding */
-  border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-size: 16px; /* Font size */
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
-  margin-left: 50px;
-}
-
-.btn-print:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-}
-
-    /* Accessibility Controls Container */
-    .accesbility-controls {
-      display: flex;
-      justify-content: flex-end; /* Align buttons to the right */
-      margin-bottom: 20px; /* Margin below the buttons */
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      table, th, td {
-        font-size: 14px;
-      }
-      th, td {
-        padding: 10px 12px;
-      }
-
-    
-    }
-
-    @media print {
-      .no-print, .no-print * {
-        display: none !important;
-      }
-
-      .metrics {
-        display: flex !important;
-        flex-direction: row !important;
-      }
-    }
-  </style>
-`;
-        
-          const accesbilityControls = ` <button class="button back-button" onclick="window.close()">
+    fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCyJK4KvR31gC1a3jUU9p3BrIIIDexOPrY', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+    .then(response => response.json())
+    .then(data => {
+      const content = data.candidates[0].content.parts[0].text;
+      const contentStyles = `
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+          }
+          h1, h2 {
+            color: #333;
+            margin-bottom: 10px;
+          }
+          h1 {
+            font-size: 32px;
+            text-align: center;
+          }
+          h2 {
+            font-size: 24px;
+            margin-top: 20px;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+          }
+          th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+          }
+          td {
+            background-color: #f9f9f9;
+          }
+          tr:hover td {
+            background-color: #f1f1f1;
+          }
+          p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+          }
+          .button.back-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+          }
+          .button.back-button:hover {
+            background-color: #c82333;
+          }
+          .btn-print {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-left: 50px;
+          }
+          .btn-print:hover {
+            background-color: #0056b3;
+          }
+          .accesbility-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+          }
+          @media (max-width: 768px) {
+            table, th, td {
+              font-size: 14px;
+            }
+            th, td {
+              padding: 10px 12px;
+            }
+          }
+          @media print {
+            .no-print, .no-print * {
+              display: none !important;
+            }
+            .metrics {
+              display: flex !important;
+              flex-direction: row !important;
+            }
+          }
+        </style>
+      `;
+      
+      const accesbilityControls = ` 
+        <button class="button back-button" onclick="window.close()">
           Back
         </button>
-          <button onclick="window.print()" class="btn-print">Print</button><hr>
-          </div>`;
+        <button onclick="window.print()" class="btn-print">Print</button><hr>
+      </div>`;
 
-          const reportContent = accesbilityControls + contentStyles + content.replace("```html", "").replace("```", "").replace("Losses", `
-            Losses<table>
-  <tbody><tr>
-    <th>Total Income</th>
-    <th>Total Outcome</th>
-    <th>Total Profit</th>
-  </tr>
-  <tr>
-    <td>Rs. ${report.totalIncome}</td>
-    <td>Rs. ${report.totalOutcome}</td>
-    <td>Rs. ${report.profit}</td>
-  </tr>
-</tbody></table>`);
+      const reportContent = accesbilityControls + contentStyles + content.replace("```html", "").replace("```", "").replace("Losses", `
+        Losses<table>
+          <tbody><tr>
+            <th>Total Income</th>
+            <th>Total Outcome</th>
+            <th>Total Profit</th>
+          </tr>
+          <tr>
+            <td>Rs. ${report.totalIncome}</td>
+            <td>Rs. ${report.totalOutcome}</td>
+            <td>Rs. ${report.profit}</td>
+          </tr>
+        </tbody></table>`);
 
-          let newWindow = window.open('', '_blank');
-           if (newWindow) {
-           newWindow.document.write(reportContent);
-           newWindow.document.close();
-          } else {
-              console.error('Failed to open the new window. It might be blocked by the browser.');
-          }
-          ai_pdf_button.removeAttribute("disabled");
-          ai_pdf_button.innerHTML = "Generate AI Report";
-      })
-      .catch(error => {
-          console.error('Error:', error);
-          alert('An error occurred while sending the request.');
-      });
+      let newWindow = window.open('', '_blank');
+      if (newWindow) {
+        newWindow.document.write(reportContent);
+        newWindow.document.close();
+      } else {
+        console.error('Failed to open the new window. It might be blocked by the browser.');
+      }
+      ai_pdf_button.removeAttribute("disabled");
+      ai_pdf_button.innerHTML = "Generate AI Report";
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while sending the request.');
+    });
   }
 
   // Generate CSV content
   const generateCSV = (transactions) => {
-    // Prepare CSV header
     const header = ["TRANSACTION NAME", "DATE & TIME", "AMOUNT", "TYPE", "REFERENCE"];
-
-    // Prepare rows for CSV
     const rows = transactions.map(transaction => [
       transaction.name,
       new Date(transaction.date).toLocaleString(),
@@ -320,12 +310,8 @@ const Finance = () => {
       transaction.status,
       transaction.reference,
     ]);
-
-    // Combine header and rows into CSV format
-    const csvContent = [header, ...rows].map(row => row.join(',')).join('|');
-    return csvContent;
+    return [header, ...rows].map(row => row.join(',')).join('|');
   };
-
 
   // Handle Income Button Click
   const handleIncome = () => {
@@ -339,14 +325,14 @@ const Finance = () => {
 
   // Handle Three-Dots Menu Click
   const handleMenuClick = (index, e) => {
-    e.stopPropagation(); // Prevent event bubbling
-    setShowMenu(showMenu === index ? null : index); // Toggle menu
+    e.stopPropagation();
+    setShowMenu(showMenu === index ? null : index);
   };
 
   // Handle Update Transaction
   const handleUpdate = (index) => {
     const transaction = transactions[index];
-    navigate("/update-form", { state: { transaction } }); // Redirect to UpdateForm with transaction data
+    navigate("/update-form", { state: { transaction } });
   };
 
   // Open Delete Confirmation Modal
@@ -360,9 +346,8 @@ const Finance = () => {
 
     const transaction = transactions[deleteConfirmation];
     try {
-      await deleteTransaction(transaction._id); // Make sure to use _id not id
+      await deleteTransaction(transaction._id);
 
-      // Re-fetch transactions and report with current filters
       const cleanFilters = {};
       Object.keys(filters).forEach(key => {
         if (filters[key] !== "" && filters[key] !== null && filters[key] !== undefined) {
@@ -372,7 +357,6 @@ const Finance = () => {
 
       const updatedTransactions = await getTransactions(cleanFilters);
 
-      // Recalculate total income, outcome, and profit
       const totalIncome = updatedTransactions
         .filter(t => t.status === "Income")
         .reduce((sum, t) => sum + t.amount, 0);
@@ -385,7 +369,7 @@ const Finance = () => {
 
       setTransactions(updatedTransactions);
       setReport({ totalIncome, totalOutcome, profit });
-      setDeleteConfirmation(null); // Close modal
+      setDeleteConfirmation(null);
     } catch (error) {
       console.error("Error deleting transaction:", error);
       setError("Failed to delete transaction. Please try again.");
@@ -394,7 +378,7 @@ const Finance = () => {
 
   // Handle Cancel Action
   const handleCancel = () => {
-    setDeleteConfirmation(null); // Close modal
+    setDeleteConfirmation(null);
   };
 
   // Prepare data for the line chart
@@ -402,7 +386,7 @@ const Finance = () => {
     const dataMap = {};
 
     transactions.forEach((transaction) => {
-      const date = new Date(transaction.date).toISOString().split("T")[0]; // Extract date (YYYY-MM-DD)
+      const date = new Date(transaction.date).toISOString().split("T")[0];
       if (!dataMap[date]) {
         dataMap[date] = { date, income: 0, outcome: 0 };
       }
@@ -413,7 +397,6 @@ const Finance = () => {
       }
     });
 
-    // Convert to array and sort by date
     return Object.values(dataMap).sort((a, b) => new Date(a.date) - new Date(b.date));
   };
 
@@ -425,29 +408,28 @@ const Finance = () => {
     { name: "Outcome", value: report.totalOutcome },
   ];
 
-  // Colors for the pie chart
   const COLORS = ["#008000", "#dc3545"];
 
   return (
     <div className="finance-dashboard" onClick={handleClickOutside}>
       {/* Buttons Section at the Top */}
       <div className="buttons-section">
-      <div class="button-group-left">
-        <button className="button income" onClick={handleIncome}>
-          Income
-        </button>
-        <button className="button outcome" onClick={handleOutcome}>
-          Outcome
-        </button>
+        <div className="button-group-left">
+          <button className="button income" onClick={handleIncome}>
+            Income
+          </button>
+          <button className="button outcome" onClick={handleOutcome}>
+            Outcome
+          </button>
         </div>
-        <div class="button-group-right">
-        <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>
-          Generate AI Report
-        </button>
-        <button className="button export-pdf" onClick={handleExportPDF}>
-          Generate Report
-        </button>
-      </div>
+        <div className="button-group-right">
+          <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>
+            Generate AI Report
+          </button>
+          <button className="button export-pdf" onClick={handleExportPDF}>
+            Generate Report
+          </button>
+        </div>
       </div>
 
       {/* Title Below Buttons */}
@@ -470,85 +452,88 @@ const Finance = () => {
       </div>
 
       {/* Filter Section */}
-<div className="filter-section">
-  <h3>Filter Transactions</h3>
-  <div className="filters">
-    {/* Date Range Filter */}
-    <div className="date-range-filter">
-      <label>Date Range</label>
-      <div className="date-inputs">
-        <input
-          type="date"
-          name="startDate"
-          value={filters.startDate}
-          onChange={handleFilterChange}
-          placeholder="Start Date"
-          max={filters.endDate || undefined} // Ensure start date is not after end date
-        />
-        <span>to</span>
-        <input
-          type="date"
-          name="endDate"
-          value={filters.endDate}
-          onChange={handleFilterChange}
-          placeholder="End Date"
-          min={filters.startDate || undefined} // Ensure end date is not before start date
-        />
+      <div className="filter-section">
+        <h3>Filter Transactions</h3>
+        {dateError && <div className="error-message">{dateError}</div>}
+        <div className="filters">
+          {/* Date Range Filter */}
+          <div className="date-range-filter">
+            <label>Date Range</label>
+            <div className="date-inputs">
+              <input
+                type="date"
+                name="startDate"
+                value={filters.startDate}
+                onChange={handleFilterChange}
+                placeholder="Start Date"
+                min={minTransactionDate}
+                max={filters.endDate || currentDateString}
+              />
+              <span>to</span>
+              <input
+                type="date"
+                name="endDate"
+                value={filters.endDate}
+                onChange={handleFilterChange}
+                placeholder="End Date"
+                min={filters.startDate || minTransactionDate}
+                max={currentDateString}
+              />
+            </div>
+          </div>
+
+          {/* Type Filter */}
+          <div className="type-filter">
+            <label>Type</label>
+            <select name="type" value={filters.type} onChange={handleFilterChange}>
+              <option value="">All Types</option>
+              <option value="Income">Income</option>
+              <option value="Outcome">Outcome</option>
+            </select>
+          </div>
+
+          {/* Reference Filter */}
+          <div className="reference-filter">
+            <label>Reference</label>
+            <select name="reference" value={filters.reference} onChange={handleFilterChange}>
+              <option value="">All References</option>
+              <option value="Inventory Expense">Inventory Expense</option>
+              <option value="Salary Payment">Salary Payment</option>
+              <option value="Sales Income">Sales Income</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          {/* Amount Range Filter */}
+          <div className="amount-range-filter">
+            <label>Amount Range</label>
+            <div className="amount-inputs">
+              <input
+                type="number"
+                name="minAmount"
+                value={filters.minAmount}
+                onChange={handleFilterChange}
+                placeholder="Min Amount"
+              />
+              <span>to</span>
+              <input
+                type="number"
+                name="maxAmount"
+                value={filters.maxAmount}
+                onChange={handleFilterChange}
+                placeholder="Max Amount"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Apply and Reset Buttons */}
+        <div className="filter-buttons">
+          <button className="button reset" onClick={resetFilters}>
+            Reset Filters
+          </button>
+        </div>
       </div>
-    </div>
-
-    {/* Type Filter */}
-    <div className="type-filter">
-      <label>Type</label>
-      <select name="type" value={filters.type} onChange={handleFilterChange}>
-        <option value="">All Types</option>
-        <option value="Income">Income</option>
-        <option value="Outcome">Outcome</option>
-      </select>
-    </div>
-
-    {/* Reference Filter */}
-    <div className="reference-filter">
-      <label>Reference</label>
-      <select name="reference" value={filters.reference} onChange={handleFilterChange}>
-        <option value="">All References</option>
-        <option value="Inventory Expense">Inventory Expense</option>
-        <option value="Salary Payment">Salary Payment</option>
-        <option value="Sales Income">Sales Income</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
-
-    {/* Amount Range Filter */}
-    <div className="amount-range-filter">
-      <label>Amount Range</label>
-      <div className="amount-inputs">
-        <input
-          type="number"
-          name="minAmount"
-          value={filters.minAmount}
-          onChange={handleFilterChange}
-          placeholder="Min Amount"
-        />
-        <span>to</span>
-        <input
-          type="number"
-          name="maxAmount"
-          value={filters.maxAmount}
-          onChange={handleFilterChange}
-          placeholder="Max Amount"
-        />
-      </div>
-    </div>
-  </div>
-
-  {/* Apply and Reset Buttons */}
-  <div className="filter-buttons">
-    <button className="button reset" onClick={resetFilters}>
-      Reset Filters
-    </button>
-  </div>
-</div>
 
       {/* Charts Section */}
       <div className="charts-container">
@@ -626,11 +611,9 @@ const Finance = () => {
                 <td>{transaction.reference}</td>
                 <td>
                   <div className="actions-container">
-                    {/* Three-dots icon */}
                     <button className="three-dots-button" onClick={(e) => handleMenuClick(index, e)}>
                       <FaEllipsisV />
                     </button>
-                    {/* Dropdown menu */}
                     {showMenu === index && (
                       <div className="dropdown-menu">
                         <button onClick={() => handleUpdate(index)}>Update</button>
