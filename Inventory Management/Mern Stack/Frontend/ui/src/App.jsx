@@ -3,10 +3,10 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css'
-import InventoryList from './components/InventoryList'
-import AddInventoryItem from './components/AddInventoryItem'
-import SeeDetails from './components/Seedetails';
-import UpdateInventoryItem from './components/UpdateInventoryItem';
+import InventoryList from './components/InventoryManagement/InventoryList'
+import AddInventoryItem from './components/InventoryManagement/AddInventoryItem'
+import SeeDetails from './components/InventoryManagement/SeeDetails';
+import UpdateInventoryItem from './components/InventoryManagement/UpdateInventoryItem';
 
 
 function App() {
