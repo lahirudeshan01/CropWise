@@ -62,5 +62,3 @@ export const deleteTransaction = async (id) => {
   return response.data;
 };
 
-// For backward compatibility
-export const logTransaction = addTransaction;

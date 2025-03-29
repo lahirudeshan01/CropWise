@@ -59,6 +59,8 @@ const addTransaction = async (req, res) => {
   }
 };
 
+
+
 // Generate financial report
 const generateReport = async (req, res) => {
   try {
@@ -142,7 +144,31 @@ const generateDailyReport = async (req, res) => {
     res.status(500).json({ message: 'Error generating daily report', error: error.message });
   }
 };
+const Transaction = require('../models/Transaction');
 
+exports.logUniversalTransaction = async ({ name, amount, reference }) => {
+  try {
+    if (!name || amount === undefined || !reference) {
+      throw new Error('name, amount, and reference are required');
+    }
+
+    const status = reference.toLowerCase().includes('sale') ? 'Income' : 'Outcome';
+
+    const newTransaction = new Transaction({
+      name,
+      amount: Math.abs(amount),
+      status,
+      reference,
+      date: new Date()
+    });
+
+    await newTransaction.save();
+    return newTransaction;
+  } catch (error) {
+    console.error('Error in logUniversalTransaction:', error);
+    throw error;
+  }
+};
 // Update a transaction
 const updateTransaction = async (req, res) => {
   try {
@@ -191,6 +217,6 @@ module.exports = {
   generateDailyReport,
   updateTransaction,
   deleteTransaction,
-  // Keep logTransaction for backward compatibility
-  logTransaction: addTransaction,
+  logUniversalTransaction
+ 
 };

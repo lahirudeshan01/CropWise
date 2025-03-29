@@ -3,8 +3,9 @@ const financeController = require('../controllers/financecontroller.js');
 
 const router = express.Router();
 
-// Log a transaction
-router.post('/transactions', financeController.logTransaction);
+
+//Add transactions
+router.post('/transactions', financeController.addTransaction);
 
 // Get all transactions
 router.get('/transactions', financeController.getTransactions);
@@ -18,11 +19,13 @@ router.get('/monthly-report', financeController.generateMonthlyReport);
 // Generate daily financial report
 router.get('/daily-report', financeController.generateDailyReport); 
 
-//Add transactions
-router.post('/transactions', financeController.addTransaction);
-
+//update transactions
 router.put('/transactions/:id', financeController.updateTransaction);
+
+//delete transactions
 router.delete('/transactions/:id', financeController.deleteTransaction);
 
+// Single endpoint for all modules
+router.post('/transactions', financeController.logUniversalTransaction);
 
 module.exports = router;

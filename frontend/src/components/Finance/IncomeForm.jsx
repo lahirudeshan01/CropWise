@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { logTransaction } from "../../api/financeApi";
+import { addTransaction } from "../../api/financeApi";
 import "./Finance.css";
 
 const IncomeForm = () => {
@@ -50,7 +50,7 @@ const IncomeForm = () => {
     };
 
     try {
-      await logTransaction(newTransaction);
+      await addTransaction(newTransaction);
       navigate("/finance");
     } catch (error) {
       console.error("Error submitting transaction:", error);
