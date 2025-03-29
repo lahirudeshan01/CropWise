@@ -12,6 +12,8 @@ import HomePage from './component/UserUi/HomePage'
 import AboutUs from './component/UserUi/AboutUs'
 import Buyers from './component/UserUi/Buyers'
 import FarmerList from './component/Showdetails/FarmerList'
+import Userfee from './component/UserUi2/Userfee'
+import PaymentPage from './component/Payment_order/PaymentPage'
 
 // Create a layout component for dashboard pages
 function DashboardLayout({ children }) {
@@ -38,6 +40,8 @@ function App() {
               <Route path="/about" element={<AboutUs/>} />
               <Route path="/" element={<HomePage/>} />
               <Route path="/buy" element={<Buyers/>} />
+              <Route path="/userfee" element={<Userfee/>} />
+              <Route path="/PaymentPage" element={<PaymentPage/>} />
              
               
 

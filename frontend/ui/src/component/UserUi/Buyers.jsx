@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Header from "./Header";
-import "./card.css"; // Ensure your styles are included
+import "./card.css";
 
 const Buyers = () => {
+  const navigate = useNavigate();
   const [farmers, setFarmers] = useState([]);
+  const [filteredFarmers, setFilteredFarmers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -16,6 +19,7 @@ const Buyers = () => {
       .get("http://localhost:3000/api/farmers")
       .then((res) => {
         setFarmers(res.data);
+        setFilteredFarmers(res.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -24,6 +28,26 @@ const Buyers = () => {
         setLoading(false);
       });
   }, []);
+
+  // Search functionality
+  const handleSearch = (event) => {
+    const value = event.target.value.toLowerCase();
+    setSearchTerm(value);
+
+    const filtered = farmers.filter(
+      (farmer) =>
+        farmer.Character.toLowerCase().includes(value) ||
+        farmer.verity.toLowerCase().includes(value) ||
+        farmer.location.toLowerCase().includes(value)
+    );
+
+    setFilteredFarmers(filtered);
+  };
+
+  const handleBuyProduct = (product) => {
+    // Navigate to Userfee and pass the selected product as state
+    navigate('/userfee', { state: { selectedProduct: product } });
+  };
 
   return (
     <div>
@@ -89,15 +113,36 @@ const Buyers = () => {
       {/* Farmers Listing Section */}
       <div className="buyers-container">
         <h2>Available Harvest Listings</h2>
-        <br/>
+        
+        {/* Search Bar */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          marginBottom: '20px' 
+        }}>
+          <input 
+            type="text" 
+            placeholder="Search by Character, Variety, or Location" 
+            value={searchTerm}
+            onChange={handleSearch}
+            style={{
+              width: '50%',
+              padding: '10px',
+              borderRadius: '5px',
+              border: '1px solid #ddd'
+            }}
+          />
+        </div>
 
         {loading ? (
           <p>Loading farmers data...</p>
         ) : error ? (
           <p>{error}</p>
+        ) : filteredFarmers.length === 0 ? (
+          <p>No results found.</p>
         ) : (
           <div className="card-list">
-            {farmers.map((farmer) => (
+            {filteredFarmers.map((farmer) => (
               <motion.div
                 key={farmer._id}
                 className="card"
@@ -117,7 +162,6 @@ const Buyers = () => {
                 </div>
 
                 {/* Details Section */}
-                {/* <h3>Listing ID: {farmer._id || "N/A"}</h3> */}
                 <p>
                   <strong>Character:</strong>  {farmer.Character || "N/A"}
                 </p>
@@ -134,10 +178,13 @@ const Buyers = () => {
                   <strong>Location:</strong>  {farmer.location || "N/A"}
                 </p>
 
-                {/* View Details Button */}
-                <Link to={`/viewdetails/${farmer._id}`} className="btn">
+                {/* Buy Product Button */}
+                <button 
+                  onClick={() => handleBuyProduct(farmer)} 
+                  className="btn"
+                >
                   Buy Product
-                </Link>
+                </button>
               </motion.div>
             ))}
           </div>
