@@ -504,7 +504,6 @@ const Finance = () => {
               <option value="Inventory Expense">Inventory Expense</option>
               <option value="Salary Payment">Salary Payment</option>
               <option value="Sales Income">Sales Income</option>
-              <option value="Salary Deductions">Salary Deductions</option>
               <option value="Other">Other</option>
             </select>
           </div>

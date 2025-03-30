@@ -4,19 +4,19 @@ const salarySchema = new mongoose.Schema({
   employeeId: { 
     type: String, 
     required: true,
-    index: true // For faster queries
+    index: true
   },
-  monthYear: { // Combined field for easier querying
+  monthYear: {
     type: String, 
     required: true,
     index: true,
-    match: /^\d{4}-\d{2}$/ // Format: YYYY-MM
+    match: /^\d{4}-\d{2}$/
   },
   basicSalary: { 
     type: Number, 
     required: true,
     min: 0,
-    set: v => parseFloat(v.toFixed(2)) // Ensure 2 decimal places
+    set: v => parseFloat(v.toFixed(2))
   },
   epf: { 
     type: Number, 
@@ -24,7 +24,6 @@ const salarySchema = new mongoose.Schema({
     min: 0,
     set: v => parseFloat(v.toFixed(2))
   },
-  // ... same for other amount fields
   etf: { 
     type: Number, 
     required: true,
@@ -41,23 +40,18 @@ const salarySchema = new mongoose.Schema({
     default: 'Pending' 
   },
   paymentDate: Date,
-  transactionRefs: [{ // References to original salary payment transactions
+  transactionRefs: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Transaction'
   }],
   processedAt: {
     type: Date,
     default: Date.now
-  },
-  deductionTransactionRef: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Transaction'
   }
 }, {
-  timestamps: true // Adds createdAt and updatedAt automatically
+  timestamps: true
 });
 
-// Compound index for frequent queries
 salarySchema.index({ employeeId: 1, monthYear: 1 }, { unique: true });
 
 module.exports = mongoose.model('Salary', salarySchema);

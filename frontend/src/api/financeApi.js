@@ -87,9 +87,8 @@ export const getSalaries = async (filters = {}) => {
 export const markSalaryAsPaid = async (id) => {
   try {
     const response = await axios.put(`${API_URL}/salaries/${id}/paid`);
-    return response; // Return the full response object
+    return response;
   } catch (error) {
-    // Properly propagate the error with response data if available
     if (error.response) {
       throw error.response.data;
     }

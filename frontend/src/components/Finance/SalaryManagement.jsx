@@ -17,6 +17,18 @@ const SalaryManagement = () => {
   const [processMonth, setProcessMonth] = useState('');
   const [processYear, setProcessYear] = useState('');
 
+  // Get current date for validation
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1; // Months are 0-indexed in JS
+
+  // Check if a month/year is in the future
+  const isFutureMonthYear = (month, year) => {
+    if (year > currentYear) return true;
+    if (year === currentYear && month > currentMonth) return true;
+    return false;
+  };
+
   // Fetch salaries based on filters
   useEffect(() => {
     const fetchSalaries = async () => {
@@ -41,6 +53,12 @@ const SalaryManagement = () => {
       setLoading(true);
       setError(null);
       setSuccess(null);
+      
+      // Additional client-side validation
+      if (isFutureMonthYear(parseInt(processMonth), parseInt(processYear))) {
+        throw new Error('Cannot process salaries for future months');
+      }
+
       await processSalaries(parseInt(processMonth), parseInt(processYear));
       const updated = await getSalaries({
         month: processMonth,
@@ -49,7 +67,7 @@ const SalaryManagement = () => {
       setSalaries(updated);
       setSuccess('Salaries processed successfully');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to process salaries');
+      setError(err.response?.data?.message || err.message || 'Failed to process salaries');
     } finally {
       setLoading(false);
     }
@@ -61,13 +79,8 @@ const SalaryManagement = () => {
       setError(null);
       setSuccess(null);
       
-      const response = await markSalaryAsPaid(id);
+      await markSalaryAsPaid(id);
       
-      // Check if response exists and has data
-      if (!response || !response.data) {
-        throw new Error('Invalid server response');
-      }
-  
       // Update local state
       setSalaries(salaries.map(s => 
         s._id === id ? { 
@@ -77,23 +90,35 @@ const SalaryManagement = () => {
         } : s
       ));
       
-      // Set success message - make sure to check for nested properties safely
-      const deduction = response.data.deduction || {};
-      const breakdown = deduction.breakdown || {};
-      
-      setSuccess(
-        `Payment successful!`
-      );
+      setSuccess('Salary marked as paid successfully');
   
     } catch (err) {
-      // More comprehensive error handling
-      const errorMessage = err.message || 
-                          (err.error && err.error.message) || 
-                          'Payment failed';
-      setError(`Payment Failed: ${errorMessage}`);
+      setError(err.message || 'Payment failed');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handle filter changes with validation
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    
+    // For month/year filters, validate they're not in the future
+    if ((name === 'month' || name === 'year') && value) {
+      const month = name === 'month' ? parseInt(value) : parseInt(filters.month || '0');
+      const year = name === 'year' ? parseInt(value) : parseInt(filters.year || '0');
+      
+      if (month && year && isFutureMonthYear(month, year)) {
+        setError(`Cannot filter future months (${month}/${year})`);
+        return;
+      }
+    }
+    
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setError(null);
   };
 
   return (
@@ -133,11 +158,20 @@ const SalaryManagement = () => {
             onChange={(e) => setProcessMonth(e.target.value)}
           >
             <option value="">Select Month</option>
-            {Array.from({ length: 12 }, (_, i) => (
-              <option key={i+1} value={i+1}>
-                {new Date(0, i).toLocaleString('default', { month: 'long' })}
-              </option>
-            ))}
+            {Array.from({ length: 12 }, (_, i) => {
+              const monthValue = i + 1;
+              const isFuture = processYear && isFutureMonthYear(monthValue, parseInt(processYear));
+              return (
+                <option 
+                  key={monthValue} 
+                  value={monthValue}
+                  disabled={isFuture}
+                >
+                  {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                  {isFuture}
+                </option>
+              );
+            })}
           </select>
           <select 
             value={processYear} 
@@ -145,8 +179,18 @@ const SalaryManagement = () => {
           >
             <option value="">Select Year</option>
             {Array.from({ length: 10 }, (_, i) => {
-              const year = new Date().getFullYear() - 5 + i;
-              return <option key={year} value={year}>{year}</option>;
+              const year = currentYear - 5 + i;
+              const isFutureYear = year > currentYear;
+              return (
+                <option 
+                  key={year} 
+                  value={year}
+                  disabled={isFutureYear}
+                >
+                  {year}
+                  {isFutureYear}
+                </option>
+              );
             })}
           </select>
           <button 
@@ -163,29 +207,51 @@ const SalaryManagement = () => {
         <h2>Filter Salaries</h2>
         <div className="filters">
           <select 
+            name="month"
             value={filters.month} 
-            onChange={(e) => setFilters({...filters, month: e.target.value})}
+            onChange={handleFilterChange}
           >
             <option value="">All Months</option>
-            {Array.from({ length: 12 }, (_, i) => (
-              <option key={i+1} value={i+1}>
-                {new Date(0, i).toLocaleString('default', { month: 'long' })}
-              </option>
-            ))}
-          </select>
-          <select 
-            value={filters.year} 
-            onChange={(e) => setFilters({...filters, year: e.target.value})}
-          >
-            <option value="">All Years</option>
-            {Array.from({ length: 10 }, (_, i) => {
-              const year = new Date().getFullYear() - 5 + i;
-              return <option key={year} value={year}>{year}</option>;
+            {Array.from({ length: 12 }, (_, i) => {
+              const monthValue = i + 1;
+              const isFuture = filters.year && isFutureMonthYear(monthValue, parseInt(filters.year));
+              return (
+                <option 
+                  key={monthValue} 
+                  value={monthValue}
+                  disabled={isFuture}
+                >
+                  {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                  {isFuture}
+                </option>
+              );
             })}
           </select>
           <select 
+            name="year"
+            value={filters.year} 
+            onChange={handleFilterChange}
+          >
+            <option value="">All Years</option>
+            {Array.from({ length: 10 }, (_, i) => {
+              const year = currentYear - 5 + i;
+              const isFutureYear = year > currentYear;
+              return (
+                <option 
+                  key={year} 
+                  value={year}
+                  disabled={isFutureYear}
+                >
+                  {year}
+                  {isFutureYear}
+                </option>
+              );
+            })}
+          </select>
+          <select 
+            name="status"
             value={filters.status} 
-            onChange={(e) => setFilters({...filters, status: e.target.value})}
+            onChange={handleFilterChange}
           >
             <option value="">All Statuses</option>
             <option value="Pending">Pending</option>
@@ -204,7 +270,7 @@ const SalaryManagement = () => {
             <th>Employee ID</th>
             <th>Month</th>
             <th>Basic Salary</th>
-            <th>EPF (12%)</th>
+            <th>EPF (8%)</th>
             <th>ETF (3%)</th>
             <th>Net Salary</th>
             <th>Status</th>
