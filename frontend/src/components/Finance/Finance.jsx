@@ -421,6 +421,12 @@ const Finance = () => {
           <button className="button outcome" onClick={handleOutcome}>
             Outcome
           </button>
+          <button 
+  className="button salary-management" 
+  onClick={() => navigate('/salary-management')}
+>
+  Salaries
+</button>
         </div>
         <div className="button-group-right">
          <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>  
@@ -500,6 +506,7 @@ const Finance = () => {
               <option value="Inventory Expense">Inventory Expense</option>
               <option value="Salary Payment">Salary Payment</option>
               <option value="Sales Income">Sales Income</option>
+              <option value="Salary Deductions">Salary Deductions</option>
               <option value="Other">Other</option>
             </select>
           </div>

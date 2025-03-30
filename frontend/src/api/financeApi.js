@@ -61,4 +61,38 @@ export const deleteTransaction = async (id) => {
   const response = await axios.delete(`${API_URL}/transactions/${id}`);
   return response.data;
 };
+// Add to existing exports
 
+export const processSalaries = async (month, year) => {
+  const response = await axios.post(`${API_URL}/salaries/process`, { month, year });
+  return response.data;
+};
+
+export const getSalaries = async (filters = {}) => {
+  // Convert month to number if it exists
+  const processedFilters = { ...filters };
+  if (processedFilters.month) {
+    processedFilters.month = parseInt(processedFilters.month);
+  }
+  if (processedFilters.year) {
+    processedFilters.year = parseInt(processedFilters.year);
+  }
+  
+  const response = await axios.get(`${API_URL}/salaries`, { 
+    params: processedFilters 
+  });
+  return response.data;
+};
+
+export const markSalaryAsPaid = async (id) => {
+  try {
+    const response = await axios.put(`${API_URL}/salaries/${id}/paid`);
+    return response; // Return the full response object
+  } catch (error) {
+    // Properly propagate the error with response data if available
+    if (error.response) {
+      throw error.response.data;
+    }
+    throw error;
+  }
+};

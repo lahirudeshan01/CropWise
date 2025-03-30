@@ -4,6 +4,7 @@ import FinanceReportPage from './components/Finance/FinanceReportPage';
 import IncomeForm from './components/Finance/IncomeForm';
 import OutcomeForm from './components/Finance/OutcomeForm';
 import UpdateForm from './components/Finance/UpdateForm'; 
+import SalaryManagement from './components/Finance/SalaryManagement';
 
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
         <Route path="/income-form" element={<IncomeForm />} />
         <Route path="/outcome-form" element={<OutcomeForm />} />
         <Route path="/update-form" element={<UpdateForm />} />
+
+        <Route path="/salary-management" element={<SalaryManagement />} />
       </Routes>
     </Router>
   );

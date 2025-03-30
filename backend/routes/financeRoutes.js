@@ -1,5 +1,6 @@
 const express = require('express');
 const financeController = require('../controllers/financecontroller.js');
+const salaryController = require('../controllers/salarycontroller');
 
 const router = express.Router();
 
@@ -27,5 +28,10 @@ router.delete('/transactions/:id', financeController.deleteTransaction);
 
 // Single endpoint for all modules
 router.post('/transactions', financeController.logUniversalTransaction);
+
+router.post('/salaries/process', salaryController.processSalaries);
+router.get('/salaries', salaryController.getSalaries);
+router.put('/salaries/:id/paid', salaryController.markAsPaid);
+
 
 module.exports = router;

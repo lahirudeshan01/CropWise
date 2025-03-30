@@ -100,7 +100,22 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
+.button-group-left .button {
+  height: 36px; /* Reduced from 40px */
+  padding: 8px 16px; /* Reduced from 10px 20px */
+  font-size: 13px; /* Slightly smaller font */
+}
+.button.salary-management {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+  color: white;
+  font-size: 15px;
+}
 
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0.9;
+}
 /* Back to Finance Button Styles */
 .button.back-button {
   background: linear-gradient(135deg, #f44336, #d32f2f);
