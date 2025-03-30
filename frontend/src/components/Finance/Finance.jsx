@@ -429,9 +429,7 @@ const Finance = () => {
 </button>
         </div>
         <div className="button-group-right">
-         <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>  
-            Generate AI Report
-          </button>  
+        
           <button className="button export-pdf" onClick={handleExportPDF}>
             Generate Report
           </button>

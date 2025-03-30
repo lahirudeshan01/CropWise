@@ -13,12 +13,22 @@ const OutcomeForm = () => {
 
   const [errors, setErrors] = useState({});
 
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    
+    // Allow only numbers with up to 2 decimal places
+    if (value === "" || value.match(/^\d*\.?\d{0,2}$/)) {
+      setFormData({ ...formData, amount: value });
+      setErrors({ ...errors, amount: "" });
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-
-    // Clear error when user types
-    setErrors({ ...errors, [name]: "" });
+    if (name !== "amount") {
+      setFormData({ ...formData, [name]: value });
+      setErrors({ ...errors, [name]: "" });
+    }
   };
 
   const validateForm = () => {
@@ -30,22 +40,26 @@ const OutcomeForm = () => {
 
     if (!formData.amount) {
       newErrors.amount = "Amount is required";
-    } else if (isNaN(formData.amount) || Number(formData.amount) <= 0) {
-      newErrors.amount = "Amount must be a positive number";
+    } else if (isNaN(formData.amount)) {
+      newErrors.amount = "Amount must be a number";
+    } else if (Number(formData.amount) <= 0) {
+      newErrors.amount = "Amount must be positive";
+    } else if (formData.amount.includes(".") && formData.amount.split(".")[1].length > 2) {
+      newErrors.amount = "Maximum 2 decimal places allowed";
     }
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) return; // Stop submission if validation fails
+    if (!validateForm()) return;
 
     const newTransaction = {
       ...formData,
+      amount: parseFloat(formData.amount).toFixed(2),
       date: new Date().toISOString(),
       status: "Outcome",
       isUserAdded: true,
@@ -76,19 +90,26 @@ const OutcomeForm = () => {
               placeholder="Enter name"
               value={formData.name}
               onChange={handleInputChange}
-            
             />
             {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
           <div className="form-group">
             <label htmlFor="amount">Amount</label>
             <input
-              type="number"
+              type="text"  // Changed to text to better handle decimal input
               name="amount"
-              placeholder="Enter amount"
+              placeholder="Enter amount (e.g. 100.50)"
               value={formData.amount}
-              onChange={handleInputChange}
-             
+              onChange={handleAmountChange}
+              onBlur={() => {
+                // Format to 2 decimals when field loses focus
+                if (formData.amount && !isNaN(formData.amount)) {
+                  setFormData({
+                    ...formData,
+                    amount: parseFloat(formData.amount).toFixed(2),
+                  });
+                }
+              }}
             />
             {errors.amount && <span className="error-message">{errors.amount}</span>}
           </div>
