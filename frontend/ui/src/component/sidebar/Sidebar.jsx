@@ -3,8 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarDate } from "./SidebarDate";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import "./sidebar.css"; 
-//  import "../App.css";
+import "./sidebar.css";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -17,6 +16,14 @@ const Sidebar = () => {
 
   return (
     <div className="Sidebar">
+      <div className="sidebar-header">
+        <img 
+          src="https://p7.hiclipart.com/preview/976/522/355/natural-environment-earth-ecology-clean-environment.jpg" 
+          alt="CropWise Logo" 
+          className="sidebar-logo" 
+        />
+        <h2 className="sidebar-title">CropWise</h2>
+      </div>
       <ul>
         {SidebarDate.map((val, key) => (
           <React.Fragment key={key}>
@@ -38,17 +45,13 @@ const Sidebar = () => {
                 </div>
               )}
             </li>
-
-            {/* Render dropdown if open */}
             {val.subMenu && openDropdown === key && (
               <ul className="dropdown-menu">
                 {val.subMenu.map((subItem, subKey) => (
                   <li
                     key={subKey}
                     onClick={() => navigate(subItem.link)}
-                    className={`sidebar-item sub-item ${
-                      location.pathname === subItem.link ? "active" : ""
-                    }`}
+                    className={`sidebar-item sub-item ${location.pathname === subItem.link ? "active" : ""}`}
                   >
                     <div>{subItem.icon}</div>
                     <div>{subItem.title}</div>

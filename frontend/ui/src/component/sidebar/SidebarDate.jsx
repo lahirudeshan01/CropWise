@@ -3,12 +3,14 @@ import HomeIcon from '@mui/icons-material/Home';
 import EmailIcon from '@mui/icons-material/Email';
 import CallIcon from '@mui/icons-material/Call';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import AgricultureIcon from '@mui/icons-material/Agriculture'; // Icon for Harvest
+// import AgricultureIcon from '@mui/icons-material/Agriculture'; 
+import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
+import ViewHeadlineRoundedIcon from '@mui/icons-material/ViewHeadlineRounded';
 
 
 export const SidebarDate = [
     {
-        title: "Home",
+        title: "Homes",
         icon: <HomeIcon />,
         link: "/home"
     },
@@ -20,7 +22,7 @@ export const SidebarDate = [
     {
         title: "Contact",
         icon: <CallIcon />,
-        link: "/contact"
+        link: "/contact",
     },
     {
         title: "MarketPlace",
@@ -30,12 +32,12 @@ export const SidebarDate = [
         subMenu: [
             {
                 title: "Add Harvest",
-                icon: <AgricultureIcon />,
+                icon: <AddBoxRoundedIcon />,
                 link: "/harvest"
             },
             {
                 title: "Show Listning",
-                icon: <AgricultureIcon />,
+                icon: <ViewHeadlineRoundedIcon />,
                 link: "/showall"
             }
         ]

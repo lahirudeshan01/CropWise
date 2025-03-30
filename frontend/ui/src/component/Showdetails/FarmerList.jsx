@@ -45,7 +45,7 @@ const FarmerList = ({ farmers }) => {
                 <td>{farmer.Character || "N/A"}</td>
                 <td>{farmer.verity || "N/A"}</td>
                 <td>{farmer.quantity || "N/A"}</td>
-                <td>{farmer.price || "N/A"}</td>
+                <td>{farmer.price ||  "N/A"}.00</td>
                 <td>{farmer.location || "N/A"}</td>
                 <td>
                   {farmer._id ? (
