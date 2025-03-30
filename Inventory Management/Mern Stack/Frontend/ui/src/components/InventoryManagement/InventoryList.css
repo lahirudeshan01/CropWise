@@ -60,7 +60,7 @@
     background-color: #f9fafb;
     border-bottom: 1px solid #e5e7eb;
     color: #111827;
-    font-weight: 500;
+    font-weight: 700;
   }
   
   td {
@@ -139,7 +139,7 @@
 select {
   appearance: none;
   background-color: #f9fafb;
-  border: 1px solid #ccc;
+  border: 1px solid #f9f5f5;
   border-radius: 4px;
   padding: 4px 8px;
   font-size: 14px;
