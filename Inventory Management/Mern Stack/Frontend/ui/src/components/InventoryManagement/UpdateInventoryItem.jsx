@@ -51,19 +51,47 @@ const UpdateInventoryItem = () => {
     }, [id]);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        if (name === 'category') {
+            let defaultUnit = "Kg";
+            if (value === "Farm Machinery & Tools") defaultUnit = "Units";
+            setFormData({ 
+                ...formData, 
+                category: value, 
+                unit: defaultUnit,
+                availableAmount: ["Farm Machinery & Tools", "Packaging Materials", "Pest Control & Storage Protection", "Other"].includes(value) && defaultUnit === "Units"
+                    ? (formData.availableAmount.includes('.')) ? Math.floor(parseFloat(formData.availableAmount)).toString() || "" : formData.availableAmount
+                    : formData.availableAmount
+            });
+        } else if (name === 'unit') {
+            setFormData({ 
+                ...formData, 
+                unit: value,
+                availableAmount: value === "Units" 
+                    ? (formData.availableAmount.includes('.')) ? Math.floor(parseFloat(formData.availableAmount)).toString() || "" : formData.availableAmount
+                    : formData.availableAmount
+            });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleAmountChange = (e) => {
         const value = e.target.value;
-        if (value === '' || /^\d*\.?\d*$/.test(value)) {
-            setFormData({ ...formData, availableAmount: value });
+        if (formData.unit === "Units") {
+            if (value === '' || /^\d*$/.test(value)) {
+                setFormData({ ...formData, availableAmount: value });
+            }
+        } else {
+            if (value === '' || /^\d*\.?\d{0,3}$/.test(value)) {
+                setFormData({ ...formData, availableAmount: value });
+            }
         }
     };
 
     const handleUnitPriceChange = (e) => {
         const value = e.target.value;
-        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+        if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
             setFormData({ ...formData, unitPrice: value });
         }
     };
@@ -79,13 +107,19 @@ const UpdateInventoryItem = () => {
 
     const adjustAmount = (increment) => {
         let currentValue = parseFloat(formData.availableAmount) || 0;
-        const decimalPart = currentValue % 1;
-        currentValue = Math.floor(currentValue) + increment + decimalPart;
+        if (formData.unit === "Units") {
+            currentValue = Math.floor(currentValue) + increment;
+        } else {
+            const decimalPart = currentValue % 1;
+            currentValue = Math.floor(currentValue) + increment + decimalPart;
+        }
         
         if (currentValue < 0) currentValue = 0;
         
-        // If decimal part is 0, show as integer, otherwise keep decimal
-        const newValue = decimalPart === 0 ? currentValue.toString() : currentValue.toFixed(3).replace(/\.?0+$/, '');
+        const newValue = formData.unit === "Units" 
+            ? currentValue.toString() 
+            : (currentValue % 1 === 0 ? currentValue.toString() : currentValue.toFixed(3).replace(/\.?0+$/, ''));
+        
         setFormData({ ...formData, availableAmount: newValue });
     };
 
@@ -112,6 +146,11 @@ const UpdateInventoryItem = () => {
             isValid = false;
         }
 
+        if (formData.unit === "Units" && formData.availableAmount.includes('.')) {
+            newErrors.availableAmount = "Available Amount must be a whole number when Units is selected.";
+            isValid = false;
+        }
+
         if (!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (!formData.expirationDate || new Date(formData.expirationDate) <= new Date())) {
             newErrors.expirationDate = "Expiration Date must be a future date.";
             isValid = false;
@@ -124,6 +163,25 @@ const UpdateInventoryItem = () => {
 
         setErrors(newErrors);
         return isValid;
+    };
+
+    const getAvailableUnits = () => {
+        switch(formData.category) {
+            case "Fertilizers":
+            case "Pesticides":
+                return ["Kg", "Liters"];
+            case "Seeds":
+                return ["Kg"];
+            case "Packaging Materials":
+                return ["Kg", "Units"];
+            case "Farm Machinery & Tools":
+                return ["Units"];
+            case "Pest Control & Storage Protection":
+            case "Other":
+                return ["Kg", "Liters", "Units"];
+            default:
+                return ["Kg", "Liters", "Units"];
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -158,6 +216,8 @@ const UpdateInventoryItem = () => {
     if (errors.fetchError) {
         return <div className="update-error-message">{errors.fetchError}</div>;
     }
+
+    const availableUnits = getAvailableUnits();
 
     return (
         <div className="update-inventory-item-container">
@@ -203,10 +263,10 @@ const UpdateInventoryItem = () => {
                     >
                         +
                     </button>
-                    <select name="unit" value={formData.unit} onChange={handleChange} className="update-select">
-                        <option value="Kg">Kg</option>
-                        <option value="Liters">Liters</option>
-                        <option value="Units">Units</option>
+                    <select name="unit" value={formData.unit} onChange={handleChange} className="update-select" disabled={availableUnits.length === 1}>
+                        {availableUnits.map(unit => (
+                            <option key={unit} value={unit}>{unit}</option>
+                        ))}
                     </select>
                 </div>
                 {errors.availableAmount && <p className="update-error-message">{errors.availableAmount}</p>}

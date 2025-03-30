@@ -42,13 +42,24 @@ const SeeDetails = () => {
 
     const adjustQuickUpdateAmount = (increment) => {
         let currentValue = parseFloat(quickUpdateAmount) || 0;
-        const decimalPart = currentValue % 1;
-        currentValue = Math.floor(currentValue) + increment + decimalPart;
+        
+        if (item.unit === "Units") {
+            // For Units, only allow whole numbers
+            currentValue = Math.floor(currentValue) + increment;
+        } else {
+            // For Kg and Liters, allow decimals
+            const decimalPart = currentValue % 1;
+            currentValue = Math.floor(currentValue) + increment + decimalPart;
+        }
         
         if (currentValue < 0) currentValue = 0;
         
-        const newValue = decimalPart === 0 ? currentValue.toString() : currentValue.toFixed(3).replace(/\.?0+$/, '');
+        const newValue = item.unit === "Units" 
+            ? currentValue.toString() 
+            : (currentValue % 1 === 0 ? currentValue.toString() : currentValue.toFixed(3).replace(/\.?0+$/, ''));
+        
         setQuickUpdateAmount(newValue);
+        setValidationError("");
     };
 
     const handleQuickUpdate = async () => {
@@ -57,13 +68,18 @@ const SeeDetails = () => {
             return;
         }
 
-        if (parseFloat(quickUpdateAmount) < 0) {
-            setValidationError("Amount cannot be negative.");
+        if (parseFloat(quickUpdateAmount) <= 0) {
+            setValidationError("Available amount must be greater than 0.");
             return;
         }
 
         if (item.unit === "Units" && !Number.isInteger(parseFloat(quickUpdateAmount))) {
             setValidationError("Units cannot be a decimal number.");
+            return;
+        }
+
+        if (["Kg", "Liters"].includes(item.unit) && quickUpdateAmount.split('.')[1]?.length > 3) {
+            setValidationError("Maximum 3 decimal places allowed for Kg and Liters.");
             return;
         }
 
@@ -86,6 +102,29 @@ const SeeDetails = () => {
         } catch (err) {
             console.error("Error updating item:", err);
             setError("Failed to update item. Please try again later.");
+        }
+    };
+
+    const handleQuickUpdateInputChange = (e) => {
+        const value = e.target.value;
+        
+        if (item.unit === "Units") {
+            // Only allow whole numbers for Units
+            if (value === '' || /^\d*$/.test(value)) {
+                setQuickUpdateAmount(value);
+                setValidationError("");
+            }
+        } else {
+            // Allow up to 3 decimal places for Kg and Liters
+            if (value === '' || /^\d*\.?\d{0,3}$/.test(value)) {
+                setQuickUpdateAmount(value);
+                setValidationError("");
+            }
+        }
+
+        // Show error immediately if value is 0
+        if (parseFloat(value) === 0) {
+            setValidationError("Available amount must be greater than 0.");
         }
     };
 
@@ -131,6 +170,7 @@ const SeeDetails = () => {
 
     const expirationStatus = getExpirationStatus(item.expirationDate);
     const stockStatus = getStockStatus(item.availableAmount);
+    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials"].includes(item.category);
 
     return (
         <div className="see-details-container">
@@ -164,17 +204,19 @@ const SeeDetails = () => {
                     <div className="detail-label">Unit price</div>
                     <div className="detail-value">{formatCurrency(item.unitPrice)}</div>
                 </div>
-                <div className="item-detail-row">
-                    <div className="detail-label">Expires in</div>
-                    <div className={`detail-value ${expirationStatus.status}`}>
-                        {expirationStatus.status === "expired" ? `Item expired ${expirationStatus.timeLeft}` :
-                         expirationStatus.status === "expires-today" ? "Item expires today" :
-                         expirationStatus.status === "expires-soon" ? ` ${expirationStatus.timeLeft}` :
-                         expirationStatus.status === "expires-near" ? ` ${expirationStatus.timeLeft}` :
-                         expirationStatus.status === "expires-far" ? ` ${expirationStatus.timeLeft}` :
-                         "No expiration date"}
+                {showExpirationDate && (
+                    <div className="item-detail-row">
+                        <div className="detail-label">Expires in</div>
+                        <div className={`detail-value ${expirationStatus.status}`}>
+                            {expirationStatus.status === "expired" ? `Item expired ${expirationStatus.timeLeft}` :
+                            expirationStatus.status === "expires-today" ? "Item expires today" :
+                            expirationStatus.status === "expires-soon" ? ` ${expirationStatus.timeLeft}` :
+                            expirationStatus.status === "expires-near" ? ` ${expirationStatus.timeLeft}` :
+                            expirationStatus.status === "expires-far" ? ` ${expirationStatus.timeLeft}` :
+                            "No expiration date"}
+                        </div>
                     </div>
-                </div>
+                )}
                 <div className="item-detail-row">
                     <div className="detail-label">Note</div>
                     <div className="detail-value">
@@ -207,57 +249,61 @@ const SeeDetails = () => {
                 </div>
             )}
 
-{showQuickUpdateModal && (
-    <div className="confirmation-overlay">
-        <div className="confirmation-dialog">
-            <p>Quick Update Available Amount</p>
-            <div className="quick-update-controls">
-                <button 
-                    className="amount-adjust-button"
-                    onClick={() => adjustQuickUpdateAmount(-1)}
-                    disabled={!quickUpdateAmount || parseFloat(quickUpdateAmount) <= 0}
-                >
-                    -
-                </button>
-                <input
-                    type="number"
-                    value={quickUpdateAmount}
-                    onChange={(e) => {
-                        setQuickUpdateAmount(e.target.value);
-                        setValidationError("");
-                    }}
-                    onKeyDown={(e) => {
-                        if (e.key === 'ArrowUp') {
-                            e.preventDefault();
-                            adjustQuickUpdateAmount(1);
-                        } else if (e.key === 'ArrowDown') {
-                            e.preventDefault();
-                            adjustQuickUpdateAmount(-1);
-                        }
-                    }}
-                    className={`amount-input ${validationError ? "input-error" : ""}`}
-                    placeholder="0"
-                    step="any"
-                />
-                <button 
-                    className="amount-adjust-button"
-                    onClick={() => adjustQuickUpdateAmount(1)}
-                >
-                    +
-                </button>
-            </div>
-            {validationError && <p className="text-red-500 text-sm">{validationError}</p>}
-            <div className="confirmation-buttons">
-                <button className="update-button" onClick={handleQuickUpdate}>
-                    Update
-                </button>
-                <button className="delete-button" onClick={() => setShowQuickUpdateModal(false)}>
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </div>
-)}
+            {showQuickUpdateModal && (
+                <div className="confirmation-overlay">
+                    <div className="confirmation-dialog">
+                        <p>Quick Update Available Amount</p>
+                        <div className="quick-update-controls">
+                            <button 
+                                className="amount-adjust-button"
+                                onClick={() => adjustQuickUpdateAmount(-1)}
+                                disabled={!quickUpdateAmount || parseFloat(quickUpdateAmount) <= 0}
+                            >
+                                -
+                            </button>
+                            <input
+                                type="text"
+                                value={quickUpdateAmount}
+                                onChange={handleQuickUpdateInputChange}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'ArrowUp') {
+                                        e.preventDefault();
+                                        adjustQuickUpdateAmount(1);
+                                    } else if (e.key === 'ArrowDown') {
+                                        e.preventDefault();
+                                        adjustQuickUpdateAmount(-1);
+                                    }
+                                }}
+                                className={`amount-input ${validationError ? "input-error" : ""}`}
+                                placeholder="0"
+                            />
+                            <button 
+                                className="amount-adjust-button"
+                                onClick={() => adjustQuickUpdateAmount(1)}
+                            >
+                                +
+                            </button>
+                        </div>
+                        {validationError && (
+                            <div style={{ color: "#ef4444", fontWeight: "600", fontSize: "0.875rem", marginTop: "0.5rem" }}>
+                                {validationError}
+                            </div>
+                        )}
+                        <div className="confirmation-buttons">
+                            <button 
+                                className="update-button" 
+                                onClick={handleQuickUpdate}
+                                disabled={validationError || !quickUpdateAmount}
+                            >
+                                Update
+                            </button>
+                            <button className="delete-button" onClick={() => setShowQuickUpdateModal(false)}>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
