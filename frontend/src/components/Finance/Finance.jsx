@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
+import Sidebar from "./Sidebar"; 
 import { getTransactions, generateReport, deleteTransaction } from "../../api/financeApi";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import "./Finance.css";
 
 const Finance = () => {
+
   const [transactions, setTransactions] = useState([]);
   const [report, setReport] = useState({ totalIncome: 0, totalOutcome: 0, profit: 0 });
   const [showMenu, setShowMenu] = useState(null);
@@ -413,6 +415,8 @@ const Finance = () => {
   return (
     <div className="finance-dashboard" onClick={handleClickOutside}>
       {/* Buttons Section at the Top */}
+       {/* Sidebar */}
+      
       <div className="buttons-section">
         <div className="button-group-left">
           <button className="button income" onClick={handleIncome}>
