@@ -158,7 +158,7 @@ const AddHarvest = () => {
           ))}
         </div>
 
-        <button type="submit" className="submit-button">ADD HARVEST</button>
+        <button type="submit" className="submits-button">ADD HARVEST</button>
       </form>
     </div>
   );

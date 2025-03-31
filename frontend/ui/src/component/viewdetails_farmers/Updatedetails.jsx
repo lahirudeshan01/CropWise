@@ -150,8 +150,8 @@ function Updatedetails() {
   }
 
   return (
-    <div className="update-form-container">
-      <div className="update-form">
+    <div className="update-form-containere">
+      <div className="update-form-farmer">
         <h2 className="form-title">Update Farmer</h2>
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
@@ -274,7 +274,7 @@ function Updatedetails() {
           
           <div className="form-buttons">
             <button type="submit" className="update-button">Update</button>
-            <button type="button" className="cancel-button" onClick={handleCancel}>Cancel</button>
+            <button type="button" className="cancels-button" onClick={handleCancel}>Cancel</button>
           </div>
         </form>
       </div>

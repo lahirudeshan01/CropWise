@@ -1,4 +1,6 @@
-body {
+
+
+ body {
   margin: 0;
   padding: 0;
 }
@@ -7,14 +9,14 @@ body {
   width: 260px;
   background-color: #2c332d ;
   min-height: 100vh;
-  position: fixed; /* Fix the sidebar in place */
+  position: fixed; 
   left: 0;
   top: 0;
   bottom: 0;
-  overflow-y: auto; /* Allow scrolling if sidebar content is too long */
+  overflow-y: auto;
 }
 
-/* Sidebar Header with Logo and Title */
+
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -53,9 +55,9 @@ body {
   transition: background-color 0.2s;
 }
 
-/* Styling for the active tab */
+
 .sidebar-item.active {
-  background-color: #16a21a; /* Green color matching your example */
+  background-color: #16a21a; 
   color: white;
 }
 
@@ -63,29 +65,28 @@ body {
   margin-right: 10px;
 }
 
-/* Hover effect for non-active tabs */
+
 .sidebar-item:not(.active):hover {
   background-color: #743232;
 }
 
-/* Dropdown menu styling */
+
 .dropdown-menu {
   margin-top: 0 !important;
   padding-left: 0;
 }
 
-/* Submenu item styling - adding indentation and different style */
 .sub-item {
-  padding-left: 40px !important; /* Increase padding to indent */
-  margin-top: 5px !important; /* Reduce margin for submenu items */
-  background-color: rgba(224, 224, 224, 0.3); /* Slight background to differentiate */
+  padding-left: 40px !important; 
+  margin-top: 5px !important; 
+  background-color: rgba(224, 224, 224, 0.3); 
 }
 
 .sub-item:not(.active):hover {
   background-color: rgba(224, 224, 224, 0.7);
 }
 
-/* Dashboard layout structure */
+
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
@@ -106,12 +107,12 @@ body {
 
 .dashboard-content {
   flex: 1;
-  margin-left: 260px; /* This should match sidebar width */
+  margin-left: 260px; 
   padding: 20px;
   overflow-x: hidden;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
@@ -128,7 +129,7 @@ body {
     width: 100%;
   }
 
-  /* Add a toggle button for mobile */
+
   .sidebar-toggle {
     display: block;
     position: fixed;
@@ -141,4 +142,4 @@ body {
     padding: 8px;
     border-radius: 4px;
   }
-}
+} 

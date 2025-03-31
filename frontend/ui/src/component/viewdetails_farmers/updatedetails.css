@@ -1,11 +1,11 @@
 /* Add these styles to your existing updatedetails.css */
-.update-form-container {
+.update-form-containere {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.update-form {
+.update-form-farmer {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -60,14 +60,14 @@
   font-size: 16px;
   font-weight: 500;
   transition: background-color 0.3s;
-}
+} 
 
 .update-button:hover {
   background-color: #218838;
 }
 
-.cancel-button {
-  background-color: #6c757d;
+.cancels-button {
+  background-color: #e43a0b;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -76,10 +76,11 @@
   font-size: 16px;
   font-weight: 500;
   transition: background-color 0.3s;
+  
 }
 
 .cancel-button:hover {
-  background-color: #5a6268;
+  background-color: #12b75a;
 }
 
 .loading-message {
@@ -98,22 +99,22 @@
   max-width: 800px;
   text-align: center;
   font-size: 16px;
-}
+} 
 
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
-  .update-form {
+  .update-form-farmer {
     padding: 20px;
   }
 
-  .form-buttons {
+   .form-buttons {
     flex-direction: column;
     gap: 10px;
   }
 
   .update-button, .cancel-button {
     width: 100%;
-  }
+  } 
 }
 .image-upload-section {
   display: flex;
@@ -123,7 +124,7 @@
 }
 
 .image-preview-container {
-  width: 250px;
+  width: 450px;
   height: 250px;
   border: 2px dashed #ddd;
   display: flex;

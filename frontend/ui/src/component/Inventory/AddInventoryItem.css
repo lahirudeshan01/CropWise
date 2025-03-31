@@ -1,6 +1,6 @@
-/* Container styling */
+/* /* 
 .add-inventory-item-container {
-  max-width: 700px;
+  width: 60%;
   margin: 2rem auto;
   padding: 2rem;
   background-color: white;
@@ -9,14 +9,14 @@
   font-family: Arial, sans-serif;
 }
 
-/* Form styling */
+
 form {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-/* Heading styling */
+
 h1 {
   font-size: 2rem;
   font-weight: 700;
@@ -24,7 +24,7 @@ h1 {
   color: #2d3748;
 }
 
-/* Label styling */
+
 label {
   display: block;
   font-weight: 600;
@@ -33,7 +33,7 @@ label {
   font-size: 1rem;
 }
 
-/* Input styling */
+
 input, select, textarea {
   width: 100%;
   padding: 0.75rem;
@@ -46,7 +46,7 @@ input, select, textarea {
   transition: border-color 0.2s;
 }
 
-/* Focus states */
+
 input:focus,
 select:focus,
 textarea:focus {
@@ -55,7 +55,7 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Select dropdown styling */
+
 select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
@@ -64,7 +64,7 @@ select {
   padding-right: 2.5rem;
 }
 
-/* Date input styling */
+
 input[type="date"] {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
@@ -73,13 +73,13 @@ input[type="date"] {
   min-height: 44px;
 }
 
-/* Textarea styling */
+
 textarea {
   min-height: 120px;
   resize: vertical;
 }
 
-/* Error message styling */
+
 .error-message {
   color: #dc2626;
   font-size: 0.875rem;
@@ -87,7 +87,7 @@ textarea {
   margin-bottom: 1rem;
 }
 
-/* Unit price container */
+
 .unit-price-container {
   display: flex;
   align-items: center;
@@ -107,8 +107,8 @@ textarea {
   margin-bottom: 0;
 }
 
-/* Standardized buttons */
-button {
+
+/* button {
   height: 44px;
   padding: 0 1.25rem;
   border: none;
@@ -117,9 +117,10 @@ button {
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-}
+  
+} */
 
-.unit-price-button {
+/* .unit-price-button {
   width: 44px;
   height: 44px;
   padding: 0;
@@ -146,9 +147,17 @@ button {
   background-color: #3b82f6;
   color: white;
   margin-right: 1rem;
-  width: 700px;
-  display: block; /* Make it a block element */
+  display: block; 
   margin: 20px auto;
+  height: 44px;
+  padding: 0 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  width: 200px;
 }
 
 .submit-button:hover {
@@ -160,9 +169,17 @@ button {
   background-color: #f1f5f9;
   color: #4b5563;
   border: 1px solid #e5e7eb;
-  width: 700px;
-  display: block; /* Make it a block element */
+  display: block; 
   margin: 0 auto;
+  height: 44px;
+  padding: 0 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  width: 200px;
 }
 
 .cancel-button:hover {
@@ -170,7 +187,7 @@ button {
   transform: translateY(-1px);
 }
 
-/* Utility classes */
+
 .mb-4 {
   margin-bottom: 1rem;
 }
@@ -187,7 +204,7 @@ button {
   font-weight: 700;
 }
 
-/* Mobile responsiveness */
+
 @media (max-width: 640px) {
   .add-inventory-item-container {
     margin: 1rem;
@@ -204,4 +221,4 @@ button {
   .unit-price-container select {
     width: 80px;
   }
-}
+} 

@@ -1,6 +1,8 @@
 const express = require("express");
 const routes = require("./routes/farmers_set");
 const inventoryRoutes = require("./routes/inventory&resource")
+const financeRoutes = require('./routes/financeRoutes');
+
 const db_connection = require("./config/db_connection");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -21,6 +23,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.get("/", (req, res) => res.send("Hello..."));
 app.use("/api/farmers", routes);
 app.use("/api/inventory", inventoryRoutes);
+app.use('/api', financeRoutes);
 
 const PORT = 3000;
 

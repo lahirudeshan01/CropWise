@@ -18,6 +18,9 @@ import AddInventoryItem from './component/Inventory/AddInventoryItem'
 import InventoryList from './component/InventoryList/InventoryList'
 import SeeDetails from './component/SeeDetails/SeeDetails'
 import UpdateInventoryItem from './component/UpdateInventory/UpdateInventoryItem'
+import Finance from './component/finance/Finance'
+import IncomeForm from './component/finance/IncomeForm'
+import OutcomeForm from './component/finance/OutcomeForm'
 
 // import ShowDetails from './component/ShowDetailsemployee/ShowDetailsemployee'
 
@@ -50,6 +53,9 @@ function App() {
               <Route path="/PaymentPage" element={<PaymentPage/>} />
               <Route path="/item/:id" element={<SeeDetails/>} />
               <Route path="/edit-item/:id" element={<UpdateInventoryItem/>} />
+              <Route path="/income-form" element={<IncomeForm/>} />
+              <Route path="/outcome-form" element={<OutcomeForm/>} />
+
               
 
              
@@ -66,6 +72,7 @@ function App() {
               <Route path="/inventryshow" element={<DashboardLayout><InventoryList/></DashboardLayout>} />
               <Route path="/addinventry" element={<DashboardLayout><AddInventoryItem/></DashboardLayout>} />
               <Route path="/inventryshow" element={<DashboardLayout><InventoryList/></DashboardLayout>} />
+              <Route path="/financeshow" element={<DashboardLayout><Finance/></DashboardLayout>} />
              
             
 
