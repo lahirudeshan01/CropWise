@@ -14,6 +14,7 @@ import Buyers from './component/UserUi/Buyers'
 import FarmerList from './component/Showdetails/FarmerList'
 import Userfee from './component/UserUi2/Userfee'
 import PaymentPage from './component/Payment_order/PaymentPage'
+import TaskForm from './component/assignTasks/TaskForm'
 
 // Create a layout component for dashboard pages
 function DashboardLayout({ children }) {
@@ -53,6 +54,7 @@ function App() {
               <Route path="/showall" element={<DashboardLayout><Showall /></DashboardLayout>} />
               <Route path="/Show/:id" element={<DashboardLayout><Detailsview /></DashboardLayout>} />
               <Route path="/updatedetails/:id" element={<DashboardLayout><Updatedetails /></DashboardLayout>} />
+              <Route path="/task" element={<DashboardLayout><TaskForm/></DashboardLayout>} />
            
               
             </Routes>

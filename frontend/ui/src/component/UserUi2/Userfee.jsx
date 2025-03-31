@@ -1,10 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Stepper, Step, StepLabel, Button, Typography, TextField, Grid, Paper } from '@mui/material';
-import { LocalShipping, PaymentOutlined, CheckCircle } from '@mui/icons-material';
-import './Userfee.css';
-import PaymentPage from '../Payment_order/PaymentPage'; // Import the PaymentPage component
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import {
+  Stepper,
+  Step,
+  StepLabel,
+  Button,
+  Typography,
+  TextField,
+  Grid,
+  Paper,
+} from "@mui/material";
+import {
+  LocalShipping,
+  PaymentOutlined,
+  CheckCircle,
+} from "@mui/icons-material";
+import "./Userfee.css";
+import PaymentPage from "../Payment_order/PaymentPage"; // Import the PaymentPage component
 
 const Userfee = () => {
   const location = useLocation();
@@ -15,26 +28,28 @@ const Userfee = () => {
     quantity: 0,
     totalPrice: 0,
     deliveryInfo: {
-      name: '',
-      address: '',
-      phone: '',
-      email: ''
+      name: "",
+      address: "",
+      phone: "",
+      email: "",
     },
-    paymentMethod: '',
-    paymentDetails: null
+    paymentMethod: "",
+    paymentDetails: null,
   });
 
   // Effect to set initial product from navigation state
   useEffect(() => {
     if (location.state && location.state.selectedProduct) {
-      setOrderDetails(prev => ({
+      setOrderDetails((prev) => ({
         ...prev,
         product: location.state.selectedProduct,
         quantity: location.state.selectedProduct.quantity,
-        totalPrice: location.state.selectedProduct.price * location.state.selectedProduct.quantity
+        totalPrice:
+          location.state.selectedProduct.price *
+          location.state.selectedProduct.quantity,
       }));
     } else {
-      navigate('/buy');
+      navigate("/buy");
     }
   }, [location.state, navigate]);
 
@@ -44,22 +59,22 @@ const Userfee = () => {
 
     // Ensure quantity doesn't exceed available stock or fall below minimum required quantity
     const validQuantity = Math.min(enteredQuantity, maxQuantity);
-    
-    setOrderDetails(prev => ({
+
+    setOrderDetails((prev) => ({
       ...prev,
       quantity: validQuantity,
-      totalPrice: validQuantity * prev.product.price
+      totalPrice: validQuantity * prev.product.price,
     }));
   };
 
   const handleDeliveryInfoChange = (e) => {
     const { name, value } = e.target;
-    setOrderDetails(prev => ({
+    setOrderDetails((prev) => ({
       ...prev,
       deliveryInfo: {
         ...prev.deliveryInfo,
-        [name]: value
-      }
+        [name]: value,
+      },
     }));
   };
 
@@ -73,7 +88,7 @@ const Userfee = () => {
     if (activeStep > 1) {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     } else {
-      navigate('/buy');
+      navigate("/buy");
     }
   };
 
@@ -96,29 +111,32 @@ const Userfee = () => {
         ...orderDetails,
         paymentMethod: paymentInfo.paymentMethod,
         paymentDetails: paymentInfo.paymentDetails,
-        status: 'Pending'
+        status: "Pending",
       };
-      
+
       // Send order to the server
-      const response = await axios.post('http://localhost:3000/api/orders', updatedOrderDetails);
+      const response = await axios.post(
+        "http://localhost:3000/api/orders",
+        updatedOrderDetails
+      );
 
       if (response.data) {
         setActiveStep(3); // Move to confirmation step
       }
     } catch (error) {
-      console.error('Order placement failed:', error);
+      console.error("Order placement failed:", error);
     }
   };
 
   const steps = [
-    { label: 'Product Details', icon: null },
-    { label: 'Delivery Details', icon: <LocalShipping /> },
-    { label: 'Payment', icon: <PaymentOutlined /> },
-    { label: 'Confirmation', icon: <CheckCircle /> }
+    { label: "Product Details", icon: null },
+    { label: "Delivery Details", icon: <LocalShipping /> },
+    { label: "Payment", icon: <PaymentOutlined /> },
+    { label: "Confirmation", icon: <CheckCircle /> },
   ];
 
   const renderStepContent = (step) => {
-    switch(step) {
+    switch (step) {
       case 1:
         return (
           <Paper elevation={3} className="delivery-form">
@@ -138,7 +156,11 @@ const Userfee = () => {
                       onChange={handleQuantityChange}
                       inputProps={{
                         min: 1000,
-                        max: orderDetails.product.quantity
+                        max: orderDetails.product.quantity,
+                      }}
+                      onInput={(e) => {
+                        // Remove leading zeros
+                        e.target.value = e.target.value.replace(/^0+/, "");
                       }}
                     />
                   </Grid>
@@ -149,8 +171,8 @@ const Userfee = () => {
                   </Grid>
                 </Grid>
                 <Typography variant="subtitle2" style={{ marginTop: 10 }}>
-                  Price: Rs.{orderDetails.product.price} /1kg 
-                  | Total Price: Rs. {orderDetails.totalPrice.toFixed(2)}
+                  Price: Rs.{orderDetails.product.price} /1kg | Total Price: Rs.{" "}
+                  {orderDetails.totalPrice.toFixed(2)}
                 </Typography>
               </div>
             )}
@@ -180,9 +202,34 @@ const Userfee = () => {
                   fullWidth
                   label="Phone Number"
                   name="phone"
-                  type="tel"
+                  // Change type from "number" to "tel" for better mobile keyboard support
+                  type="number"
                   value={orderDetails.deliveryInfo.phone}
-                  onChange={handleDeliveryInfoChange}
+                  onChange={(e) => {
+                    // Only allow digits
+                    const value = e.target.value.replace(/\D/g, "");
+                    // Set a maximum length of 10 digits
+                    if (value.length <= 10) {
+                      handleDeliveryInfoChange({
+                        target: {
+                          name: e.target.name,
+                          value: value,
+                        },
+                      });
+                    }
+                  }}
+                  // Add error state and helper text
+                  error={
+                    orderDetails.deliveryInfo.phone.length > 0 &&
+                    orderDetails.deliveryInfo.phone.length !== 10
+                  }
+                  helperText={
+                    orderDetails.deliveryInfo.phone.length > 0 &&
+                    orderDetails.deliveryInfo.phone.length !== 10
+                      ? "Phone number must be exactly 10 digits"
+                      : ""
+                  }
+                  inputProps={{ maxLength: 10 }}
                   required
                 />
               </Grid>
@@ -206,7 +253,7 @@ const Userfee = () => {
             orderDetails={{
               product: orderDetails.product,
               quantity: orderDetails.quantity,
-              totalPrice: orderDetails.totalPrice
+              totalPrice: orderDetails.totalPrice,
             }}
             onPaymentSubmit={handlePaymentSubmit}
             onBack={handleBack}
@@ -215,10 +262,15 @@ const Userfee = () => {
       case 3:
         return (
           <Paper elevation={3} className="confirmation-section">
-            <CheckCircle style={{ fontSize: 60, color: 'green', marginBottom: 20 }} />
-            <Typography variant="h5" gutterBottom>Order Placed Successfully!</Typography>
+            <CheckCircle
+              style={{ fontSize: 60, color: "green", marginBottom: 20 }}
+            />
+            <Typography variant="h5" gutterBottom>
+              Order Placed Successfully!
+            </Typography>
             <Typography variant="body1">
-              Thank you for your order. Your payment has been processed and your products will be delivered soon.
+              Thank you for your order. Your payment has been processed and your
+              products will be delivered soon.
             </Typography>
             <Typography variant="body2" style={{ marginTop: 20 }}>
               Order details have been sent to: {orderDetails.deliveryInfo.email}
@@ -227,7 +279,7 @@ const Userfee = () => {
               variant="contained"
               color="primary"
               style={{ marginTop: 20 }}
-              onClick={() => navigate('/buy')}
+              onClick={() => navigate("/buy")}
             >
               Continue Shopping
             </Button>
@@ -252,19 +304,17 @@ const Userfee = () => {
 
       <div className="step-content">
         {renderStepContent(activeStep)}
-        
+
         {/* Show navigation buttons only on step 1 */}
         {activeStep === 1 && (
           <div className="navigation-buttons">
-            <Button onClick={handleBack}>
-              Back to Products
-            </Button>
-            <Button 
-              variant="contained" 
+            <Button onClick={handleBack}>Back to Products</Button>
+            <Button
+              variant="contained"
               color="primary"
               onClick={handleNext}
               disabled={
-                orderDetails.quantity <= 999 || 
+                orderDetails.quantity <= 999 ||
                 orderDetails.quantity > orderDetails.product.quantity ||
                 !validateDeliveryInfo()
               }

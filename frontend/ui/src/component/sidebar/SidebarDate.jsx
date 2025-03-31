@@ -20,9 +20,21 @@ export const SidebarDate = [
         link: "/add-member"
     },
     {
-        title: "Contact",
+        title: "Assign Task",
         icon: <CallIcon />,
-        link: "/contact",
+        link: "#",
+        subMenu: [
+            {
+                title: "Add Task",
+                icon: <AddBoxRoundedIcon />,
+                link: "/task"
+            },
+            {
+                title: "Show Task",
+                icon: <ViewHeadlineRoundedIcon />,
+                link: ""
+            }
+        ]
     },
     {
         title: "MarketPlace",

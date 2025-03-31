@@ -20,6 +20,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/", (req, res) => res.send("Hello..."));
 app.use("/api/farmers", routes);
+app.use("/api/tasks", routes);
 
 const PORT = 3000;
 
