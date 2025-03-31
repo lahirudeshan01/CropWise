@@ -15,6 +15,10 @@ import FarmerList from './component/Showdetails/FarmerList'
 import Userfee from './component/UserUi2/Userfee'
 import PaymentPage from './component/Payment_order/PaymentPage'
 import TaskForm from './component/assignTasks/TaskForm'
+import AddInventoryItem from './component/Inventory/AddInventoryItem'
+import InventoryList from './component/InventoryList/InventoryList'
+import SeeDetails from './component/SeeDetails/SeeDetails'
+import UpdateInventoryItem from './component/UpdateInventory/UpdateInventoryItem'
 
 // Create a layout component for dashboard pages
 function DashboardLayout({ children }) {
@@ -43,6 +47,9 @@ function App() {
               <Route path="/buy" element={<Buyers/>} />
               <Route path="/userfee" element={<Userfee/>} />
               <Route path="/PaymentPage" element={<PaymentPage/>} />
+              <Route path="/item/:id" element={<SeeDetails/>} />
+              <Route path="/edit-item/:id" element={<UpdateInventoryItem/>} />
+
              
               
 
@@ -55,6 +62,11 @@ function App() {
               <Route path="/Show/:id" element={<DashboardLayout><Detailsview /></DashboardLayout>} />
               <Route path="/updatedetails/:id" element={<DashboardLayout><Updatedetails /></DashboardLayout>} />
               <Route path="/task" element={<DashboardLayout><TaskForm/></DashboardLayout>} />
+              <Route path="/addinventry" element={<DashboardLayout><AddInventoryItem/></DashboardLayout>} />
+              <Route path="/inventryshow" element={<DashboardLayout><InventoryList/></DashboardLayout>} />
+              
+
+             
            
               
             </Routes>
