@@ -14,11 +14,12 @@ import Buyers from './component/UserUi/Buyers'
 import FarmerList from './component/Showdetails/FarmerList'
 import Userfee from './component/UserUi2/Userfee'
 import PaymentPage from './component/Payment_order/PaymentPage'
-import TaskForm from './component/assignTasks/TaskForm'
 import AddInventoryItem from './component/Inventory/AddInventoryItem'
 import InventoryList from './component/InventoryList/InventoryList'
 import SeeDetails from './component/SeeDetails/SeeDetails'
 import UpdateInventoryItem from './component/UpdateInventory/UpdateInventoryItem'
+
+// import ShowDetails from './component/ShowDetailsemployee/ShowDetailsemployee'
 
 // Create a layout component for dashboard pages
 function DashboardLayout({ children }) {
@@ -49,10 +50,11 @@ function App() {
               <Route path="/PaymentPage" element={<PaymentPage/>} />
               <Route path="/item/:id" element={<SeeDetails/>} />
               <Route path="/edit-item/:id" element={<UpdateInventoryItem/>} />
+              
 
              
               
-
+              
               
               {/* Dashboard routes with sidebar */}
               <Route path="/dashboard" element={<DashboardLayout><Home /></DashboardLayout>} />
@@ -60,11 +62,12 @@ function App() {
               <Route path="/harvest" element={<DashboardLayout><Addharvest /></DashboardLayout>} />
               <Route path="/showall" element={<DashboardLayout><Showall /></DashboardLayout>} />
               <Route path="/Show/:id" element={<DashboardLayout><Detailsview /></DashboardLayout>} />
-              <Route path="/updatedetails/:id" element={<DashboardLayout><Updatedetails /></DashboardLayout>} />
-              <Route path="/task" element={<DashboardLayout><TaskForm/></DashboardLayout>} />
+              <Route path="/updatedetails/:id" element={<DashboardLayout><Updatedetails /></DashboardLayout>} />                          
+              <Route path="/inventryshow" element={<DashboardLayout><InventoryList/></DashboardLayout>} />
               <Route path="/addinventry" element={<DashboardLayout><AddInventoryItem/></DashboardLayout>} />
               <Route path="/inventryshow" element={<DashboardLayout><InventoryList/></DashboardLayout>} />
-              
+             
+            
 
              
            

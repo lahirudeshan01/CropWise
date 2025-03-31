@@ -223,7 +223,7 @@ function Updatedetails() {
           <div className="form-group">
             <label htmlFor="quantity">Quantity:</label>
             <input
-              type="text"
+              type="number"
               id="quantity"
               name="quantity"
               value={farmer.quantity}

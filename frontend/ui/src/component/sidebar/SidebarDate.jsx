@@ -15,15 +15,11 @@ export const SidebarDate = [
         link: "/home",
         subMenu: [
             {
-                title: "Income ",
+                title: "show ",
                 icon: <AddBoxRoundedIcon />,
-                link: ""
+                link: "/financeshow"
             },
-            {
-                title: "Show ",
-                icon: <ViewHeadlineRoundedIcon />,
-                link: ""
-            }
+  
         ]
     },
     {
@@ -56,7 +52,7 @@ export const SidebarDate = [
             {
                 title: "Show Task",
                 icon: <ViewHeadlineRoundedIcon />,
-                link: ""
+                link: "/showemployee"
             }
         ]
     },
