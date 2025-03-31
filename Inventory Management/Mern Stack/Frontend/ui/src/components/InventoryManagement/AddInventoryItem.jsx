@@ -27,14 +27,12 @@ const AddInventoryItem = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'category') {
-            // Reset unit when category changes
             let defaultUnit = "Kg";
             if (value === "Farm Machinery & Tools") defaultUnit = "Units";
             setFormData({ 
                 ...formData, 
                 category: value, 
                 unit: defaultUnit,
-                // Reset availableAmount when switching to categories that require whole numbers
                 availableAmount: ["Farm Machinery & Tools", "Packaging Materials", "Pest Control & Storage Protection", "Other"].includes(value) && defaultUnit === "Units"
                     ? (formData.availableAmount.includes('.')) ? Math.floor(parseFloat(formData.availableAmount)).toString() || "" : formData.availableAmount
                     : formData.availableAmount
@@ -43,7 +41,6 @@ const AddInventoryItem = () => {
             setFormData({ 
                 ...formData, 
                 unit: value,
-                // Reset availableAmount when switching to Units
                 availableAmount: value === "Units" 
                     ? (formData.availableAmount.includes('.')) ? Math.floor(parseFloat(formData.availableAmount)).toString() || "" : formData.availableAmount
                     : formData.availableAmount
@@ -55,7 +52,6 @@ const AddInventoryItem = () => {
 
     const handleAmountChange = (e) => {
         const value = e.target.value;
-        // Different regex based on unit
         if (formData.unit === "Units") {
             if (value === '' || /^\d*$/.test(value)) {
                 setFormData({ ...formData, availableAmount: value });
@@ -129,12 +125,16 @@ const AddInventoryItem = () => {
             isValid = false;
         }
 
-        if (!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (!formData.expirationDate || new Date(formData.expirationDate) <= new Date())) {
+        // Only validate expiration date if category is not "Farm Machinery & Tools", "Packaging Materials", or "Other"
+        if (!["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) && 
+            (!formData.expirationDate || new Date(formData.expirationDate) <= new Date())) {
             newErrors.expirationDate = "Expiration Date must be a future date.";
             isValid = false;
         }
 
-        if (["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0)) {
+        // Only validate unit price if category is "Fertilizers", "Pesticides", or "Seeds"
+        if (["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && 
+            (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0)) {
             newErrors.unitPrice = "Unit Price must be a positive number.";
             isValid = false;
         }
@@ -173,7 +173,7 @@ const AddInventoryItem = () => {
             itemName: formData.itemName,
             availableAmount: parseFloat(formData.availableAmount),
             unit: formData.unit,
-            expirationDate: ["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) ? null : formData.expirationDate,
+            expirationDate: ["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) ? null : formData.expirationDate,
             unitPrice: formData.unitPrice ? parseFloat(formData.unitPrice) : 0,
             notes: formData.notes
         };
@@ -187,6 +187,10 @@ const AddInventoryItem = () => {
     };
 
     const availableUnits = getAvailableUnits();
+
+    // Determine if we should show expiration date and unit price fields
+    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
+    const showUnitPrice = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
 
     return (
         <div className="add-inventory-item-container p-4">
@@ -240,7 +244,7 @@ const AddInventoryItem = () => {
                 </div>
                 {errors.availableAmount && <p className="error-message">{errors.availableAmount}</p>}
 
-                {!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (
+                {showExpirationDate && (
                     <>
                         <label>Expiration Date</label>
                         <input 
@@ -250,11 +254,13 @@ const AddInventoryItem = () => {
                             onChange={handleChange} 
                             min={getCurrentDate()}
                         />
-                        {errors.expirationDate && <p className="error-message">{errors.expirationDate}</p>}
+                        {formData.category !== "Other" && errors.expirationDate && (
+                            <p className="error-message">{errors.expirationDate}</p>
+                        )}
                     </>
                 )}
 
-                {!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (
+                {showUnitPrice && (
                     <>
                         <label>Unit Price (RS.)</label>
                         <div className="unit-price-container">
@@ -283,7 +289,9 @@ const AddInventoryItem = () => {
                                 +
                             </button>
                         </div>
-                        {errors.unitPrice && <p className="error-message">{errors.unitPrice}</p>}
+                        {["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && errors.unitPrice && (
+                            <p className="error-message">{errors.unitPrice}</p>
+                        )}
                     </>
                 )}
 

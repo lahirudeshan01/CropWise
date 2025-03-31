@@ -22,7 +22,7 @@ const InventorySchema = new mongoose.Schema({
     availableAmount: {
         type: Number,
         required: true,
-        min: 0, // Ensures the value is not negative
+        min: 0,
     },
     unit: {
         type: String,
@@ -31,28 +31,35 @@ const InventorySchema = new mongoose.Schema({
     },
     unitPrice: {
         type: Number,
-        required: true,
-        min: 0, // Ensures the value is not negative
+        required: function() {
+            return this.category !== "Farm Machinery & Tools" && 
+                   this.category !== "Packaging Materials" && 
+                   this.category !== "Other";
+        },
+        min: 0,
     },
     expirationDate: {
         type: Date,
         required: function() {
-            return this.category !== "Farm Machinery & Tools" && this.category !== "Packaging Materials";
+            return this.category !== "Farm Machinery & Tools" && 
+                   this.category !== "Packaging Materials" && 
+                   this.category !== "Other";
         },
         validate: {
             validator: function (value) {
-                // Ensure the expiration date is in the future
-                if (this.category !== "Farm Machinery & Tools" && this.category !== "Packaging Materials") {
+                if (this.category !== "Farm Machinery & Tools" && 
+                    this.category !== "Packaging Materials" && 
+                    this.category !== "Other") {
                     return value > Date.now();
                 }
-                return true; // Skip validation for categories that don't require expirationDate
+                return true;
             },
             message: "Expiration date must be in the future.",
         },
     },
     notes: {
         type: String,
-        default: "", // Optional field
+        default: "",
     },
 });
 

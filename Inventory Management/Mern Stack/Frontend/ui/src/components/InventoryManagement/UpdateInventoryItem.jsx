@@ -9,7 +9,6 @@ const UpdateInventoryItem = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         category: "Fertilizers",
-        customCategory: "",
         itemName: "",
         availableAmount: "",
         unit: "Kg",
@@ -31,7 +30,6 @@ const UpdateInventoryItem = () => {
                 const item = response.data;
                 setFormData({
                     category: item.category,
-                    customCategory: item.category === "Other" ? item.customCategory : "",
                     itemName: item.itemName,
                     availableAmount: item.availableAmount,
                     unit: item.unit,
@@ -151,12 +149,16 @@ const UpdateInventoryItem = () => {
             isValid = false;
         }
 
-        if (!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (!formData.expirationDate || new Date(formData.expirationDate) <= new Date())) {
+        // Only validate expiration date if category is not "Farm Machinery & Tools", "Packaging Materials", or "Other"
+        if (!["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) && 
+            (!formData.expirationDate || new Date(formData.expirationDate) <= new Date())) {
             newErrors.expirationDate = "Expiration Date must be a future date.";
             isValid = false;
         }
 
-        if (["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0)) {
+        // Only validate unit price if category is "Fertilizers", "Pesticides", or "Seeds"
+        if (["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && 
+            (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0)) {
             newErrors.unitPrice = "Unit Price must be a positive number.";
             isValid = false;
         }
@@ -188,14 +190,12 @@ const UpdateInventoryItem = () => {
         e.preventDefault();
         if (!validateForm()) return;
 
-        const finalCategory = formData.category === "Other" ? (formData.customCategory || "Other") : formData.category;
-
         const updatedItem = {
-            category: finalCategory,
+            category: formData.category,
             itemName: formData.itemName,
             availableAmount: parseFloat(formData.availableAmount),
             unit: formData.unit,
-            expirationDate: ["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) ? null : formData.expirationDate,
+            expirationDate: ["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) ? null : formData.expirationDate,
             unitPrice: formData.unitPrice ? parseFloat(formData.unitPrice) : 0,
             notes: formData.notes
         };
@@ -218,6 +218,10 @@ const UpdateInventoryItem = () => {
     }
 
     const availableUnits = getAvailableUnits();
+
+    // Determine if we should show expiration date and unit price fields
+    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
+    const showUnitPrice = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
 
     return (
         <div className="update-inventory-item-container">
@@ -271,7 +275,7 @@ const UpdateInventoryItem = () => {
                 </div>
                 {errors.availableAmount && <p className="update-error-message">{errors.availableAmount}</p>}
 
-                {!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (
+                {showExpirationDate && (
                     <>
                         <label className="update-label">Expiration Date</label>
                         <input 
@@ -282,11 +286,13 @@ const UpdateInventoryItem = () => {
                             className="update-input"
                             min={getCurrentDate()}
                         />
-                        {errors.expirationDate && <p className="update-error-message">{errors.expirationDate}</p>}
+                        {formData.category !== "Other" && errors.expirationDate && (
+                            <p className="update-error-message">{errors.expirationDate}</p>
+                        )}
                     </>
                 )}
 
-                {!["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category) && (
+                {showUnitPrice && (
                     <>
                         <label className="update-label">Unit Price (RS.)</label>
                         <div className="unit-price-container">
@@ -315,7 +321,9 @@ const UpdateInventoryItem = () => {
                                 +
                             </button>
                         </div>
-                        {errors.unitPrice && <p className="update-error-message">{errors.unitPrice}</p>}
+                        {["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && errors.unitPrice && (
+                            <p className="update-error-message">{errors.unitPrice}</p>
+                        )}
                     </>
                 )}
 
