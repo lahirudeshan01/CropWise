@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
-import Sidebar from "./Sidebar"; 
 import { getTransactions, generateReport, deleteTransaction } from "../../api/financeApi";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import "./Finance.css";

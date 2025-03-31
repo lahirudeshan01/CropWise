@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import Finance from './components/Finance/Finance';
 import FinanceReportPage from './components/Finance/FinanceReportPage';
 import IncomeForm from './components/Finance/IncomeForm';
@@ -11,17 +11,15 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Main Finance Page */}
-        <Route path="/" element={<Finance />} />
-
-        {/* Finance Report Page */}
-        <Route path="/finance-report" element={<FinanceReportPage />} />
-        <Route path="/finance" element={<Finance/>} />
-        <Route path="/income-form" element={<IncomeForm />} />
-        <Route path="/outcome-form" element={<OutcomeForm />} />
-        <Route path="/update-form" element={<UpdateForm />} />
-
-        <Route path="/salary-management" element={<SalaryManagement />} />
+    
+          <Route index element={<Finance />} />
+          <Route path="finance-report" element={<FinanceReportPage />} />
+          <Route path="finance" element={<Finance />} />
+          <Route path="income-form" element={<IncomeForm />} />
+          <Route path="outcome-form" element={<OutcomeForm />} />
+          <Route path="update-form" element={<UpdateForm />} />
+          <Route path="salary-management" element={<SalaryManagement />} />
+      
       </Routes>
     </Router>
   );
