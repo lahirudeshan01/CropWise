@@ -18,7 +18,6 @@ import AddInventoryItem from './component/Inventory/AddInventoryItem'
 import InventoryList from './component/InventoryList/InventoryList'
 import SeeDetails from './component/SeeDetails/SeeDetails'
 import UpdateInventoryItem from './component/UpdateInventory/UpdateInventoryItem'
-import Finance from './component/finance/Finance'
 import IncomeForm from './component/finance/IncomeForm'
 import OutcomeForm from './component/finance/OutcomeForm'
 import SalaryManagement from './component/finance/SalaryManagement'
@@ -27,6 +26,7 @@ import FinanceReportPage from './component/finance/FinanceReportPage'
 import Register from './component/Register/Register'
 import Login from './component/Login/Login'
 import EditUserDetails from './component/edit/EditUserDetails'
+import Finance from './component/finance/Finance'
 
 // import Dashboard01 from './component/dashboard01/Dashboard01'
 
@@ -90,7 +90,8 @@ function App() {
               <Route path="/inventryshow" element={<DashboardLayout><InventoryList/></DashboardLayout>} />
               <Route path="/addinventry" element={<DashboardLayout><AddInventoryItem/></DashboardLayout>} />
               <Route path="/inventryshow" element={<DashboardLayout><InventoryList/></DashboardLayout>} />
-              <Route path="/financeshow" element={<DashboardLayout><Finance/></DashboardLayout>} />
+              
+              {<Route path="/financeshow" element={<DashboardLayout><Finance/></DashboardLayout>} /> }
               {/* <Route path="/dash" element={<DashboardLayout><Dashboard01/></DashboardLayout>} />
               */}
             

@@ -91,7 +91,7 @@ const HomePage = () => {
       {/* Image and Content Section */}
       <div className="image-and-content">
         <motion.div initial={{ x: -100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 1 }} className="image-section">
-          <img src="/images/image1.jpg" alt="CropWise" className="hero-image" />
+          <img src="https://imageio.forbes.com/specials-images/imageserve/1154958041/0x0.jpg?format=jpg&height=600&width=1200&fit=bounds" alt="CropWise" className="hero-image" />
           <h2>All in one solution <br /> for rice cultivation <br /> management</h2>
         </motion.div>
         <motion.div initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 1 }} className="content-section">

@@ -13,7 +13,7 @@ const Header = () => {
       className="navbar"
     >
       <div className="logo">
-        <img src="/images/logo.png" alt="CropWise Logo" className="logo-image" />
+        <img src="https://p7.hiclipart.com/preview/976/522/355/natural-environment-earth-ecology-clean-environment.jpg" alt="CropWise Logo" className="logo-image" />
         <span className="logo-text">CropWise</span>
       </div>
       <ul>

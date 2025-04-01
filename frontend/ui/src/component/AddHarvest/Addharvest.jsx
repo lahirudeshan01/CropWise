@@ -134,9 +134,9 @@ const AddHarvest = () => {
         <div className="form-grid">
           {[
             { name: "farmerId", label: "Listing ID" },
-            { name: "Character", label: "Character" },
+            { name: "Character", label: "Rice Type" },
             { name: "verity", label: "Verity" },
-            { name: "quantity", label: "Quantity", type: "number" },
+            { name: "quantity", label: "Avalibale Quantity", type: "number" },
             { name: "price", label: "Price", type: "number" },
             { name: "address", label: "Address" },
             { name: "location", label: "Location" }

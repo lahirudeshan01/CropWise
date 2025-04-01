@@ -163,7 +163,7 @@ const Buyers = () => {
 
                 {/* Details Section */}
                 <p>
-                  <strong>Character:</strong>  {farmer.Character || "N/A"}
+                  <strong>Rice Type:</strong>  {farmer.Character || "N/A"}
                 </p>
                 <p>
                   <strong>Variety:</strong>  {farmer.verity || "N/A"}
