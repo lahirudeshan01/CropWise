@@ -279,7 +279,7 @@ function Register() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="submit-btn"
+            className="submit-btn4"
             disabled={isSubmitting}
             
           >

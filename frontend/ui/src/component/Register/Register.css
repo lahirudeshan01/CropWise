@@ -18,7 +18,7 @@
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   position: relative;
-  margin-top: 300px; 
+  margin-top: 10px; 
 }
 
 .registration-container h2 {
@@ -105,8 +105,8 @@
 }
 
 /* Button Styling */
-.submit-btn {
-  background: linear-gradient(to right, #6366f1, #8b5cf6);
+.submit-btn4 {
+  background: linear-gradient(to right, #03ccab, #27db54);
   color: white;
   border: none;
   padding: 1rem;
@@ -118,12 +118,12 @@
   margin-top: 1rem;
 }
 
-.submit-btn:hover {
+.submit-btn4:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
-.submit-btn:disabled {
+.submit-btn4:disabled {
   background: #ccc;
   transform: none;
   box-shadow: none;
