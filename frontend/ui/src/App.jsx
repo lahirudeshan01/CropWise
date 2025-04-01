@@ -27,6 +27,10 @@ import Register from './component/Register/Register'
 import Login from './component/Login/Login'
 import EditUserDetails from './component/edit/EditUserDetails'
 import Finance from './component/finance/Finance'
+import TaskForm from './component/assignTasks/TaskForm'
+import ShowAll from './component/Viewdetaistasks/ShowAlltask'
+import ShowDetails from './component/Showtask/ShowDetailstask.jsx'
+import UpdateEmployee from './component/UpdateEmployee/updateemployee.jsx'
 
 // import Dashboard01 from './component/dashboard01/Dashboard01'
 
@@ -69,6 +73,9 @@ function App() {
               <Route path="/register" element={<Register/>} />
               <Route path="/log" element={<Login/>} />
               <Route path="/edit-details" element={<EditUserDetails/>} />
+              <Route path="/Showtask/:id" element={<ShowDetails/>} />
+              <Route path="/update-employee/:id" element={<UpdateEmployee/>} />
+             
              
 
               {/* <Route path="/register" element={<Register/>} /> */}
@@ -90,8 +97,13 @@ function App() {
               <Route path="/inventryshow" element={<DashboardLayout><InventoryList/></DashboardLayout>} />
               <Route path="/addinventry" element={<DashboardLayout><AddInventoryItem/></DashboardLayout>} />
               <Route path="/inventryshow" element={<DashboardLayout><InventoryList/></DashboardLayout>} />
-              
+              <Route path="/task" element={<DashboardLayout><TaskForm/></DashboardLayout>} />
+              <Route path="/showtask" element={<DashboardLayout><ShowAll/></DashboardLayout>} />
               {<Route path="/financeshow" element={<DashboardLayout><Finance/></DashboardLayout>} /> }
+
+
+              
+
               {/* <Route path="/dash" element={<DashboardLayout><Dashboard01/></DashboardLayout>} />
               */}
             
