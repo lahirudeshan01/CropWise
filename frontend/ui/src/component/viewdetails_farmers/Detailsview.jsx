@@ -102,7 +102,7 @@ function Detailsview() {
         </table>
 
         <div className="button-container">
-          <Link to={`/updatedetails/${farmer._id}`} className="edit-button">
+          <Link to={`/updatedetails/${farmer._id}`} className="edit-button2">
             Update Listing
           </Link>
           <button onClick={handleDelete} className="delete-button">

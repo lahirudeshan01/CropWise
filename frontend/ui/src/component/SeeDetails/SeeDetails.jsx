@@ -174,7 +174,7 @@ const SeeDetails = () => {
 
     return (
         <div className="see-details-container">
-            <button className="back-button" onClick={() => navigate("/")}>
+            <button className="back-button" onClick={() => navigate("/inventryshow")}>
                 ← Back
             </button>
             <h1>{item.category}</h1>
