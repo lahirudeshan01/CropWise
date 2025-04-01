@@ -1,6 +1,6 @@
 const express = require('express');
-const financeController = require('../controllers/financecontroller');
-const salaryController = require('../controllers/salarycontroller');
+const financeController = require('./financecontroller');
+const salaryController = require('./salarycontroller');
 
 const router = express.Router();
 

@@ -65,7 +65,7 @@ const IncomeForm = () => {
 
     try {
       await addTransaction(newTransaction);
-      navigate("/finance");
+      navigate("/financeshow");
     } catch (error) {
       console.error("Error submitting transaction:", error);
     }

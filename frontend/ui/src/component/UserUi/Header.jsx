@@ -27,7 +27,7 @@ const Header = () => {
           <Link to="/buy">Buy</Link> {/* Use Link for navigation */}
         </li>
       </ul>
-      <button className="login-btn">Login</button>
+      <Link to = "/log" className="loginbtn buy-btn">Login</Link>
     </motion.nav>
   );
 };

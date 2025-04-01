@@ -67,7 +67,7 @@ const OutcomeForm = () => {
 
     try {
       await addTransaction(newTransaction);
-      navigate("/finance", { state: { newTransaction } });
+      navigate("/financeshow", { state: { newTransaction } });
     } catch (error) {
       console.error("Error submitting transaction:", error);
     }

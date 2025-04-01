@@ -2,7 +2,7 @@ const express = require("express");
 const routes = require("./routes/farmers_set");
 const inventoryRoutes = require("./routes/inventory&resource")
 const financeRoutes = require('./routes/financeRoutes');
-
+const router = require("./routes/UserRoute");
 const db_connection = require("./config/db_connection");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -24,6 +24,7 @@ app.get("/", (req, res) => res.send("Hello..."));
 app.use("/api/farmers", routes);
 app.use("/api/inventory", inventoryRoutes);
 app.use('/api', financeRoutes);
+app.use("/users", router);
 
 const PORT = 3000;
 

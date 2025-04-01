@@ -21,6 +21,14 @@ import UpdateInventoryItem from './component/UpdateInventory/UpdateInventoryItem
 import Finance from './component/finance/Finance'
 import IncomeForm from './component/finance/IncomeForm'
 import OutcomeForm from './component/finance/OutcomeForm'
+import SalaryManagement from './component/finance/SalaryManagement'
+import UpdateForm from './component/finance/UpdateForm'
+import FinanceReportPage from './component/finance/FinanceReportPage'
+import Register from './component/Register/Register'
+import Login from './component/Login/Login'
+import EditUserDetails from './component/edit/EditUserDetails'
+
+// import Dashboard01 from './component/dashboard01/Dashboard01'
 
 // import ShowDetails from './component/ShowDetailsemployee/ShowDetailsemployee'
 
@@ -47,7 +55,7 @@ function App() {
             <Routes>
               {/* Public routes */}
               <Route path="/about" element={<AboutUs/>} />
-              <Route path="/" element={<HomePage/>} />
+               <Route path="/" element={<HomePage/>} /> 
               <Route path="/buy" element={<Buyers/>} />
               <Route path="/userfee" element={<Userfee/>} />
               <Route path="/PaymentPage" element={<PaymentPage/>} />
@@ -55,9 +63,19 @@ function App() {
               <Route path="/edit-item/:id" element={<UpdateInventoryItem/>} />
               <Route path="/income-form" element={<IncomeForm/>} />
               <Route path="/outcome-form" element={<OutcomeForm/>} />
+              <Route path="/salary-management" element={<SalaryManagement/>} />
+              <Route path="/update-form" element={<UpdateForm/>} />
+              <Route path="/finance-report" element={<FinanceReportPage/>} />
+              <Route path="/register" element={<Register/>} />
+              <Route path="/log" element={<Login/>} />
+              <Route path="/edit-details" element={<EditUserDetails/>} />
+             
+
+              {/* <Route path="/register" element={<Register/>} /> */}
+
+
 
               
-
              
               
               
@@ -73,7 +91,8 @@ function App() {
               <Route path="/addinventry" element={<DashboardLayout><AddInventoryItem/></DashboardLayout>} />
               <Route path="/inventryshow" element={<DashboardLayout><InventoryList/></DashboardLayout>} />
               <Route path="/financeshow" element={<DashboardLayout><Finance/></DashboardLayout>} />
-             
+              {/* <Route path="/dash" element={<DashboardLayout><Dashboard01/></DashboardLayout>} />
+              */}
             
 
              

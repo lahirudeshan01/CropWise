@@ -50,7 +50,7 @@ const FinanceReportPage = () => {
   }, [transactions]);
 
   const handleGoBack = () => {
-    navigate("/finance");
+    navigate("/financeshow");
   };
 
   const printReport = () => {

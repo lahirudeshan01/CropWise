@@ -71,7 +71,7 @@ const UpdateForm = () => {
         reference: location.state.transaction.reference, // Include reference
         date: location.state.transaction.date, // Include date
       });
-      navigate("/finance");
+      navigate("/financeshow");
     } catch (error) {
       console.error("Error updating transaction:", error);
       setApiError("Failed to update transaction. Please try again.");

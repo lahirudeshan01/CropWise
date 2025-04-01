@@ -1,0 +1,343 @@
+/* Dashboard01.css - Complete Fixed Version */
+
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    min-height: 100vh;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+    background-color: #fff;
+    box-sizing: border-box;
+    margin: 0px auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Header Section */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 0 10px;
+    width: 100%;
+    position: relative;
+}
+
+.header h1 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin: 0;
+    padding-top: 10px;
+}
+
+.edit-button {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: absolute;
+    right: 20px;
+    top: 0;
+}
+
+.edit-button:hover {
+    background-color: #2980b9;
+}
+
+/* Current State Section */
+.planting-section {
+    margin-bottom: 30px;
+    padding: 0 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.current-states {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.current-states h2 {
+    font-size: 22px;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.planting-text {
+    font-size: 18px;
+    color: #7f8c8d;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+/* State-specific colors */
+.planning {
+    background-color: #f0f0f0;
+    border-left: 4px solid #95a5a6;
+}
+
+.land-preparation {
+    background-color: #e1f5fe;
+    border-left: 4px solid #0288d1;
+}
+
+.planting {
+    background-color: #e8f5e9;
+    border-left: 4px solid #4caf50;
+}
+
+.growth {
+    background-color: #fff3e0;
+    border-left: 4px solid #ff9800;
+}
+
+.harvesting {
+    background-color: #fce4ec;
+    border-left: 4px solid #e91e63;
+}
+
+/* Harvest Day Section */
+.harvest-day {
+    background-color: #27ae60;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    margin-bottom: 30px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.harvest-day h2 {
+    font-size: 24px;
+    margin: 0 0 10px 0;
+}
+
+.harvest-day span {
+    font-size: 18px;
+}
+
+/* Crop Tracker Section */
+.crop-tracker {
+    margin-bottom: 30px;
+    padding: 0 20px;
+    width: 100%;
+}
+
+.crop-tracker h2 {
+    font-size: 22px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.crop-tracker table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.crop-tracker th,
+.crop-tracker td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.crop-tracker th {
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.crop-tracker td {
+    background-color: #fff;
+    color: #333;
+}
+
+/* Current Tasks Section */
+.current-tasks {
+    margin-bottom: 30px;
+    padding: 0 20px;
+    width: 100%;
+}
+
+.current-tasks h2 {
+    font-size: 22px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+.task-item span {
+    flex: 1;
+    text-align: center;
+}
+
+.status {
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.status.complete {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status.ongoing {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+
+.status.upcoming {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+/* Harvest Prediction Section */
+.harvest-prediction {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 25px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+  
+.harvest-prediction h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    padding: 0 10px;
+}
+  
+.prediction-card {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+  
+.prediction-item {
+    flex: 1;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    min-width: 200px;
+}
+  
+.prediction-label {
+    display: block;
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+  
+.prediction-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+  
+.ai-recommendations {
+    background-color: #f0f8ff;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 0 10px;
+}
+  
+.ai-recommendations h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+  
+.recommendations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+  
+.recommendation-item {
+    padding: 8px 12px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .edit-button {
+        position: static;
+        align-self: flex-end;
+    }
+    
+    .task-header, 
+    .task-item {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .task-header span, 
+    .task-item span {
+        flex: 1 0 45%;
+        text-align: left;
+    }
+
+    .prediction-card {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .crop-tracker table {
+        display: block;
+        overflow-x: auto;
+    }
+}

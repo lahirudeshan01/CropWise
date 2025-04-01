@@ -10,6 +10,19 @@ import ViewHeadlineRoundedIcon from '@mui/icons-material/ViewHeadlineRounded';
 
 export const SidebarDate = [
     {
+        title: "Crop Management",
+        icon: <HomeIcon />,
+        link: "/dashboard",
+        subMenu: [
+            {
+                title: "show ",
+                icon: <AddBoxRoundedIcon />,
+                link: "/dashboard"
+            },
+  
+        ]
+    },
+    {
         title: "Finance",
         icon: <HomeIcon />,
         link: "/home",

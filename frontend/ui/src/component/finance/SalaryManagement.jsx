@@ -126,7 +126,7 @@ const SalaryManagement = () => {
       {/* Back Button */}
       <button 
         className="back-button"
-        onClick={() => navigate('/finance')}
+        onClick={() => navigate('/financeshow')}
         style={{
           backgroundColor: 'red',
           color: 'white',

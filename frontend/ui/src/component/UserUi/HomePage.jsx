@@ -66,10 +66,16 @@ const HomePage = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="buttons"
         >
-          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn buy-btn">
+          {/* <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn buy-btn">
             Buy harvest
+          </motion.button> */}
+          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn buy-btn" onClick={() => navigate("/buy")}>
+            Buy Harvest
           </motion.button>
-          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn register-btn">
+          {/* <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn register-btn">
+            Register
+          </motion.button> */}
+          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn register-btn" onClick={() => navigate("/register")}>
             Register
           </motion.button>
         </motion.div>
