@@ -77,87 +77,173 @@ const PaymentPage = ({ orderDetails, onPaymentSubmit, onBack }) => {
     }
   };
 
-  const validatePayment = () => {
-    const newErrors = {};
+  // const validatePayment = () => {
+  //   const newErrors = {};
     
-    if (paymentMethod === 'creditCard') {
-      // Card number validation
-      if (!paymentDetails.cardNumber) {
-        newErrors.cardNumber = 'Card number is required';
-      } else if (!/^\d{16}$/.test(paymentDetails.cardNumber)) {
-        newErrors.cardNumber = 'Enter a valid 16-digit card number';
-      }
+  //   if (paymentMethod === 'creditCard') {
+  //     // Card number validation
+  //     if (!paymentDetails.cardNumber) {
+  //       newErrors.cardNumber = 'Card number is required';
+  //     } else if (!/^\d{16}$/.test(paymentDetails.cardNumber)) {
+  //       newErrors.cardNumber = 'Enter a valid 16-digit card number';
+  //     }
       
-      // Cardholder name validation
-      if (!paymentDetails.cardholderName) {
-        newErrors.cardholderName = 'Cardholder name is required';
-      }
+  //     // Cardholder name validation
+  //     if (!paymentDetails.cardholderName) {
+  //       newErrors.cardholderName = 'Cardholder name is required';
+  //     }
       
-      // Expiry date validation
-      if (!paymentDetails.expiryDate) {
-        newErrors.expiryDate = 'Expiry date is required';
-      } else if (!/^\d{2}\/\d{2}$/.test(paymentDetails.expiryDate)) {
-        newErrors.expiryDate = 'Use MM/YY format';
-      } else {
-        // Check if date is in the past
-        const [month, year] = paymentDetails.expiryDate.split('/');
-        const expYear = 2000 + parseInt(year, 10);
-        const expMonth = parseInt(month, 10) - 1; // JS months are 0-indexed
-        const expDate = new Date(expYear, expMonth, 1);
-        const today = new Date();
+  //     // Expiry date validation
+  //     if (!paymentDetails.expiryDate) {
+  //       newErrors.expiryDate = 'Expiry date is required';
+  //     } else if (!/^\d{2}\/\d{2}$/.test(paymentDetails.expiryDate)) {
+  //       newErrors.expiryDate = 'Use MM/YY format';
+  //     } else {
+  //       // Check if date is in the past
+  //       const [month, year] = paymentDetails.expiryDate.split('/');
+  //       const expYear = 2000 + parseInt(year, 10);
+  //       const expMonth = parseInt(month, 10) - 1; // JS months are 0-indexed
+  //       const expDate = new Date(expYear, expMonth, 1);
+  //       const today = new Date();
         
-        // Set today to the beginning of the month for accurate comparison
-        today.setDate(1);
-        today.setHours(0, 0, 0, 0);
+  //       // Set today to the beginning of the month for accurate comparison
+  //       today.setDate(1);
+  //       today.setHours(0, 0, 0, 0);
         
-        if (expDate < today) {
-          newErrors.expiryDate = 'Card has expired';
-        }
+  //       if (expDate < today) {
+  //         newErrors.expiryDate = 'Card has expired';
+  //       }
         
-        if (parseInt(month, 10) < 1 || parseInt(month, 10) > 12) {
-          newErrors.expiryDate = 'Invalid month';
-        }
+  //       if (parseInt(month, 10) < 1 || parseInt(month, 10) > 12) {
+  //         newErrors.expiryDate = 'Invalid month';
+  //       }
+  //     }
+      
+  //     // CVV validation
+  //     if (!paymentDetails.cvv) {
+  //       newErrors.cvv = 'CVV is required';
+  //     } else if (!/^\d{3}$/.test(paymentDetails.cvv)) {
+  //       newErrors.cvv = 'CVV must be 3 digits';
+  //     }
+  //   } 
+  //   else if (paymentMethod === 'bankTransfer') {
+  //     // Account name validation
+  //     if (!paymentDetails.accountName) {
+  //       newErrors.accountName = 'Account name is required';
+  //     }
+      
+  //     // Account number validation
+  //     if (!paymentDetails.accountNumber) {
+  //       newErrors.accountNumber = 'Account number is required';
+  //     } else if (paymentDetails.accountNumber.length < 5) {
+  //       newErrors.accountNumber = 'Account number must be at least 5 digits';
+  //     } else if (paymentDetails.accountNumber.length > 16) {
+  //       newErrors.accountNumber = 'Account number cannot exceed 16 digits';
+  //     }
+      
+  //     // Bank name validation
+  //     if (!paymentDetails.bankName) {
+  //       newErrors.bankName = 'Bank name is required';
+  //     }
+      
+  //     // IFSC code validation
+  //     if (!paymentDetails.ifscCode) {
+  //       newErrors.ifscCode = 'IFSC code is required';
+  //     } else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(paymentDetails.ifscCode)) {
+  //       newErrors.ifscCode = 'Enter a valid IFSC code (e.g., SBIN0123456)';
+  //     }
+  //   }
+    
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
+// Update the validatePayment function
+const validatePayment = () => {
+  const newErrors = {};
+  
+  if (paymentMethod === 'creditCard') {
+    // Card number validation - between 5 and 16 digits
+    if (!paymentDetails.cardNumber) {
+      newErrors.cardNumber = 'Card number is required';
+    } else if (!/^\d{5,16}$/.test(paymentDetails.cardNumber)) {
+      newErrors.cardNumber = 'Card number must be between 5 and 16 digits';
+    }
+    
+    // Cardholder name validation
+    if (!paymentDetails.cardholderName) {
+      newErrors.cardholderName = 'Cardholder name is required';
+    }
+    
+    // Expiry date validation
+    if (!paymentDetails.expiryDate) {
+      newErrors.expiryDate = 'Expiry date is required';
+    } else if (!/^\d{2}\/\d{2}$/.test(paymentDetails.expiryDate)) {
+      newErrors.expiryDate = 'Use MM/YY format';
+    } else {
+      // Check if date is in the past or too far in the future
+      const [month, year] = paymentDetails.expiryDate.split('/');
+      const expYear = 2000 + parseInt(year, 10);
+      const expMonth = parseInt(month, 10) - 1; // JS months are 0-indexed
+      const expDate = new Date(expYear, expMonth, 1);
+      const today = new Date();
+      const maxDate = new Date();
+      
+      // Set max date to 5 years from now (2030)
+      maxDate.setFullYear(maxDate.getFullYear() + 5);
+      
+      // Set today to the beginning of the month for accurate comparison
+      today.setDate(1);
+      today.setHours(0, 0, 0, 0);
+      
+      if (expDate < today) {
+        newErrors.expiryDate = 'Card has expired';
+      } else if (expDate > maxDate) {
+        newErrors.expiryDate = 'Expiry date cannot exceed 5 years from now';
       }
       
-      // CVV validation
-      if (!paymentDetails.cvv) {
-        newErrors.cvv = 'CVV is required';
-      } else if (!/^\d{3,4}$/.test(paymentDetails.cvv)) {
-        newErrors.cvv = 'CVV must be 3 or 4 digits';
-      }
-    } 
-    else if (paymentMethod === 'bankTransfer') {
-      // Account name validation
-      if (!paymentDetails.accountName) {
-        newErrors.accountName = 'Account name is required';
-      }
-      
-      // Account number validation
-      if (!paymentDetails.accountNumber) {
-        newErrors.accountNumber = 'Account number is required';
-      } else if (paymentDetails.accountNumber.length < 5) {
-        newErrors.accountNumber = 'Account number must be at least 5 digits';
-      } else if (paymentDetails.accountNumber.length > 16) {
-        newErrors.accountNumber = 'Account number cannot exceed 16 digits';
-      }
-      
-      // Bank name validation
-      if (!paymentDetails.bankName) {
-        newErrors.bankName = 'Bank name is required';
-      }
-      
-      // IFSC code validation
-      if (!paymentDetails.ifscCode) {
-        newErrors.ifscCode = 'IFSC code is required';
-      } else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(paymentDetails.ifscCode)) {
-        newErrors.ifscCode = 'Enter a valid IFSC code (e.g., SBIN0123456)';
+      if (parseInt(month, 10) < 1 || parseInt(month, 10) > 12) {
+        newErrors.expiryDate = 'Invalid month';
       }
     }
     
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
+    // CVV validation - maximum 3 digits
+    if (!paymentDetails.cvv) {
+      newErrors.cvv = 'CVV is required';
+    } else if (!/^\d{3}$/.test(paymentDetails.cvv)) {
+      newErrors.cvv = 'CVV must be exactly 3 digits';
+    }
+  } 
+  else if (paymentMethod === 'bankTransfer') {
+    // Account name validation
+    if (!paymentDetails.accountName) {
+      newErrors.accountName = 'Account name is required';
+    }
+    
+    // Account number validation
+    if (!paymentDetails.accountNumber) {
+      newErrors.accountNumber = 'Account number is required';
+    } else if (paymentDetails.accountNumber.length < 5) {
+      newErrors.accountNumber = 'Account number must be at least 5 digits';
+    } else if (paymentDetails.accountNumber.length > 16) {
+      newErrors.accountNumber = 'Account number cannot exceed 16 digits';
+    }
+    
+    // Bank name validation
+    if (!paymentDetails.bankName) {
+      newErrors.bankName = 'Bank name is required';
+    }
+    
+    // IFSC code validation
+    if (!paymentDetails.ifscCode) {
+      newErrors.ifscCode = 'IFSC code is required';
+    } else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(paymentDetails.ifscCode)) {
+      newErrors.ifscCode = 'Enter a valid IFSC code (e.g., SBIN0123456)';
+    }
+  }
+  
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
   const handleSubmit = () => {
     if (validatePayment()) {
       // Show confirmation dialog

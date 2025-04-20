@@ -19,7 +19,7 @@ const FarmerList = ({ farmers }) => {
       <div className="search-container">
         <input
           type="text"
-          placeholder="Search by Character..."
+          placeholder="Search by Rice Type..."
           className="search-input"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -30,7 +30,7 @@ const FarmerList = ({ farmers }) => {
           <thead>
             <tr>
               <th>Listing ID</th>
-              <th>Character</th>
+              <th>Rice Type</th>
               <th>Verity</th>
               <th>Quantity</th>
               <th>Price</th>
