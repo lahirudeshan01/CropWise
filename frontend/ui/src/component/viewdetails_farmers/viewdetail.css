@@ -22,6 +22,7 @@
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+  
 }
 
 .farmer-image {
@@ -45,7 +46,7 @@
 }
 
 .farmer-details-table th {
-  background-color: #f4f4f4;
+  background-color: #bcbcbc;
   font-weight: bold;
 }
 
@@ -56,7 +57,7 @@
   margin-top: 20px;
 }
 
-.edit-button, .delete-button {
+.edit-button2, .delete-button {
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
@@ -65,13 +66,13 @@
   transition: 0.3s;
 }
 
-.edit-button {
+.edit-button2 {
   background: #007bff;
   color: white;
   text-decoration: none;
 }
 
-.edit-button:hover {
+.edit-button2:hover {
   background: #0056b3;
 }
 

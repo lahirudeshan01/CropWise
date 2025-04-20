@@ -54,7 +54,7 @@ function Detailsview() {
   return (
     <div className="farmer-details-container">
       <div className="farmer-card">
-        <h1 className="title">Farmer Details</h1>
+        <h1 className="title">Listing Details</h1>
 
         {/* Image Display */}
         {farmer.image && (
@@ -102,7 +102,7 @@ function Detailsview() {
         </table>
 
         <div className="button-container">
-          <Link to={`/updatedetails/${farmer._id}`} className="edit-button">
+          <Link to={`/updatedetails/${farmer._id}`} className="edit-button2">
             Update Listing
           </Link>
           <button onClick={handleDelete} className="delete-button">

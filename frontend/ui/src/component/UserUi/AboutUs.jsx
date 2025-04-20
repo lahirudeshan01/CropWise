@@ -35,7 +35,7 @@ function AboutUs() {
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
         >
           <img 
-            src="/images/about2.jpg" 
+            src="https://www.onlanka.com/wp-content/uploads/2021/11/paddy-farmers-fertilizer.jpg" 
             alt="Agriculture Technology" 
             className="mission-image"
           />
@@ -54,7 +54,7 @@ function AboutUs() {
           In addition to empowering farmers with smart agricultural solutions, CropWise is dedicated to fostering a sustainable future through eco-friendly practices and responsible resource management. We believe that innovation should go hand in hand with environmental stewardship, ensuring that farming remains both profitable and sustainable. Our advanced solutions not only help reduce water and fertilizer waste but also promote soil health and biodiversity. By integrating automation, IoT-based monitoring, and predictive analytics, we enable farmers to make informed decisions that minimize environmental impact while maximizing yields. As we continue to push the boundaries of agricultural technology, our goal is to create a more resilient food system—one that supports farmers, protects natural resources, and secures food production for future generations.
           </p>
           <img 
-            src="/images/about1.jpg" 
+            src="https://www.villagesquare.in/wp-content/uploads/2021/02/02-1-1024x550.jpg" 
             alt="Agriculture Technology" 
             className="vision-image"
           />

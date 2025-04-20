@@ -66,10 +66,16 @@ const HomePage = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="buttons"
         >
-          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn buy-btn">
+          {/* <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn buy-btn">
             Buy harvest
+          </motion.button> */}
+          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn buy-btn" onClick={() => navigate("/buy")}>
+            Buy Harvest
           </motion.button>
-          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn register-btn">
+          {/* <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn register-btn">
+            Register
+          </motion.button> */}
+          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn register-btn" onClick={() => navigate("/register")}>
             Register
           </motion.button>
         </motion.div>
@@ -85,7 +91,7 @@ const HomePage = () => {
       {/* Image and Content Section */}
       <div className="image-and-content">
         <motion.div initial={{ x: -100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 1 }} className="image-section">
-          <img src="/images/image1.jpg" alt="CropWise" className="hero-image" />
+          <img src="https://imageio.forbes.com/specials-images/imageserve/1154958041/0x0.jpg?format=jpg&height=600&width=1200&fit=bounds" alt="CropWise" className="hero-image" />
           <h2>All in one solution <br /> for rice cultivation <br /> management</h2>
         </motion.div>
         <motion.div initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 1 }} className="content-section">
@@ -99,7 +105,7 @@ const HomePage = () => {
             <li>Enhance data-driven farming.</li>
           </ul>
           <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="more-about-btn" onClick={() => navigate("/about")}>
-            MORE ABOUT US
+            MORE ABOUT US.
           </motion.button>
         </motion.div>
       </div>

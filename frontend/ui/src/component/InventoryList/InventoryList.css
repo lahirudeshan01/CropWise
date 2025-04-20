@@ -1,0 +1,163 @@
+.p-4 {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  color: #1a1a1a;
+  padding-bottom: 0.5rem;
+  border-bottom: none;
+  margin-bottom: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+input[type="text"] {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.bg-blue-500 {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  margin-left: auto;
+  display: block;
+}
+
+.bg-blue-500:hover {
+  background-color: #2563eb;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+th {
+  text-align: left;
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  color: #111827;
+  font-weight: 700;
+}
+
+td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+tr:hover {
+  background-color: #f9fafb;
+}
+
+.text-blue-500 {
+  background-color: #4ade80;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  text-align: center;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.text-blue-500:hover {
+  background-color: #22c55e;
+  text-decoration: none;
+}
+
+tbody tr:last-child td {
+  border-bottom: 2px solid #ddd;
+}
+
+td:first-child {
+  font-weight: 500;
+}
+
+td:nth-child(3) {
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  /* input[type="text"] {
+    width: 100%;
+  } */
+  
+  .bg-blue-500 {
+    width: 100%;
+    margin-top: 1rem;
+  }
+}
+
+.bg-gray-200 {
+  background-color: white;
+}
+
+.border {
+  border: none;
+}
+
+.search-button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+select {
+appearance: none;
+background-color: #f9fafb;
+border: 1px solid #f9f5f5;
+border-radius: 4px;
+padding: 4px 8px;
+font-size: 14px;
+cursor: pointer;
+width: 120px;
+max-width: 53%;
+}
+
+select:hover {
+border-color: #888;
+}
+
+select:focus {
+outline: none;
+border-color: #3182ce;
+box-shadow: 0 0 0 1px #3182ce;
+}
+
+.expires-near {
+color: #FFD700;
+}
+
+.expires-soon {
+color: #FF8C00;
+}
+
+.expires-today, .expired {
+color: #8B0000;
+}
+
+.low-stock {
+color: #c4c708;
+}
+
+.out-of-stock {
+color: #8B0000;
+}

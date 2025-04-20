@@ -3,24 +3,71 @@ import HomeIcon from '@mui/icons-material/Home';
 import EmailIcon from '@mui/icons-material/Email';
 import CallIcon from '@mui/icons-material/Call';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import AgricultureIcon from '@mui/icons-material/Agriculture'; // Icon for Harvest
+// import AgricultureIcon from '@mui/icons-material/Agriculture'; 
+import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
+import ViewHeadlineRoundedIcon from '@mui/icons-material/ViewHeadlineRounded';
 
 
 export const SidebarDate = [
     {
-        title: "Home",
+        title: "Crop Management",
         icon: <HomeIcon />,
-        link: "/home"
+        link: "/dashboard",
+        subMenu: [
+            {
+                title: "show ",
+                icon: <AddBoxRoundedIcon />,
+                link: "/dashboard"
+            },
+  
+        ]
     },
     {
-        title: "Add Member",
+        title: "Finance",
+        icon: <HomeIcon />,
+        link: "/home",
+        subMenu: [
+            {
+                title: "show ",
+                icon: <AddBoxRoundedIcon />,
+                link: "/financeshow"
+            },
+  
+        ]
+    },
+    {
+        title: "Stock Management",
         icon: <EmailIcon />,
-        link: "/add-member"
+        link: "#",
+        subMenu: [
+            {
+                title: "Add Items",
+                icon: <AddBoxRoundedIcon />,
+                link: "/addinventry"
+            },
+            {
+                title: "Show Items",
+                icon: <ViewHeadlineRoundedIcon />,
+                link: "/inventryshow"
+            }
+        ]
     },
     {
-        title: "Contact",
+        title: "Assign Task",
         icon: <CallIcon />,
-        link: "/contact"
+        link: "#",
+        subMenu: [
+            {
+                title: "Add Task",
+                icon: <AddBoxRoundedIcon />,
+                link: "/task"
+            },
+            {
+                title: "Show Task",
+                icon: <ViewHeadlineRoundedIcon />,
+                link: "/showtask"
+            }
+        ]
     },
     {
         title: "MarketPlace",
@@ -30,12 +77,12 @@ export const SidebarDate = [
         subMenu: [
             {
                 title: "Add Harvest",
-                icon: <AgricultureIcon />,
+                icon: <AddBoxRoundedIcon />,
                 link: "/harvest"
             },
             {
                 title: "Show Listning",
-                icon: <AgricultureIcon />,
+                icon: <ViewHeadlineRoundedIcon />,
                 link: "/showall"
             }
         ]

@@ -1,0 +1,91 @@
+/* Main container */
+.buyers-container {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Grid container for cards */
+.card-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 items in a row */
+    gap: 20px; /* Space between cards */
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Individual card */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    background: #fff;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.01s ease-in-out;
+    width: 270px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Image container inside the card */
+.image-container {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f0f0f0; /* Light gray background for loading images */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.farmer-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image fills the area properly */
+    border-radius: 10px;
+}
+
+/* Text formatting */
+.card h3 {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #333;
+}
+
+.card p {
+    font-size: 14px;
+    color: #555;
+    margin: 5px 0;
+}
+
+/* Button styles */
+.btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #00a727;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.8s ease-in-out;
+}
+
+.btn:hover {
+    background: #126123;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .card-list {
+        grid-template-columns: repeat(2, 1fr); /* 2 items per row on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .card-list {
+        grid-template-columns: repeat(1, 1fr); /* 1 item per row on small screens */
+    }
+}
