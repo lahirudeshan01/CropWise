@@ -5,6 +5,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import { motion, AnimatePresence } from "framer-motion";
 import "./sidebar.css";
 
 const Sidebar = () => {
@@ -56,165 +57,140 @@ const Sidebar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMobile, sidebarOpen]);
 
-  // Define styles as individual objects
-  const styles = {
-    sidebar: {
-      width: "260px",
-      backgroundColor: "#2c332d",
-      height: "100vh",
-      position: "fixed",
-      left: 0,
-      top: 0,
-      bottom: 0,
-      overflowY: "auto",
-      transition: "transform 0.3s ease",
-      transform:
-        isMobile && !sidebarOpen ? "translateX(-100%)" : "translateX(0)",
-      zIndex: 10,
-      boxShadow: isMobile && sidebarOpen ? "2px 0 5px rgba(0,0,0,0.3)" : "none",
+  // Animation variants for menu items
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: (i) => ({
+      opacity: 1,
+      x: 0,
+      transition: {
+        delay: i * 0.05,
+        duration: 0.3,
+      },
+    }),
+  };
+
+  // SubMenu animation variants
+  const subMenuVariants = {
+    hidden: { 
+      opacity: 0,
+      height: 0,
+      marginTop: 0,
+      marginBottom: 0,
+      overflow: 'hidden'
     },
-    sidebarHeader: {
-      display: "flex",
-      alignItems: "center",
-      padding: "16px",
-      backgroundColor: "#2c332d",
-      borderBottom: "1px solid #2c332d",
+    visible: { 
+      opacity: 1,
+      height: "auto",
+      marginTop: 5,
+      marginBottom: 5,
+      transition: {
+        duration: 0.3,
+        ease: "easeInOut",
+        when: "beforeChildren",
+        staggerChildren: 0.05
+      }
     },
-    sidebarLogo: {
-      width: "40px",
-      height: "40px",
-      objectFit: "contain",
-      marginRight: "10px",
-      borderRadius: "4px",
-    },
-    sidebarTitle: {
-      margin: 0,
-      fontSize: "1.5rem",
-      fontWeight: 600,
-      color: "#16a21a",
-    },
-    ul: {
-      listStyleType: "none",
-      padding: 0,
-      margin: 0,
-    },
-    sidebarItem: {
-      padding: "18px",
-      display: "flex",
-      alignItems: "center",
-      cursor: "pointer",
-      marginTop: "5px",
-      color: "#fffefe",
-      transition: "background-color 0.2s",
-      position: "relative",
-    },
-    sidebarItemActive: {
-      backgroundColor: "#16a21a",
-      color: "white",
-    },
-    iconContainer: {
-      marginRight: "10px",
-      display: "flex",
-      alignItems: "center",
-    },
-    dropdownIndicator: {
-      marginLeft: "auto",
-      display: "flex",
-      alignItems: "center",
-    },
-    dropdownMenu: {
-      margin: 0,
-      padding: 0,
-    },
-    subItem: {
-      paddingLeft: "40px",
-      backgroundColor: "rgba(224, 224, 224, 0.3)",
-    },
-    sidebarToggle: {
-      display: "block",
-      position: "fixed",
-      top: "10px",
-      left: isMobile ? (sidebarOpen ? "270px" : "10px") : "270px",
-      zIndex: 20,
-      backgroundColor: "#16A21A",
-      color: "white",
-      border: "none",
-      padding: "8px",
-      borderRadius: "4px",
-      cursor: "pointer",
-      transition: "left 0.3s ease",
-      boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
-    },
-    activeIndicator: {
-      position: "absolute",
-      left: 0,
-      top: 0,
-      bottom: 0,
-      width: "4px",
-      backgroundColor: "#16a21a",
-      display: "none",
-    },
-    activeIndicatorVisible: {
-      display: "block",
-    },
-    // mainContent: {
-    //   marginLeft: isMobile ? '0' : '260px',
-    //   transition: 'margin-left 0.3s ease',
-    //   padding: '20px'
-    // }
+    exit: { 
+      opacity: 0,
+      height: 0,
+      marginTop: 0,
+      marginBottom: 0,
+      transition: {
+        duration: 0.2,
+        ease: "easeInOut",
+      }
+    }
+  };
+
+  // Logo animation variants
+  const logoVariants = {
+    rest: { rotate: 0 },
+    hover: { 
+      rotate: 5,
+      scale: 1.1,
+      transition: { duration: 0.3 }
+    }
   };
 
   return (
     <>
-      {/* Dark overlay that appears behind the sidebar on mobile */}
-      <div style={styles.overlay} onClick={toggleSidebar} />
-
-      {/* Toggle button */}
-      <button
+      {/* Toggle button with animation */}
+      <motion.button
         id="sidebar-toggle-button"
-        style={{
-          ...styles.sidebarToggle,
-          display: isMobile ? "flex" : "none",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        className="sidebar-toggle-button"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
         onClick={toggleSidebar}
         aria-label="Toggle sidebar"
+        initial={false}
+        animate={{ 
+          left: isMobile ? (sidebarOpen ? "270px" : "10px") : "270px",
+          backgroundColor: "#16A21A"
+        }}
+        transition={{ duration: 0.3 }}
       >
         {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
-      </button>
+      </motion.button>
 
-      {/* Sidebar */}
-      <div id="cropwise-sidebar" style={styles.sidebar}>
-        <div
-          style={{
-            ...styles.sidebarHeader,
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+      {/* Animated sidebar with overlay */}
+      <AnimatePresence>
+        {isMobile && sidebarOpen && (
+          <motion.div 
+            className="sidebar-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            exit={{ opacity: 0 }}
+            onClick={toggleSidebar}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Sidebar with glass effect */}
+      <motion.div 
+        id="cropwise-sidebar" 
+        className="sidebar"
+        initial={false}
+        animate={{ 
+          x: isMobile && !sidebarOpen ? "-100%" : 0,
+        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      >
+        <div className="sidebar-header">
           <Link
-            to="/"
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-            }}
+            to="/home"
+            className="logo-link"
           >
-            <img
+            <motion.img
               src="https://p7.hiclipart.com/preview/976/522/355/natural-environment-earth-ecology-clean-environment.jpg"
               alt="CropWise Logo"
-              style={styles.sidebarLogo}
+              className="sidebar-logo"
+              variants={logoVariants}
+              initial="rest"
+              whileHover="hover"
             />
-            <h2 style={styles.sidebarTitle}>CropWise</h2>
+            <motion.div 
+              className="logo-text-container"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <h2 className="sidebar-title">CropWise</h2>
+              <span className="sidebar-subtitle">Smart Agriculture</span>
+            </motion.div>
           </Link>
         </div>
-        <ul style={styles.ul}>
+
+        <div className="divider"></div>
+
+        <ul className="sidebar-menu">
           {SidebarDate.map((val, key) => (
             <React.Fragment key={key}>
-              <li
+              <motion.li
+                custom={key}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
                 onClick={() => {
                   if (val.subMenu) {
                     toggleDropdown(key);
@@ -223,34 +199,67 @@ const Sidebar = () => {
                     if (isMobile) setSidebarOpen(false);
                   }
                 }}
-                style={{
-                  ...styles.sidebarItem,
-                  ...(location.pathname === val.link
-                    ? styles.sidebarItemActive
-                    : {}),
+                className={`sidebar-item ${location.pathname === val.link ? "active" : ""}`}
+                whileHover={{ 
+                  backgroundColor: location.pathname === val.link ? "#16a21a" : "rgba(255, 255, 255, 0.1)",
+                  x: 5,
+                  transition: { duration: 0.2 }
                 }}
               >
-                <div
-                  style={{
-                    ...styles.activeIndicator,
-                    ...(location.pathname === val.link
-                      ? styles.activeIndicatorVisible
-                      : {}),
-                  }}
-                />
-                <div style={styles.iconContainer}>{val.icon}</div>
-                <div>{val.title}</div>
+                <div className={`active-indicator ${location.pathname === val.link ? "visible" : ""}`} />
+                <div className="icon-container">
+                  <motion.div 
+                    whileHover={{ scale: 1.2 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {val.icon}
+                  </motion.div>
+                </div>
+                <div className="item-title">{val.title}</div>
                 {val.subMenu && (
-                  <div style={styles.dropdownIndicator}>
-                    {openDropdown === key ? (
-                      <ExpandLessIcon />
-                    ) : (
-                      <ExpandMoreIcon />
-                    )}
-                  </div>
+                  <motion.div 
+                    className="dropdown-indicator"
+                    animate={{ rotate: openDropdown === key ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ExpandMoreIcon />
+                  </motion.div>
                 )}
-              </li>
-              {val.subMenu && openDropdown === key && (
+              </motion.li>
+
+              <AnimatePresence>
+                {val.subMenu && openDropdown === key && (
+                  <motion.ul 
+                     //className="dropdown-menu"
+                    variants={subMenuVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    {val.subMenu.map((subItem, subKey) => (
+                      <motion.li
+                        key={subKey}
+                        variants={itemVariants}
+                        onClick={() => {
+                          navigate(subItem.link);
+                          if (isMobile) setSidebarOpen(false);
+                        }}
+                        className={`sidebar-item sub-item ${
+                          location.pathname === subItem.link ? "active" : ""
+                        }`}
+                        whileHover={{ 
+                          x: 5,
+                          transition: { duration: 0.2 }
+                        }}
+                      >
+                        <div className={`active-indicator ${location.pathname === subItem.link ? "visible" : ""}`} />
+                        <div className="icon-container">{subItem.icon}</div>
+                        <div className="item-title">{subItem.title}</div>
+                      </motion.li>
+                    ))}
+                  </motion.ul>
+                )}
+{/* {val.subMenu && openDropdown === key && (
                 <ul style={styles.dropdownMenu}>
                   {val.subMenu.map((subItem, subKey) => (
                     <li
@@ -280,14 +289,18 @@ const Sidebar = () => {
                     </li>
                   ))}
                 </ul>
-              )}
+              )} */}
+
+
+              </AnimatePresence>
             </React.Fragment>
           ))}
         </ul>
-      </div>
 
-      {/* Wrapper for the main content area */}
-      <div style={styles.mainContent}>{/* Your main content goes here */}</div>
+        <div className="sidebar-footer">
+          <p>© 2025 CropWise</p>
+        </div>
+      </motion.div>
     </>
   );
 };
