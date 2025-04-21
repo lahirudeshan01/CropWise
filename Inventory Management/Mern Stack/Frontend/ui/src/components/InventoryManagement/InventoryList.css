@@ -178,3 +178,106 @@ select:focus {
 .out-of-stock {
   color: #8B0000; /* Dark red for out of stock */
 }
+
+/* Existing styles for InventoryList.css */
+
+/* Report button styling */
+.inventoryReportButtonContainer {
+  display: flex;
+  align-items: center;
+  
+}
+
+.inventoryReportGenerateBtn {
+  background-color: #16a34a;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  border: none;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.inventoryReportGenerateBtn:hover {
+  background-color: #15803d;
+  transform: translateY(-1px);
+}
+
+.inventoryReportGenerateBtn:active {
+  transform: translateY(0px);
+}
+
+/* Expiration date styling classes */
+.expired {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.expires-today {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.expires-soon {
+  color: #f59e0b;
+}
+
+.expires-near {
+  color: #84cc16;
+}
+
+/* Stock status styling classes */
+.out-of-stock {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.low-stock {
+  color: #f59e0b;
+}
+/* Add to your CSS file */
+#pdf-report-container {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+}
+
+/* Inventory Report Styles */
+.inventoryReport-action-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.inventoryReport-add-button {
+  background-color: #3b82f6;
+  transition: background-color 0.3s ease;
+}
+
+.inventoryReport-add-button:hover {
+  background-color: #2563eb;
+}
+
+.inventoryReport-generate-button {
+  background-color: #10b981;
+  transition: background-color 0.3s ease;
+}
+
+.inventoryReport-generate-button:hover {
+  background-color: #059669;
+}
+
+/* PDF Table Styles */
+@media print {
+  body * {
+      visibility: hidden;
+  }
+  .inventoryReport-pdf-table, .inventoryReport-pdf-table * {
+      visibility: visible;
+  }
+  .inventoryReport-pdf-table {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+  }
+}

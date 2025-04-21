@@ -126,8 +126,8 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f0f0f0;
-  border: 1px solid #e2e8f0;
+  background-color: #a9cbf9;
+  border: 1px solid #a9cbf9;
   border-radius: 6px;
   font-size: 1.25rem;
   flex-shrink: 0;

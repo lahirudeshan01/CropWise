@@ -175,7 +175,7 @@
 }
 
 .back-button {
-  background-color: #f3f4f6;
+  background-color: #cdf7cf;
   color: #63514b;
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -190,8 +190,8 @@
 }
 
 .back-button:hover {
-  background-color: #e5e7eb;
-  color: #1f2937;
+  background-color: #6af498;
+  color: #37221f;
 }
 
 .quick-update-button {

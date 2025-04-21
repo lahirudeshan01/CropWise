@@ -175,7 +175,7 @@ const SeeDetails = () => {
     return (
         <div className="see-details-container">
             <button className="back-button" onClick={() => navigate("/")}>
-                ← Back
+                ←
             </button>
             <h1>{item.category}</h1>
             <div className="item-header">

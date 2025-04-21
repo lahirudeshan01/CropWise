@@ -7,6 +7,7 @@ import InventoryList from './components/InventoryManagement/InventoryList'
 import AddInventoryItem from './components/InventoryManagement/AddInventoryItem'
 import SeeDetails from './components/InventoryManagement/SeeDetails';
 import UpdateInventoryItem from './components/InventoryManagement/UpdateInventoryItem';
+import GenerateInventoryReport from './components/InventoryManagement/GenerateInventoryReport';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/add-item" element={<AddInventoryItem />} />
         <Route path="/item/:id" element={<SeeDetails />} />
         <Route path="/edit-item/:id" element={< UpdateInventoryItem/>} />
+        <Route path="/generate-inventory-report" element={<GenerateInventoryReport />} />
       </Routes>
     </Router>
   );

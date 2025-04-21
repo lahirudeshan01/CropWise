@@ -65,13 +65,21 @@ const InventoryList = () => {
                 />
             </div>
 
-            {/* Add Item Button */}
-            <button
-                className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-                onClick={() => navigate("/add-item")}
-            >
-                + Add Item
-            </button>
+            {/* Action Buttons */}
+            <div className="inventoryReport-actionButtons mb-4">
+                <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                    onClick={() => navigate("/add-item")}
+                >
+                    + Add Item
+                </button>
+                <button
+                    className="bg-green-600 text-white px-4 py-2 rounded"
+                    onClick={() => navigate("/generate-inventory-report")}
+                >
+                    Generate Report
+                </button>
+            </div>
 
             {/* Inventory Table */}
             <table className="w-full border-collapse">

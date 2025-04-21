@@ -125,14 +125,12 @@ const AddInventoryItem = () => {
             isValid = false;
         }
 
-        // Only validate expiration date if category is not "Farm Machinery & Tools", "Packaging Materials", or "Other"
         if (!["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) && 
             (!formData.expirationDate || new Date(formData.expirationDate) <= new Date())) {
             newErrors.expirationDate = "Expiration Date must be a future date.";
             isValid = false;
         }
 
-        // Only validate unit price if category is "Fertilizers", "Pesticides", or "Seeds"
         if (["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && 
             (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0)) {
             newErrors.unitPrice = "Unit Price must be a positive number.";
@@ -161,7 +159,7 @@ const AddInventoryItem = () => {
                 return ["Kg", "Liters", "Units"];
         }
     };
-
+    // Not in use 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
@@ -174,7 +172,7 @@ const AddInventoryItem = () => {
             availableAmount: parseFloat(formData.availableAmount),
             unit: formData.unit,
             expirationDate: ["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) ? null : formData.expirationDate,
-            unitPrice: formData.unitPrice ? parseFloat(formData.unitPrice) : 0,
+            unitPrice: formData.unitPrice ? parseFloat(formData.unitPrice) : null,
             notes: formData.notes
         };
 
@@ -187,10 +185,7 @@ const AddInventoryItem = () => {
     };
 
     const availableUnits = getAvailableUnits();
-
-    // Determine if we should show expiration date and unit price fields
-    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
-    const showUnitPrice = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
+    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category);
 
     return (
         <div className="add-inventory-item-container p-4">
@@ -254,45 +249,41 @@ const AddInventoryItem = () => {
                             onChange={handleChange} 
                             min={getCurrentDate()}
                         />
-                        {formData.category !== "Other" && errors.expirationDate && (
+                        {errors.expirationDate && (
                             <p className="error-message">{errors.expirationDate}</p>
                         )}
                     </>
                 )}
 
-                {showUnitPrice && (
-                    <>
-                        <label>Unit Price (RS.)</label>
-                        <div className="unit-price-container">
-                            <button 
-                                type="button" 
-                                className="unit-price-button" 
-                                onClick={() => adjustUnitPrice(-1)}
-                                disabled={!formData.unitPrice || parseFloat(formData.unitPrice) <= 0}
-                            >
-                                -
-                            </button>
-                            <input 
-                                type="text" 
-                                name="unitPrice" 
-                                value={formData.unitPrice} 
-                                onChange={handleUnitPriceChange}
-                                onBlur={handleUnitPriceBlur}
-                                className="unit-price-input"
-                                placeholder="0.00"
-                            />
-                            <button 
-                                type="button" 
-                                className="unit-price-button" 
-                                onClick={() => adjustUnitPrice(1)}
-                            >
-                                +
-                            </button>
-                        </div>
-                        {["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && errors.unitPrice && (
-                            <p className="error-message">{errors.unitPrice}</p>
-                        )}
-                    </>
+                <label>Unit Price (RS.)</label>
+                <div className="unit-price-container">
+                    <button 
+                        type="button" 
+                        className="unit-price-button" 
+                        onClick={() => adjustUnitPrice(-1)}
+                        disabled={!formData.unitPrice || parseFloat(formData.unitPrice) <= 0}
+                    >
+                        -
+                    </button>
+                    <input 
+                        type="text" 
+                        name="unitPrice" 
+                        value={formData.unitPrice} 
+                        onChange={handleUnitPriceChange}
+                        onBlur={handleUnitPriceBlur}
+                        className="unit-price-input"
+                        placeholder="0.00"
+                    />
+                    <button 
+                        type="button" 
+                        className="unit-price-button" 
+                        onClick={() => adjustUnitPrice(1)}
+                    >
+                        +
+                    </button>
+                </div>
+                {["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && errors.unitPrice && (
+                    <p className="error-message">{errors.unitPrice}</p>
                 )}
 
                 <label>Notes</label>

@@ -31,7 +31,7 @@ const UpdateInventoryItem = () => {
                 setFormData({
                     category: item.category,
                     itemName: item.itemName,
-                    availableAmount: item.availableAmount,
+                    availableAmount: item.availableAmount.toString(),
                     unit: item.unit,
                     expirationDate: item.expirationDate ? format(new Date(item.expirationDate), 'yyyy-MM-dd') : "",
                     unitPrice: item.unitPrice ? parseFloat(item.unitPrice).toFixed(2) : "",
@@ -149,14 +149,12 @@ const UpdateInventoryItem = () => {
             isValid = false;
         }
 
-        // Only validate expiration date if category is not "Farm Machinery & Tools", "Packaging Materials", or "Other"
         if (!["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) && 
             (!formData.expirationDate || new Date(formData.expirationDate) <= new Date())) {
             newErrors.expirationDate = "Expiration Date must be a future date.";
             isValid = false;
         }
 
-        // Only validate unit price if category is "Fertilizers", "Pesticides", or "Seeds"
         if (["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && 
             (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0)) {
             newErrors.unitPrice = "Unit Price must be a positive number.";
@@ -196,7 +194,7 @@ const UpdateInventoryItem = () => {
             availableAmount: parseFloat(formData.availableAmount),
             unit: formData.unit,
             expirationDate: ["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) ? null : formData.expirationDate,
-            unitPrice: formData.unitPrice ? parseFloat(formData.unitPrice) : 0,
+            unitPrice: formData.unitPrice ? parseFloat(formData.unitPrice) : null,
             notes: formData.notes
         };
 
@@ -218,10 +216,7 @@ const UpdateInventoryItem = () => {
     }
 
     const availableUnits = getAvailableUnits();
-
-    // Determine if we should show expiration date and unit price fields
-    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
-    const showUnitPrice = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
+    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category);
 
     return (
         <div className="update-inventory-item-container">
@@ -286,45 +281,41 @@ const UpdateInventoryItem = () => {
                             className="update-input"
                             min={getCurrentDate()}
                         />
-                        {formData.category !== "Other" && errors.expirationDate && (
+                        {errors.expirationDate && (
                             <p className="update-error-message">{errors.expirationDate}</p>
                         )}
                     </>
                 )}
 
-                {showUnitPrice && (
-                    <>
-                        <label className="update-label">Unit Price (RS.)</label>
-                        <div className="unit-price-container">
-                            <button 
-                                type="button" 
-                                className="unit-price-button" 
-                                onClick={() => adjustUnitPrice(-1)}
-                                disabled={!formData.unitPrice || parseFloat(formData.unitPrice) <= 0}
-                            >
-                                -
-                            </button>
-                            <input 
-                                type="text" 
-                                name="unitPrice" 
-                                value={formData.unitPrice} 
-                                onChange={handleUnitPriceChange}
-                                onBlur={handleUnitPriceBlur}
-                                className="update-input unit-price-input"
-                                placeholder="0.00"
-                            />
-                            <button 
-                                type="button" 
-                                className="unit-price-button" 
-                                onClick={() => adjustUnitPrice(1)}
-                            >
-                                +
-                            </button>
-                        </div>
-                        {["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && errors.unitPrice && (
-                            <p className="update-error-message">{errors.unitPrice}</p>
-                        )}
-                    </>
+                <label className="update-label">Unit Price (RS.)</label>
+                <div className="unit-price-container">
+                    <button 
+                        type="button" 
+                        className="unit-price-button" 
+                        onClick={() => adjustUnitPrice(-1)}
+                        disabled={!formData.unitPrice || parseFloat(formData.unitPrice) <= 0}
+                    >
+                        -
+                    </button>
+                    <input 
+                        type="text" 
+                        name="unitPrice" 
+                        value={formData.unitPrice} 
+                        onChange={handleUnitPriceChange}
+                        onBlur={handleUnitPriceBlur}
+                        className="update-input unit-price-input"
+                        placeholder="0.00"
+                    />
+                    <button 
+                        type="button" 
+                        className="unit-price-button" 
+                        onClick={() => adjustUnitPrice(1)}
+                    >
+                        +
+                    </button>
+                </div>
+                {["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && errors.unitPrice && (
+                    <p className="update-error-message">{errors.unitPrice}</p>
                 )}
 
                 <label className="update-label">Notes</label>
