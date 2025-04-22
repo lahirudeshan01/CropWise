@@ -133,7 +133,7 @@ const Finance = () => {
     navigate("/finance-report", { state: { transactions, report } });
   };
 
-  /*
+  
   const generateAiReport = () => {
     const csvData = generateCSV(transactions);
     sendRequest(csvData);
@@ -314,7 +314,7 @@ const Finance = () => {
     ]);
     return [header, ...rows].map(row => row.join(',')).join('|');
   };
-*/
+
   // Handle Income Button Click
   const handleIncome = () => {
     navigate("/income-form");
@@ -433,7 +433,9 @@ const Finance = () => {
 </button>
         </div>
         <div className="button-group-right">
-        
+        <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>
+            Generate AI Report
+          </button>
           <button className="button export-pdf" onClick={handleExportPDF}>
             Generate Report
           </button>
@@ -612,25 +614,32 @@ const Finance = () => {
           ) : (
             transactions.map((transaction, index) => (
               <tr key={transaction._id || index}>
-                <td>{transaction.name}</td>
-                <td>{new Date(transaction.date).toLocaleString()}</td>
-                <td>Rs.{transaction.amount.toLocaleString()}</td>
-                <td data-status={transaction.status}>{transaction.status}</td>
-                <td>{transaction.reference}</td>
-                <td>
-                  <div className="actions-container">
-                    <button className="three-dots-button" onClick={(e) => handleMenuClick(index, e)}>
-                      <FaEllipsisV />
-                    </button>
-                    {showMenu === index && (
-                      <div className="dropdown-menu">
-                        <button onClick={() => handleUpdate(index)}>Update</button>
-                        <button onClick={() => confirmDelete(index)}>Delete</button>
-                      </div>
-                    )}
-                  </div>
-                </td>
-              </tr>
+              <td>{transaction.name}</td>
+              <td>{new Date(transaction.date).toLocaleString()}</td>
+              <td>Rs.{transaction.amount?.toLocaleString() || "0"}</td>
+              <td data-status={transaction.status}>{transaction.status}</td>
+              <td>{transaction.reference}</td>
+              <td>
+                <div className="actions-container">
+                  <button
+                    className="three-dots-button"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent event bubbling
+                      handleMenuClick(index, e);
+                    }}
+                  >
+                    <FaEllipsisV />
+                  </button>
+                  {showMenu === index && (
+                    <div className="dropdown-menu">
+                      <button onClick={() => handleUpdate(index)}>Update</button>
+                      <button onClick={() => confirmDelete(index)}>Delete</button>
+                    </div>
+                  )}
+                </div>
+              </td>
+            </tr>
+          
             ))
           )}
         </tbody>

@@ -29,7 +29,20 @@ const UpdateForm = () => {
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    
+    // Special handling for amount field
+    if (name === "amount") {
+      // Check if the value has more than 2 decimal places
+      const decimalRegex = /^\d+(\.\d{0,2})?$/;
+      
+      // If the value is empty or matches the decimal format (max 2 decimal places)
+      if (value === "" || decimalRegex.test(value)) {
+        setFormData({ ...formData, [name]: value });
+      }
+      // Otherwise, don't update the state (invalid input)
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
 
     // Clear error when user types
     setErrors({ ...errors, [name]: "" });
@@ -39,22 +52,28 @@ const UpdateForm = () => {
   const validateForm = () => {
     let newErrors = {};
 
+    // Name validation
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
     }
 
+    // Amount validation
     if (!formData.amount) {
       newErrors.amount = "Amount is required";
-    } else if (isNaN(formData.amount) || Number(formData.amount) <= 0) {
-      newErrors.amount = "Amount must be a positive number";
+    } else if (isNaN(formData.amount)) {
+      newErrors.amount = "Amount must be a number";
+    } else if (Number(formData.amount) <= 0) {
+      newErrors.amount = "Amount must be positive";
+    } else if (formData.amount.includes(".") && formData.amount.split(".")[1].length > 2) {
+      newErrors.amount = "Maximum 2 decimal places allowed";
     }
 
+    // Status validation
     if (!formData.status) {
-      newErrors.status = "Status is required";
+      newErrors.status = "Type is required";
     }
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
@@ -68,8 +87,8 @@ const UpdateForm = () => {
       await updateTransaction({
         _id: location.state.transaction._id,
         ...formData,
-        reference: location.state.transaction.reference, // Include reference
-        date: location.state.transaction.date, // Include date
+        reference: location.state.transaction.reference,
+        date: location.state.transaction.date,
       });
       navigate("/finance");
     } catch (error) {
@@ -108,6 +127,8 @@ const UpdateForm = () => {
               placeholder="Enter amount"
               value={formData.amount}
               onChange={handleInputChange}
+              min="0.01"
+              step="0.01"
             />
             {errors.amount && <span className="error-message">{errors.amount}</span>}
           </div>
