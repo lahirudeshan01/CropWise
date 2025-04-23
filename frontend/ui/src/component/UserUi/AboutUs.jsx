@@ -25,7 +25,7 @@ function AboutUs() {
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
           className="about-us-heading-box"
         >
-          <h1 className="about-us-heading">About Ussssssss</h1>
+          <h1 className="about-us-heading">About </h1>
         </motion.div>
 
         <motion.section
