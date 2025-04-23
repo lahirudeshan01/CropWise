@@ -18,6 +18,9 @@ function ShowDetailstask() {
       minHeight: "100vh",
       backgroundColor: "#f4f4f4",
     },
+
+    
+
     taskCard: {
       background: "white",
       padding: "20px",
@@ -39,7 +42,8 @@ function ShowDetailstask() {
       border: "1px solid #ddd",
       padding: "10px",
       textAlign: "left",
-      backgroundColor: "#f2f2f2",
+      backgroundColor: "#343a40", // Darker color
+      color: "#fff",              // White text
     },
     tableCell: {
       border: "1px solid #ddd",
