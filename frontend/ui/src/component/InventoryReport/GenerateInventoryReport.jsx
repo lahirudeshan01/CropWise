@@ -55,6 +55,7 @@ const GenerateInventoryReport = () => {
                 .inventoryReport-table {
                     width: 100%;
                     border-collapse: collapse;
+                    margin-top: 20px;
                 }
                 .inventoryReport-tableHeaderRow {
                     background-color: #f5f5f5 !important;
@@ -75,6 +76,32 @@ const GenerateInventoryReport = () => {
                 .inventoryReport-subtitle {
                     font-size: 14px;
                     color: #666;
+                }
+                .inventoryReport-companyHeader {
+                    text-align: center;
+                    margin-bottom: 30px;
+                }
+                .inventoryReport-logo {
+                    height: 80px;
+                    margin-bottom: 10px;
+                }
+                .inventoryReport-companyName {
+                    font-size: 28px;
+                    font-weight: bold;
+                    color: #2a6496;
+                    margin-bottom: 5px;
+                }
+                .inventoryReport-companyDesc {
+                    font-size: 16px;
+                    color: #555;
+                    font-style: italic;
+                }
+                .inventoryReport-signature {
+                    margin-top: 50px;
+                    text-align: left;
+                    padding-top: 20px;
+                    border-top: 1px solid #ddd;
+                    width: 200px;
                 }
             }
         `;
@@ -158,12 +185,23 @@ const GenerateInventoryReport = () => {
                 ← 
             </button>
 
-            <div style={styles.header}>
-                <h1 style={styles.title}>Inventory Report</h1>
-                <p style={styles.subtitle}>Generated on: {new Date().toLocaleDateString()} at {new Date().toLocaleTimeString()}</p>
-            </div>
-
             <div id="inventoryReport-printContent" style={styles.reportContainer} className="inventoryReport-reportContainer">
+                <div style={styles.companyHeader} className="inventoryReport-companyHeader">
+                    <img 
+                        src="https://p7.hiclipart.com/preview/976/522/355/natural-environment-earth-ecology-clean-environment.jpg" 
+                        alt="Company Logo" 
+                        style={styles.logo} 
+                        className="inventoryReport-logo"
+                    />
+                    <div style={styles.companyName} className="inventoryReport-companyName">CropWise</div>
+                    <div style={styles.companyDesc} className="inventoryReport-companyDesc">Smart Agriculture</div>
+                </div>
+
+                <div style={styles.header}>
+                    <h1 style={styles.title}>Inventory Report</h1>
+                    <p style={styles.subtitle}>Generated on: {new Date().toLocaleDateString()} at {new Date().toLocaleTimeString()}</p>
+                </div>
+
                 <table style={styles.table} className="inventoryReport-table">
                     <thead>
                         <tr style={styles.tableHeaderRow} className="inventoryReport-tableHeaderRow">
@@ -192,6 +230,11 @@ const GenerateInventoryReport = () => {
                         ))}
                     </tbody>
                 </table>
+
+                <div style={styles.signature} className="inventoryReport-signature">
+                    <div>...........................................</div>
+                    <div>Signature</div>
+                </div>
             </div>
 
             <button 
@@ -236,6 +279,25 @@ const styles = {
         marginBottom: '20px',
         fontSize: '14px',
     },
+    companyHeader: {
+        textAlign: 'center',
+        marginBottom: '30px',
+    },
+    logo: {
+        height: '80px',
+        marginBottom: '10px',
+    },
+    companyName: {
+        fontSize: '28px',
+        fontWeight: 'bold',
+        color: '#2a6496',
+        marginBottom: '5px',
+    },
+    companyDesc: {
+        fontSize: '16px',
+        color: '#555',
+        fontStyle: 'italic',
+    },
     header: {
         textAlign: 'center',
         marginBottom: '30px',
@@ -258,6 +320,7 @@ const styles = {
     table: {
         width: '100%',
         borderCollapse: 'collapse',
+        marginTop: '20px',
     },
     tableHeaderRow: {
         backgroundColor: '#f5f5f5',
@@ -274,6 +337,13 @@ const styles = {
     tableCell: {
         padding: '12px',
         textAlign: 'left',
+    },
+    signature: {
+        marginTop: '50px',
+        textAlign: 'left',
+        paddingTop: '20px',
+        borderTop: '1px solid #ddd',
+        width: '200px',
     },
     printButton: {
         backgroundColor: '#4CAF50',
