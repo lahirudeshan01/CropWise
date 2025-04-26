@@ -271,16 +271,17 @@ const TaskList = ({ tasks = [] }) => {
             th { background-color: #0286fa; color: #fff; }
             .status-badge { 
               padding: 6px 18px; 
-              border-radius: 20px; 
+              border-radius: 8px; 
+              color: #222; 
               font-size: 1em;
               min-width: 90px;
               display: inline-block;
               text-align: center;
               font-weight: 600;
             }
-            .status-badge.in-progress { background: #ffd54f; color: #795548; }
+            .status-badge.in-progress { background: #fbc02d; color: #222; }
             .status-badge.complete { background: #43a047; color: #fff; }
-            .status-badge.unknown { background: #e0e0e0; color: #757575; }
+            .status-badge.unknown { background: #757575; color: #fff; }
             .total-section {
               margin-top: 18px;
               display: flex;
@@ -361,7 +362,7 @@ const TaskList = ({ tasks = [] }) => {
   return (
     <div ref={printRef} className="task-list-wrapper">
       <header className="task-list-header">
-        <h2>Task List</h2>
+        {/* <h2>Task List</h2>  <-- REMOVE THIS LINE */}
         <div className="filters no-print">
           <input
             type="text"
@@ -426,9 +427,9 @@ const TaskList = ({ tasks = [] }) => {
                       style={
                         task.status === "In Progress"
                           ? {
-                              background: "#ffd54f", // Highlighted yellow
-                              color: "#795548",
-                              borderRadius: "20px",
+                              background: "#fbc02d", // Highlighted yellow
+                              color: "#222",
+                              borderRadius: "8px",
                               fontWeight: 600,
                               padding: "6px 18px",
                               fontSize: "1em",
@@ -440,7 +441,7 @@ const TaskList = ({ tasks = [] }) => {
                           ? {
                               background: "#43a047", // Highlighted green
                               color: "#fff",
-                              borderRadius: "20px",
+                              borderRadius: "8px",
                               fontWeight: 600,
                               padding: "6px 18px",
                               fontSize: "1em",
@@ -449,9 +450,9 @@ const TaskList = ({ tasks = [] }) => {
                               textAlign: "center",
                             }
                           : {
-                              background: "#e0e0e0", // Light grey for unknown
-                              color: "#757575",
-                              borderRadius: "20px",
+                              background: "#757575", // Light grey for unknown
+                              color: "#fff",
+                              borderRadius: "8px",
                               fontWeight: 600,
                               padding: "6px 18px",
                               fontSize: "1em",
@@ -504,6 +505,7 @@ const TaskList = ({ tasks = [] }) => {
 };
 
 export default TaskList;
+
 
 
 
