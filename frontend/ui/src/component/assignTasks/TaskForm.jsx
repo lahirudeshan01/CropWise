@@ -12,45 +12,45 @@ const TaskForm = ({ onSubmit }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [isHovered, setIsHovered] = useState(false);
 
   const categoryOptions = ["Planting", "Maintenance", "Harvesting"];
   const statusOptions = ["Unknown", "In Progress", "Complete"];
 
-  // Define all styles as JavaScript objects
   const styles = {
     taskFormContainer: {
-      backgroundColor: "white",
-      borderRadius: "4px",
-      boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-      padding: "20px",
-      maxWidth: "800px",
-      margin: "0 auto",
+      backgroundColor: "#fff",
+      borderRadius: "8px",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+      padding: "32px",
+      maxWidth: "520px",
+      margin: "40px auto",
     },
     heading: {
       marginTop: 0,
-      marginBottom: "20px",
-      color: "#333",
-      fontWeight: 500,
+      marginBottom: "28px",
+      color: "#222",
+      fontWeight: 600,
+      fontSize: "2rem",
+      letterSpacing: "-1px",
     },
     formGroup: {
-      marginBottom: "15px",
+      marginBottom: "18px",
     },
     formRow: {
       display: "flex",
-      flexWrap: "wrap",
-      marginRight: "-10px",
-      marginLeft: "-10px",
+      gap: "20px",
+      marginBottom: "18px",
     },
     halfWidth: {
-      flex: "0 0 50%",
-      maxWidth: "50%",
-      padding: "0 10px",
+      flex: "1 1 0",
     },
     label: {
       display: "block",
-      marginBottom: "5px",
+      marginBottom: "6px",
       fontWeight: 500,
-      color: "#333",
+      color: "#222",
+      fontSize: "1rem",
     },
     required: {
       color: "#e53935",
@@ -59,18 +59,19 @@ const TaskForm = ({ onSubmit }) => {
     input: {
       width: "100%",
       padding: "10px",
-      border: "1px solid #ddd",
+      border: "1px solid #ccc",
       borderRadius: "4px",
-      fontSize: "14px",
+      fontSize: "1rem",
+      background: "#fafbfc",
       transition: "border-color 0.3s",
     },
     select: {
       width: "100%",
       padding: "10px",
-      border: "1px solid #ddd",
+      border: "1px solid #ccc",
       borderRadius: "4px",
-      fontSize: "14px",
-      transition: "border-color 0.3s",
+      fontSize: "1rem",
+      background: "#fafbfc",
       appearance: "none",
       backgroundImage: "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23333' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3'/%3E%3C/svg%3E\")",
       backgroundRepeat: "no-repeat",
@@ -78,36 +79,34 @@ const TaskForm = ({ onSubmit }) => {
       backgroundSize: "12px",
       paddingRight: "30px",
     },
-    inputFocus: {
-      outline: "none",
-      borderColor: "#4CAF50",
-    },
     inputError: {
       borderColor: "#e53935",
+      background: "#fff6f6",
     },
     errorMessage: {
-      display: "block",
       color: "#e53935",
-      fontSize: "12px",
-      marginTop: "4px",
+      fontSize: "0.93rem",
+      marginTop: "3px",
+      display: "block",
     },
     formActions: {
-      marginTop: "20px",
+      marginTop: "30px",
       textAlign: "right",
     },
     submitBtn: {
       backgroundColor: "#4CAF50",
       color: "white",
       border: "none",
-      padding: "10px 20px",
+      padding: "12px 32px",
       borderRadius: "4px",
       cursor: "pointer",
-      fontSize: "14px",
-      fontWeight: 500,
-      transition: "background-color 0.3s",
+      fontSize: "1rem",
+      fontWeight: 600,
+      boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
+      transition: "background 0.2s",
     },
     submitBtnHover: {
-      backgroundColor: "#3e8e41",
+      backgroundColor: "#388e3c",
     },
   };
 
@@ -134,16 +133,12 @@ const TaskForm = ({ onSubmit }) => {
     });
 
     if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: "",
-      });
+      setErrors({ ...errors, [name]: "" });
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.title.trim()) newErrors.title = "Title is required";
     if (!formData.category) newErrors.category = "Category is required";
     if (!formData.employeeID.trim()) newErrors.employeeID = "Employee ID is required";
@@ -151,16 +146,13 @@ const TaskForm = ({ onSubmit }) => {
     if (!/^\d+(\.\d{2})?$/.test(formData.payment)) {
       newErrors.payment = "Enter a valid amount with cents (e.g., 2500.00)";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
-
     try {
       await axios.post("http://localhost:3000/api/tasks", formData);
       alert("Task assigned successfully!");
@@ -172,22 +164,18 @@ const TaskForm = ({ onSubmit }) => {
         payment: "0.00",
         status: "Unknown",
       });
-      if (onSubmit) {
-        onSubmit(formData);
-      }
+      if (onSubmit) onSubmit(formData);
     } catch (error) {
       console.error("Error adding task:", error);
       alert("Failed to assign task. Please try again.");
     }
   };
 
-  // Function to handle hover for submit button
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <div style={styles.taskFormContainer}>
       <h1 style={styles.heading}>Assign New Task</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off">
+        {/* Task Title */}
         <div style={styles.formGroup}>
           <label htmlFor="title" style={styles.label}>
             Task Title<span style={styles.required}>*</span>
@@ -202,10 +190,13 @@ const TaskForm = ({ onSubmit }) => {
               ...styles.input,
               ...(errors.title ? styles.inputError : {}),
             }}
+            placeholder="Enter task title"
+            autoFocus
           />
           {errors.title && <span style={styles.errorMessage}>{errors.title}</span>}
         </div>
 
+        {/* Task Category */}
         <div style={styles.formGroup}>
           <label htmlFor="category" style={styles.label}>
             Task Category<span style={styles.required}>*</span>
@@ -228,27 +219,49 @@ const TaskForm = ({ onSubmit }) => {
           {errors.category && <span style={styles.errorMessage}>{errors.category}</span>}
         </div>
 
-        <div style={styles.formGroup}>
-          <label htmlFor="employeeID" style={styles.label}>
-            Assign To<span style={styles.required}>*</span>
-          </label>
-          <input
-            type="text"
-            id="employeeID"
-            name="employeeID"
-            placeholder="Employee ID (e.g. E10450)"
-            value={formData.employeeID}
-            onChange={handleChange}
-            style={{
-              ...styles.input,
-              ...(errors.employeeID ? styles.inputError : {}),
-            }}
-          />
-          {errors.employeeID && <span style={styles.errorMessage}>{errors.employeeID}</span>}
+        {/* Employee ID and Payment in one row */}
+        <div style={styles.formRow}>
+          <div style={styles.halfWidth}>
+            <label htmlFor="employeeID" style={styles.label}>
+              Assign To<span style={styles.required}>*</span>
+            </label>
+            <input
+              type="text"
+              id="employeeID"
+              name="employeeID"
+              placeholder="Employee ID (e.g. E10450)"
+              value={formData.employeeID}
+              onChange={handleChange}
+              style={{
+                ...styles.input,
+                ...(errors.employeeID ? styles.inputError : {}),
+              }}
+            />
+            {errors.employeeID && <span style={styles.errorMessage}>{errors.employeeID}</span>}
+          </div>
+          <div style={styles.halfWidth}>
+            <label htmlFor="payment" style={styles.label}>
+              Payment
+            </label>
+            <input
+              type="text"
+              id="payment"
+              name="payment"
+              placeholder="Amount (e.g., 2500.00)"
+              value={formData.payment}
+              onChange={handleChange}
+              style={{
+                ...styles.input,
+                ...(errors.payment ? styles.inputError : {}),
+              }}
+            />
+            {errors.payment && <span style={styles.errorMessage}>{errors.payment}</span>}
+          </div>
         </div>
 
+        {/* Due Date and Status in one row */}
         <div style={styles.formRow}>
-          <div style={{...styles.formGroup, ...styles.halfWidth}}>
+          <div style={styles.halfWidth}>
             <label htmlFor="date" style={styles.label}>
               Due Date<span style={styles.required}>*</span>
             </label>
@@ -265,13 +278,14 @@ const TaskForm = ({ onSubmit }) => {
             />
             {errors.date && <span style={styles.errorMessage}>{errors.date}</span>}
           </div>
-
-          <div style={{...styles.formGroup, ...styles.halfWidth}}>
-            <label htmlFor="status" style={styles.label}>Status</label>
-            <select 
-              id="status" 
-              name="status" 
-              value={formData.status} 
+          <div style={styles.halfWidth}>
+            <label htmlFor="status" style={styles.label}>
+              Status
+            </label>
+            <select
+              id="status"
+              name="status"
+              value={formData.status}
               onChange={handleChange}
               style={styles.select}
             >
@@ -282,26 +296,10 @@ const TaskForm = ({ onSubmit }) => {
           </div>
         </div>
 
-        <div style={styles.formGroup}>
-          <label htmlFor="payment" style={styles.label}>Payment</label>
-          <input
-            type="text"
-            id="payment"
-            name="payment"
-            placeholder="Amount (e.g., 2500.00)"
-            value={formData.payment}
-            onChange={handleChange}
-            style={{
-              ...styles.input,
-              ...(errors.payment ? styles.inputError : {}),
-            }}
-          />
-          {errors.payment && <span style={styles.errorMessage}>{errors.payment}</span>}
-        </div>
-
+        {/* Submit Button */}
         <div style={styles.formActions}>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             style={{
               ...styles.submitBtn,
               ...(isHovered ? styles.submitBtnHover : {}),
