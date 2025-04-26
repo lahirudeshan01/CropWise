@@ -230,7 +230,7 @@ const SeeDetails = () => {
             flex: 1
         },
         quantityButton: {
-            width: "30px !important",
+            width: "20px !important",
             height: "30px !important",
             display: "flex",
             alignItems: "center",
