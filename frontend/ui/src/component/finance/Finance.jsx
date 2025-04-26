@@ -133,7 +133,7 @@ const Finance = () => {
     navigate("/finance-report", { state: { transactions, report } });
   };
 
-  /*
+  
   const generateAiReport = () => {
     const csvData = generateCSV(transactions);
     sendRequest(csvData);
@@ -314,7 +314,7 @@ const Finance = () => {
     ]);
     return [header, ...rows].map(row => row.join(',')).join('|');
   };
-*/
+
   // Handle Income Button Click
   const handleIncome = () => {
     navigate("/income-form");
@@ -433,7 +433,10 @@ const Finance = () => {
 </button>
         </div>
         <div className="button-group-right">
-        
+
+        <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>
+            Generate AI Report
+          </button>
           <button className="button export-pdf" onClick={handleExportPDF}>
             Generate Report
           </button>

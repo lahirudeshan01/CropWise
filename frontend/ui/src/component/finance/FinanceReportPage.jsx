@@ -112,7 +112,7 @@ const FinanceReportPage = () => {
 
     const [year, month] = selectedMonth.split("-");
     try {
-      const response = await axios.get(`http://localhost:5000/api/monthly-report`, {
+      const response = await axios.get(`http://localhost:3000/api/monthly-report`, {
         params: { month, year },
       });
       setMonthlyReport(response.data);
@@ -131,7 +131,7 @@ const FinanceReportPage = () => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:5000/api/daily-report`, {
+      const response = await axios.get(`http://localhost:3000/api/daily-report`, {
         params: { date: selectedDate },
       });
       setDailyReport(response.data);
