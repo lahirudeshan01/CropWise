@@ -1,234 +1,3 @@
-// import React, { useState, useRef } from "react";
-// import { Link } from "react-router-dom";
-// import "./TaskList.css";
-
-// const TaskList = ({ tasks = [] }) => {
-//   const [searchTerm, setSearchTerm] = useState("");
-//   const [categoryFilter, setCategoryFilter] = useState("");
-//   const [statusFilter, setStatusFilter] = useState("");
-//   const printRef = useRef();
-
-//   const uniqueCategories = Array.from(new Set(tasks.map(({ category }) => category)));
-//   const uniqueStatuses = Array.from(new Set(tasks.map(({ status }) => status)));
-
-//   const filteredTasks = tasks.filter(task => {
-//     const matchesTitle = !searchTerm || (task.title || "").toLowerCase().includes(searchTerm.toLowerCase());
-//     const matchesCategory = !categoryFilter || task.category === categoryFilter;
-//     const matchesStatus = !statusFilter || task.status === statusFilter;
-//     return matchesTitle && matchesCategory && matchesStatus;
-//   });
-
-//   const totalPayment = filteredTasks.reduce(
-//     (sum, { payment }) => sum + (parseFloat(payment) || 0),
-//     0
-//   );
-
-//   const handlePrint = () => {
-//     const printWindow = window.open("", "", "width=800,height=600");
-//     printWindow.document.write(`
-//       <html>
-//         <head>
-//           <title>Task Report</title>
-//           <style>
-//             body { font-family: Arial, sans-serif; }
-//             table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-//             th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-//             th { background-color: #0286fa; color: #fff; }
-//             .status-badge { 
-//               padding: 3px 8px; 
-//               border-radius: 3px; 
-//               color: #fff; 
-//               font-size: 0.95em;
-//               display: inline-block;
-//             }
-//             .status-badge.complete { background: #388e3c; }
-//             .status-badge.in-progress { background: #fbc02d; color: #222; }
-//             .status-badge.unknown { background: #757575; }
-//             .total-row { background: #f5f5f5; color: #222; font-weight: bold; font-size: 1.07em; }
-//             .total-row td { border: none; }
-//             .print-header { text-align: center; margin-bottom: 20px; }
-//             .print-footer { text-align: right; margin-top: 20px; font-style: italic; }
-//             .print-date { text-align: right; margin-bottom: 10px; }
-//           </style>
-//         </head>
-//         <body>
-//           <div class="print-header">
-//             <h2>Task Management Report</h2>
-//           </div>
-//           <div class="print-date">
-//             Generated on: ${new Date().toLocaleDateString()}
-//           </div>
-//           <table>
-//             <thead>
-//               <tr>
-//                 <th>Title</th>
-//                 <th>Category</th>
-//                 <th>Employee ID</th>
-//                 <th>Date</th>
-//                 <th>Payment</th>
-//                 <th>Status</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               ${filteredTasks.map(task => `
-//                 <tr>
-//                   <td>${task.title || "N/A"}</td>
-//                   <td>${task.category || "N/A"}</td>
-//                   <td>${task.employeeID || "N/A"}</td>
-//                   <td>${task.date ? new Date(task.date).toLocaleDateString() : "N/A"}</td>
-//                   <td>${task.payment ? parseFloat(task.payment).toFixed(2) : "0.00"}</td>
-//                   <td>
-//                     <span class="status-badge ${task.status ? task.status.toLowerCase().replace(' ', '-') : 'unknown'}">
-//                       ${task.status || "Unknown"}
-//                     </span>
-//                   </td>
-//                 </tr>
-//               `).join("")}
-//               <tr class="total-row">
-//                 <td colspan="4"><b>Total</b></td>
-//                 <td><b>Rs.${totalPayment.toFixed(2)}</b></td>
-//                 <td></td>
-//               </tr>
-//             </tbody>
-//           </table>
-//           <div class="print-footer">
-//             End of Report
-//           </div>
-//         </body>
-//       </html>
-//     `);
-//     printWindow.document.close();
-//     printWindow.focus();
-//     printWindow.print();
-//     printWindow.close();
-//   };
-
-//   if (!tasks.length) {
-//     return <div className="no-tasks">No tasks found!</div>;
-//   }
-
-//   return (
-//     <div ref={printRef} className="task-list-wrapper">
-//       <div className="filters no-print">
-//         <input
-//           type="text"
-//           placeholder="Search by title..."
-//           value={searchTerm}
-//           onChange={e => setSearchTerm(e.target.value)}
-//           aria-label="Search by title"
-//         />
-
-//         <select
-//           value={categoryFilter}
-//           onChange={e => setCategoryFilter(e.target.value)}
-//           aria-label="Filter by category"
-//         >
-//           <option value="">All Categories</option>
-//           {uniqueCategories.map(category =>
-//             <option key={category} value={category}>{category}</option>
-//           )}
-//         </select>
-
-//         <select
-//           value={statusFilter}
-//           onChange={e => setStatusFilter(e.target.value)}
-//           aria-label="Filter by status"
-//         >
-//           <option value="">All Statuses</option>
-//           {uniqueStatuses.map(status =>
-//             <option key={status} value={status}>{status}</option>
-//           )}
-//         </select>
-
-//         <button onClick={handlePrint} className="print-btn">
-//           Print Report
-//         </button>
-//       </div>
-
-//       {filteredTasks.length === 0 ? (
-//         <div className="no-tasks">No tasks match your filters.</div>
-//       ) : (
-//         <div className="table-container">
-//           <table className="task-table">
-//             <thead>
-//               <tr>
-//                 <th style={{ background: "#0286fa", color: "#fff" }}>TITLE</th>
-//                 <th style={{ background: "#0286fa", color: "#fff" }}>CATEGORY</th>
-//                 <th style={{ background: "#0286fa", color: "#fff" }}>EMPLOYEE ID</th>
-//                 <th style={{ background: "#0286fa", color: "#fff" }}>DATE</th>
-//                 <th style={{ background: "#0286fa", color: "#fff" }}>PAYMENT</th>
-//                 <th style={{ background: "#0286fa", color: "#fff" }}>STATUS</th>
-//                 <th className="no-print" style={{ background: "#0286fa", color: "#fff" }}>ACTIONS</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {filteredTasks.map((task, idx) => (
-//                 <tr key={task._id || idx}>
-//                   <td>{task.title || "N/A"}</td>
-//                   <td>{task.category || "N/A"}</td>
-//                   <td>{task.employeeID || "N/A"}</td>
-//                   <td>{task.date ? new Date(task.date).toLocaleDateString() : "N/A"}</td>
-//                   <td>{task.payment ? parseFloat(task.payment).toFixed(2) : "0.00"}</td>
-//                   <td>
-//                     <span
-//                       className={`status-badge ${task.status ? task.status.toLowerCase().replace(' ', '-') : "unknown"}`}
-//                       style={{
-//                         background:
-//                           task.status === "Complete"
-//                             ? "#388e3c"
-//                             : task.status === "In Progress"
-//                             ? "#fbc02d"
-//                             : "#757575",
-//                         color: task.status === "In Progress" ? "#222" : "#fff",
-//                         fontWeight: 600,
-//                         padding: "6px 18px",
-//                         borderRadius: 8,
-//                         fontSize: "1em",
-//                         minWidth: 90,
-//                         display: "inline-block",
-//                         textAlign: "center"
-//                       }}
-//                     >
-//                       {task.status || "Unknown"}
-//                     </span>
-//                   </td>
-//                   <td className="no-print">
-//                     {task._id ? (
-//                       <Link to={`/Showtask/${task._id}`} className="view-details-btn">
-//                         View Details
-//                       </Link>
-//                     ) : (
-//                       <span>No ID</span>
-//                     )}
-//                   </td>
-//                 </tr>
-//               ))}
-//               {/* Highlighted Total Row */}
-//               <tr
-//                 className="total-row"
-//                 style={{
-//                   background: "#f5f5f5",
-//                   color: "#222",
-//                   fontWeight: "bold",
-//                   fontSize: "1.07em"
-//                 }}
-//               >
-//                 <td colSpan={4}><b>Total</b></td>
-//                 <td><b>Rs.{totalPayment.toFixed(2)}</b></td>
-//                 <td colSpan={2}></td>
-//               </tr>
-//             </tbody>
-//           </table>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default TaskList;
-
-
-
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./TaskList.css";
@@ -272,14 +41,13 @@ const TaskList = ({ tasks = [] }) => {
             .status-badge { 
               padding: 6px 18px; 
               border-radius: 8px; 
-              color: #222; 
               font-size: 1em;
               min-width: 90px;
               display: inline-block;
               text-align: center;
               font-weight: 600;
             }
-            .status-badge.in-progress { background: #fbc02d; color: #222; }
+            .status-badge.in-progress { background: #ffd600; color: #222; }
             .status-badge.complete { background: #43a047; color: #fff; }
             .status-badge.unknown { background: #757575; color: #fff; }
             .total-section {
@@ -362,7 +130,7 @@ const TaskList = ({ tasks = [] }) => {
   return (
     <div ref={printRef} className="task-list-wrapper">
       <header className="task-list-header">
-        {/* <h2>Task List</h2>  <-- REMOVE THIS LINE */}
+        {/* Removed duplicate Task List heading */}
         <div className="filters no-print">
           <input
             type="text"
@@ -427,7 +195,7 @@ const TaskList = ({ tasks = [] }) => {
                       style={
                         task.status === "In Progress"
                           ? {
-                              background: "#fbc02d", // Highlighted yellow
+                              background: "#ffd600", // Highlighted yellow
                               color: "#222",
                               borderRadius: "8px",
                               fontWeight: 600,
@@ -450,7 +218,7 @@ const TaskList = ({ tasks = [] }) => {
                               textAlign: "center",
                             }
                           : {
-                              background: "#757575", // Light grey for unknown
+                              background: "#757575", // Grey for unknown
                               color: "#fff",
                               borderRadius: "8px",
                               fontWeight: 600,
@@ -505,19 +273,3 @@ const TaskList = ({ tasks = [] }) => {
 };
 
 export default TaskList;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
