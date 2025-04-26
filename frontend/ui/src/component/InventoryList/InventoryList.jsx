@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import './InventoryList.css';
 import GenerateInventoryReport from "../InventoryReport/GenerateInventoryReport";
 
+
 const InventoryList = () => {
     const [inventory, setInventory] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -66,7 +67,6 @@ const InventoryList = () => {
                 />
             </div>
 
-            
             {/* Generate Report Button */}
             <button
                     className="bg-green-600 text-white px-4 py-2 rounded"
@@ -82,20 +82,20 @@ const InventoryList = () => {
                         <th className="p-2 border">
                             <div className="flex items-center">
                                 
-                                <select
-                                    value={selectedCategory}
-                                    onChange={(e) => setSelectedCategory(e.target.value)}
-                                    className="ml-2 p-1 border border-gray-300 rounded"
-                                >
-                                    <option value="All Categories"><b>All Categories</b></option>
-                                    <option value="Fertilizers">Fertilizers</option>
-                                    <option value="Pesticides">Pesticides</option>
-                                    <option value="Seeds">Seeds</option>
-                                    <option value="Farm Machinery & Tools">Farm Machinery & Tools</option>
-                                    <option value="Packaging Materials">Packaging Materials</option>
-                                    <option value="Pest Control & Storage Protection">Pest Control & Storage Protection</option>
-                                    <option value="Other">Other</option>
-                                </select>
+                            <select
+                                value={selectedCategory}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                className="category-dropdown"  // Add this class
+                            >
+                                <option value="All Categories"><b>All Categories</b></option>
+                                <option value="Fertilizers">Fertilizers</option>
+                                <option value="Pesticides">Pesticides</option>
+                                <option value="Seeds">Seeds</option>
+                                <option value="Farm Machinery & Tools">Farm Machinery & Tools</option>
+                                <option value="Packaging Materials">Packaging Materials</option>
+                                <option value="Pest Control & Storage Protection">Pest Control & Storage Protection</option>
+                                <option value="Other">Other</option>
+                            </select>
                             </div>
                         </th>
                         <th className="p-2 border">Item</th>

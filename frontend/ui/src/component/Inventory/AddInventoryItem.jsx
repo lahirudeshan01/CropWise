@@ -155,9 +155,9 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#5c5e5d', // Changed to blue
-    color: 'white', // White text for better contrast
-    border: '1px solid #2563eb', // Darker blue border
+    backgroundColor: '#5c5e5d',
+    color: 'white',
+    border: '1px solid #2563eb',
     borderRadius: '6px',
     fontSize: '1.25rem',
     flexShrink: 0,
@@ -165,10 +165,10 @@ const styles = {
     transition: 'background-color 0.2s',
   },
   unitPriceButtonHover: {
-    backgroundColor: '#797a7a', // Darker blue on hover
+    backgroundColor: '#797a7a',
   },
   unitPriceButtonDisabled: {
-    backgroundColor: '#797a7a', // Lighter blue when disabled
+    backgroundColor: '#797a7a',
     opacity: 0.7,
     cursor: 'not-allowed',
   },
@@ -176,12 +176,12 @@ const styles = {
     backgroundColor: '#3b82f6',
     color: 'white',
     marginRight: '1rem',
-    width: '625px', // Changed from '700px' to a fixed width
-    display: 'inline-block', // Changed from 'block' to allow side-by-side
-    margin: '20px 10px', // Adjusted margins
+    width: '625px',
+    display: 'inline-block',
+    margin: '20px 10px',
     height: '44px',
     padding: '0 1.25rem',
-    border: '1px solid #2563eb', // Added border
+    border: '1px solid #2563eb',
     borderRadius: '6px',
     fontWeight: 600,
     fontSize: '1rem',
@@ -195,10 +195,10 @@ const styles = {
   cancelButton: {
     backgroundColor: '#f1f5f9',
     color: '#4b5563',
-    border: '1px solid #e5e7eb', // Restored border
-    width: '625px', // Changed from '700px' to a fixed width
-    display: 'inline-block', // Changed from 'block' to allow side-by-side
-    margin: '20px 10px', // Adjusted margins
+    border: '1px solid #e5e7eb',
+    width: '625px',
+    display: 'inline-block',
+    margin: '20px 10px',
     height: '44px',
     padding: '0 1.25rem',
     borderRadius: '6px',
@@ -206,7 +206,6 @@ const styles = {
     fontSize: '1rem',
     cursor: 'pointer',
     transition: 'all 0.2s ease-in-out',
-  
   },
   cancelButtonHover: {
     backgroundColor: '#e2e8f0',
@@ -263,7 +262,6 @@ const AddInventoryItem = () => {
 
     const [errors, setErrors] = useState({});
     
-    // Add hover state for buttons
     const [hoverStates, setHoverStates] = useState({
         submitButton: false,
         cancelButton: false,
@@ -273,12 +271,32 @@ const AddInventoryItem = () => {
         minusPrice: false
     });
 
+    // Define forbidden symbols
+    const forbiddenSymbols = ['@', '#', '$', '*', '=', '+', '~', '^', '`', '|', '{', '}', '[', ']', '<', '>', '"', "'", ':', ';', '**','!','-','?', '.', '_'];
+
     const getCurrentDate = () => {
         return format(new Date(), 'yyyy-MM-dd');
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        
+        // Add validation for itemName field
+        if (name === 'itemName') {
+            // Check if the first character is a symbol (not letter or number)
+            if (value.length === 1 && !/^[a-zA-Z0-9]/.test(value)) {
+                // If it's a symbol as first character, don't update the state
+                return;
+            }
+            
+            // Check if any of the entered characters are in the forbidden symbols list
+            const lastEnteredChar = value.slice(-1);
+            if (forbiddenSymbols.includes(lastEnteredChar)) {
+                // If it's a forbidden symbol, don't update the state
+                return;
+            }
+        }
+        
         if (name === 'category') {
             let defaultUnit = "Kg";
             if (value === "Farm Machinery & Tools") defaultUnit = "Units";
@@ -366,6 +384,9 @@ const AddInventoryItem = () => {
         if (!formData.itemName.trim()) {
             newErrors.itemName = "Item Name is required.";
             isValid = false;
+        } else if (!/^[a-zA-Z0-9]/.test(formData.itemName)) {
+            newErrors.itemName = "Item Name must start with a letter or number.";
+            isValid = false;
         }
 
         if (!formData.availableAmount || isNaN(formData.availableAmount) || parseFloat(formData.availableAmount) <= 0) {
@@ -378,14 +399,12 @@ const AddInventoryItem = () => {
             isValid = false;
         }
 
-        // Only validate expiration date if category is not "Farm Machinery & Tools", "Packaging Materials", or "Other"
         if (!["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) && 
             (!formData.expirationDate || new Date(formData.expirationDate) <= new Date())) {
             newErrors.expirationDate = "Expiration Date must be a future date.";
             isValid = false;
         }
 
-        // Only validate unit price if category is "Fertilizers", "Pesticides", or "Seeds"
         if (["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && 
             (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0)) {
             newErrors.unitPrice = "Unit Price must be a positive number.";
@@ -441,7 +460,6 @@ const AddInventoryItem = () => {
 
     const availableUnits = getAvailableUnits();
 
-    // Determine if we should show expiration date and unit price fields
     const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
     const showUnitPrice = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
 
@@ -471,6 +489,7 @@ const AddInventoryItem = () => {
                     value={formData.itemName} 
                     onChange={handleChange} 
                     style={styles.input}
+                    placeholder="Enter item name (must start with letter or number)"
                 />
                 {errors.itemName && <p style={styles.errorMessage}>{errors.itemName}</p>}
 
