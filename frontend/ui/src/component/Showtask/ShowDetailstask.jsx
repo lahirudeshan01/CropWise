@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -39,7 +40,9 @@ function ShowDetailstask() {
       border: "1px solid #ddd",
       padding: "10px",
       textAlign: "left",
-      backgroundColor: "#f2f2f2",
+      backgroundColor: "#2c3e50", // Dark blue-gray color
+      color: "white", // White text for contrast
+      fontWeight: "600", // Slightly bolder text
     },
     tableCell: {
       border: "1px solid #ddd",
