@@ -31,6 +31,7 @@ import TaskForm from './component/assignTasks/TaskForm'
 import ShowAll from './component/Viewdetaistasks/ShowAlltask'
 import ShowDetails from './component/Showtask/ShowDetailstask.jsx'
 import UpdateEmployee from './component/UpdateEmployee/updateemployee.jsx'
+import GenerateInventoryReport from './component/InventoryReport/GenerateInventoryReport.jsx'
 
 // import Dashboard01 from './component/dashboard01/Dashboard01'
 
@@ -75,7 +76,7 @@ function App() {
               <Route path="/edit-details" element={<EditUserDetails/>} />
               <Route path="/Showtask/:id" element={<ShowDetails/>} />
               <Route path="/update-employee/:id" element={<UpdateEmployee/>} />
-             
+              <Route path="/GenerateInventoryReport" element={<GenerateInventoryReport/>} />
              
 
               {/* <Route path="/register" element={<Register/>} /> */}
