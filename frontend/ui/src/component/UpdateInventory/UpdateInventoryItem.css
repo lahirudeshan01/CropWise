@@ -71,7 +71,7 @@
   min-width: 42px;
   height: 42px;
   padding: 0;
-  background-color: #f9fafb;
+  background-color: #5c5e5d;
   border: 1px solid #e2e8f0;
   border-radius: 4px;
   cursor: pointer;
@@ -84,7 +84,7 @@
 }
 
 .unit-price-button:hover:not(:disabled) {
-  background-color: #f1f5f9;
+  background-color: #8b8d8c;
 }
 
 .unit-price-button:disabled {

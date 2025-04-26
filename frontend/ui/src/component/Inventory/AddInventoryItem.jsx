@@ -155,30 +155,33 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f0f0f0',
-    border: '1px solid #e2e8f0',
+    backgroundColor: '#5c5e5d', // Changed to blue
+    color: 'white', // White text for better contrast
+    border: '1px solid #2563eb', // Darker blue border
     borderRadius: '6px',
     fontSize: '1.25rem',
     flexShrink: 0,
     cursor: 'pointer',
+    transition: 'background-color 0.2s',
   },
   unitPriceButtonHover: {
-    backgroundColor: '#e2e8f0',
+    backgroundColor: '#797a7a', // Darker blue on hover
   },
   unitPriceButtonDisabled: {
-    opacity: 0.5,
+    backgroundColor: '#797a7a', // Lighter blue when disabled
+    opacity: 0.7,
     cursor: 'not-allowed',
   },
   submitButton: {
     backgroundColor: '#3b82f6',
     color: 'white',
     marginRight: '1rem',
-    width: '700px',
-    display: 'block',
-    margin: '20px auto',
+    width: '625px', // Changed from '700px' to a fixed width
+    display: 'inline-block', // Changed from 'block' to allow side-by-side
+    margin: '20px 10px', // Adjusted margins
     height: '44px',
     padding: '0 1.25rem',
-    border: 'none',
+    border: '1px solid #2563eb', // Added border
     borderRadius: '6px',
     fontWeight: 600,
     fontSize: '1rem',
@@ -192,10 +195,10 @@ const styles = {
   cancelButton: {
     backgroundColor: '#f1f5f9',
     color: '#4b5563',
-    border: '1px solid #e5e7eb',
-    width: '700px',
-    display: 'block',
-    margin: '0 auto',
+    border: '1px solid #e5e7eb', // Restored border
+    width: '625px', // Changed from '700px' to a fixed width
+    display: 'inline-block', // Changed from 'block' to allow side-by-side
+    margin: '20px 10px', // Adjusted margins
     height: '44px',
     padding: '0 1.25rem',
     borderRadius: '6px',
@@ -203,6 +206,7 @@ const styles = {
     fontSize: '1rem',
     cursor: 'pointer',
     transition: 'all 0.2s ease-in-out',
+  
   },
   cancelButtonHover: {
     backgroundColor: '#e2e8f0',
