@@ -55,7 +55,7 @@ const InventoryList = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Stock Management</h1>
-
+            <div className="button-container">
             {/* Search Bar */}
             <div className="mb-4">
                 <input
@@ -68,13 +68,14 @@ const InventoryList = () => {
             </div>
 
             {/* Generate Report Button */}
+            
             <button
-                    className="bg-green-600 text-white px-4 py-2 rounded"
-                    onClick={() => navigate("/GenerateInventoryReport")}
-                >
-                    Generate Report
+                className="bg-blue-800 text-white px-4 py-2 rounded hover:bg-blue-900 mr-2"
+                onClick={() => navigate("/GenerateInventoryReport")}
+            >
+                Generate Report
             </button>
-
+            </div>
             {/* Inventory Table */}
             <table className="w-full border-collapse">
                 <thead>

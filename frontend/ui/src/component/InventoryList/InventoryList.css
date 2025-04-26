@@ -77,6 +77,23 @@ tr:hover {
   font-size: 0.875rem;
 }
 
+/* Dark blue button styles */
+.bg-blue-800 {
+  background-color: #1e40af;
+}
+
+.bg-blue-800:hover {
+  background-color: #1e3a8a;
+}
+
+/* Button container layout */
+.button-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+}
+
 .text-blue-500:hover {
   background-color: #22c55e;
   text-decoration: none;
