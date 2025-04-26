@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import './InventoryList.css';
+import GenerateInventoryReport from "../InventoryReport/GenerateInventoryReport";
 
 const InventoryList = () => {
     const [inventory, setInventory] = useState([]);
@@ -65,12 +66,13 @@ const InventoryList = () => {
                 />
             </div>
 
-            {/* Add Item Button */}
+            
+            {/* Generate Report Button */}
             <button
-                className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-                onClick={() => navigate("/add-item")}
-            >
-                + Add Item
+                    className="bg-green-600 text-white px-4 py-2 rounded"
+                    onClick={() => navigate("/GenerateInventoryReport")}
+                >
+                    Generate Report
             </button>
 
             {/* Inventory Table */}
