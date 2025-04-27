@@ -28,7 +28,7 @@ const SeeDetails = () => {
             fontSize: "1.2rem",
             fontWeight: 600,
             marginBottom: "0.5rem",
-            color: "#6b7280",
+            color: "#13b010",
             textTransform: "uppercase",
             letterSpacing: "0.5px"
         },
@@ -159,7 +159,7 @@ const SeeDetails = () => {
             fontWeight: 600
         },
         backButton: {
-            backgroundColor: "#87f59b",
+            backgroundColor: "#c7c8c9",
             color: "#63514b",
             padding: "0.25rem 0.5rem", // Reduced from 0.5rem 1rem (now much narrower)
             borderRadius: "6px",
