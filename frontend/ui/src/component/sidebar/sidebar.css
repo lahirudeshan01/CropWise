@@ -9,7 +9,7 @@ body {
 
 /* Sidebar Base Styling */
 .sidebar {
-  width: 260px;
+  width: 275px;
   background: linear-gradient(135deg, #1e272e 0%, #2c3e50 100%);
   background-size: cover;
   min-height: 100vh;
@@ -432,4 +432,16 @@ body {
     margin-left: 0;
     width: 100%;
   }
+}
+
+.notification-container {
+  position: absolute;
+  top: 27px;
+  left: 159px;
+  /* right: 10px; */
+  z-index: 1000;
+}
+
+.notification-container .MuiBadge-badge {
+  background-color: #ff4081;
 }
