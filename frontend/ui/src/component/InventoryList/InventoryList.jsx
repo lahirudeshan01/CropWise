@@ -153,7 +153,7 @@ const InventoryList = () => {
                         font-size: 32px;
                         font-weight: 600;
                         margin-bottom: 10px;
-                    ">Inventory Analysis Report</h1>
+                    ">Inventory AI Analysis</h1>
                     <p style="color: #666; font-size: 14px;">Generated on ${new Date().toLocaleDateString('en-US', { 
                         weekday: 'long',
                         year: 'numeric',
@@ -169,22 +169,103 @@ const InventoryList = () => {
                     margin-bottom: 30px;
                     border-radius: 0 8px 8px 0;
                 ">
-                    <h2 style="
-                        color: #1e40af;
-                        font-size: 20px;
-                        margin: 0 0 10px 0;
-                    ">Inventory Analysis</h2>
                     <div style="margin: 0; color: #334155; white-space: pre-line;">
                         ${content
-                            .replace(/\*\*Critical Alerts\*\*/g, '<span style="font-weight: bold; color: #2e7d32;">Critical Alerts</span>')
-                            .replace(/\*\*Quick Solutions\*\*/g, '<span style="font-weight: bold; color: #2e7d32;">Quick Solutions</span>')
-                            .replace(/\*\*Smart Recommendations\*\*/g, '<span style="font-weight: bold; color: #2e7d32;">Smart Recommendations</span>')
-                            .replace(/\*\*/g, '')}
+                            .replace(/# Inventory Analysis Report\n*/g, '')
+                            .replace(/## Inventory Analysis\n*/g, '')
+                            .replace(/^\s*\d+\.\s*/gm, '')
+                            .replace(/\n\s*\d+\.\s*/g, '\n')
+                            .replace(/Generated on \[Current Date\]\n*/g, '')
+                            .replace(/Generated on.*?\d{4}\n*/g, '')
+                            .replace(/\.\.\.\n*/g, '')
+                            .replace(/^[\s\n]*/, '')
+                            .replace(/\n{3,}/g, '\n\n')  // Replace multiple newlines with max two
+                            .replace(/\*\*Critical Alerts\*\*/g, `
+                                <div style="
+                                    background: #fff1f2;
+                                    border-radius: 8px;
+                                    padding: 20px;
+                                    margin: 20px 0;
+                                    border-left: 4px solid #dc2626;
+                                ">
+                                    <div style="
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 8px;
+                                        margin-bottom: 15px;
+                                    ">
+                                        <span style="
+                                            color: #dc2626;
+                                            font-size: 24px;
+                                            font-weight: 600;
+                                        ">Critical Alerts</span>
+                                        <span style="
+                                            color: #666;
+                                            font-size: 14px;
+                                        ">(Immediate action needed)</span>
+                                    </div>
+                            `)
+                            .replace(/\*\*Quick Solutions\*\*/g, `
+                                </div>
+                                <div style="
+                                    background: #f0f7ff;
+                                    border-radius: 8px;
+                                    padding: 20px;
+                                    margin: 20px 0;
+                                    border-left: 4px solid #2563eb;
+                                ">
+                                    <span style="
+                                        color: #2563eb;
+                                        font-size: 24px;
+                                        font-weight: 600;
+                                        display: block;
+                                        margin-bottom: 15px;
+                                    ">Quick Solutions</span>
+                            `)
+                            .replace(/\*\*Smart Recommendations\*\*/g, `
+                                </div>
+                                <div style="
+                                    background: #f0fdf4;
+                                    border-radius: 8px;
+                                    padding: 20px;
+                                    margin: 20px 0;
+                                    border-left: 4px solid #059669;
+                                ">
+                                    <span style="
+                                        color: #059669;
+                                        font-size: 24px;
+                                        font-weight: 600;
+                                        display: block;
+                                        margin-bottom: 15px;
+                                    ">Smart Recommendations</span>
+                            `)
+                            .replace(/\*\*/g, '')
+                            .replace(/❗/g, '<span style="color: #dc2626; font-size: 18px; margin-right: 5px;">❗</span>')
+                            .replace(/^\s*\*\s*/gm, (match, offset, string) => {
+                                const leadingSpaces = string.slice(0, offset).match(/\n(\s*)$/)?.[1]?.length || 0;
+                                const indentLevel = Math.floor(leadingSpaces / 2);
+                                return `<div style="
+                                    margin: 8px 0;
+                                    padding-left: ${20 + (indentLevel * 20)}px;
+                                    position: relative;
+                                    color: #4a5568;
+                                    font-size: 15px;
+                                    line-height: 1.6;
+                                "><span style="
+                                    position: absolute;
+                                    left: ${indentLevel * 20}px;
+                                    color: #666;
+                                ">•</span>`;
+                            })
+                            .replace(/\n(?=\w)/g, '</div>')
+                            .replace(/\[None\]/g, '<span style="color: #666; font-style: italic;">None</span>')
+                            .replace(/:\s*None(?=\n|$)/g, ': <span style="color: #666; font-style: italic;">None</span>')
+                            .trim() + '</div>'}
                     </div>
                 </div>
     
                 <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: right;">
-                   
+                    <p style="color: #666; font-size: 13px; margin: 0;">Powered by CropWise AI</p>
                 </div>
             </div>
         `;
@@ -195,7 +276,7 @@ const InventoryList = () => {
         .catch(error => {
             console.error('Detailed error:', error);
             ai_pdf_button.removeAttribute("disabled");
-            ai_pdf_button.innerHTML = "Generate AI Report";
+            ai_pdf_button.innerHTML = "AI Insights";
             alert(`Error generating report: ${error.message}`);
         });
     };
@@ -260,7 +341,7 @@ const InventoryList = () => {
                                 const ai_pdf_button = document.getElementById("ai-pdf-button");
                                 if (ai_pdf_button) {
                                     ai_pdf_button.removeAttribute("disabled");
-                                    ai_pdf_button.innerHTML = "Generate AI Report";
+                                    ai_pdf_button.innerHTML = "AI Insights";
                                 }
                             }}
                             style={{
@@ -298,7 +379,7 @@ const InventoryList = () => {
                     />
                 </div>
                 <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>
-                    Generate AI Report
+                AI Insights
                 </button>
                 {/* Generate Report Button */}
                 <button

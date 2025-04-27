@@ -148,7 +148,7 @@ const Finance = () => {
     ai_pdf_button.setAttribute("disabled", "true");
     ai_pdf_button.innerHTML = "Generating...";
 
-    const prompt = `Create a financial report. Follow these rules. 1.Put the topic 'Financial Report' on the head of document. 2.Use bullet lists, paragraphs, headings and sub-headings. 3.Need 1 page report. 4.Use simple grammar. 5.Use html formatting for create the report(pharagraphs, headings and sub-headings). 6.Use below financial transactions for create the report. 7.Don't calculate income, outcome and profit. Those data mentioned below. Document format 1.Introduction 2.Financial Profits and losses 3.How to increase profit. 4.How to recover financial loss (Budget Plan) 5.SummaryInstructions 1.Use some transaction data in report content when explaining how to increase profit and how to recover loss. 2.In response don't give any other sentences which are not relevant to the report(examples:-This is your repot, need other help) 3.In response give only report content. 4.Give paragraph for each topic in document format with 70 words for each paragraph (Need 5 paragraphs for 5 topics also create paragraph for Financial Profits and losses).|` + 
+    const prompt = `Create a financial report. Follow these rules. 1.Put the topic 'Finance AI analysis on the head of document. 2.Use bullet lists, paragraphs, headings and sub-headings. 3.Need 1 page report. 4.Use simple grammar. 5.Use html formatting for create the report(pharagraphs, headings and sub-headings). 6.Use below financial transactions for create the report. 7.Don't calculate income, outcome and profit. Those data mentioned below. Document format 1.Introduction 2.Financial Profits and losses 3.How to increase profit. 4.How to recover financial loss (Budget Plan) 5.SummaryInstructions 1.Use some transaction data in report content when explaining how to increase profit and how to recover loss. 2.In response don't give any other sentences which are not relevant to the report(examples:-This is your repot, need other help) 3.In response give only report content. 4.Give paragraph for each topic in document format with 70 words for each paragraph (Need 5 paragraphs for 5 topics also create paragraph for Financial Profits and losses).|` + 
       `|| Total Income=Rs.${report.totalIncome} ||| Total Outcome=Rs.${report.totalOutcome}  ||| Profit=Rs.${report.profit} |||` +
       data;
 
@@ -316,7 +316,7 @@ const Finance = () => {
         console.error('Failed to open the new window. It might be blocked by the browser.');
       }
       ai_pdf_button.removeAttribute("disabled");
-      ai_pdf_button.innerHTML = "Generate AI Report";
+      ai_pdf_button.innerHTML = "AI Insights";
     })
     .catch(error => {
       console.error('Error:', error);
@@ -463,7 +463,7 @@ const Finance = () => {
                 Balance Sheet
               </button>
             <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>
-                Generate AI Report
+            AI Insights
               </button>
               <button className="button export-pdf" onClick={handleExportPDF}>
                 Generate Report
