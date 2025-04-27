@@ -10,6 +10,8 @@ import {
   TextField,
   Grid,
   Paper,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import {
   LocalShipping,
@@ -17,12 +19,12 @@ import {
   CheckCircle,
 } from "@mui/icons-material";
 import "./Userfee.css";
-import PaymentPage from "../Payment_order/PaymentPage"; // Import the PaymentPage component
+import PaymentPage from "../Payment_order/PaymentPage";
 
 const Userfee = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [activeStep, setActiveStep] = useState(1); // Start at delivery info step
+  const [activeStep, setActiveStep] = useState(1);
   const [orderDetails, setOrderDetails] = useState({
     product: null,
     quantity: 0,
@@ -35,6 +37,13 @@ const Userfee = () => {
     },
     paymentMethod: "",
     paymentDetails: null,
+  });
+  
+  // Add state for notification
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    severity: "success" // can be "error", "warning", "info", "success"
   });
 
   // Effect to set initial product from navigation state
@@ -56,8 +65,6 @@ const Userfee = () => {
   const handleQuantityChange = (e) => {
     const enteredQuantity = parseFloat(e.target.value) || 0;
     const maxQuantity = orderDetails.product.quantity;
-
-    // Ensure quantity doesn't exceed available stock or fall below minimum required quantity
     const validQuantity = Math.min(enteredQuantity, maxQuantity);
 
     setOrderDetails((prev) => ({
@@ -99,14 +106,21 @@ const Userfee = () => {
       address.trim() &&
       phone.trim() &&
       email.trim() &&
-      orderDetails.quantity >= 1000 && // Ensure minimum quantity is met
-      orderDetails.quantity <= orderDetails.product.quantity // Ensure stock availability
+      orderDetails.quantity >= 1000 &&
+      orderDetails.quantity <= orderDetails.product.quantity
     );
+  };
+
+  // Handle notification close
+  const handleCloseNotification = () => {
+    setNotification({
+      ...notification,
+      open: false
+    });
   };
 
   const handlePaymentSubmit = async (paymentInfo) => {
     try {
-      // Format the data according to our backend model field names
       const orderData = {
         product: orderDetails.product,
         quantity: orderDetails.quantity,
@@ -128,11 +142,30 @@ const Userfee = () => {
         orderData
       );
   
-      if (response.data) {
+      if (response.data && response.data.success) {
+        // Show success notification
+        setNotification({
+          open: true,
+          message: "Order added successfully!",
+          severity: "success"
+        });
         setActiveStep(3); // Move to confirmation step
+      } else {
+        // Show error notification if response exists but success is false
+        setNotification({
+          open: true,
+          message: response.data.message || "Failed to add order",
+          severity: "error"
+        });
       }
     } catch (error) {
       console.error("Order placement failed:", error);
+      // Show error notification
+      setNotification({
+        open: true,
+        message: error.response?.data?.message || "Order placement failed",
+        severity: "error"
+      });
     }
   };
 
@@ -167,7 +200,6 @@ const Userfee = () => {
                         max: orderDetails.product.quantity,
                       }}
                       onInput={(e) => {
-                        // Remove leading zeros
                         e.target.value = e.target.value.replace(/^0+/, "");
                       }}
                     />
@@ -210,13 +242,10 @@ const Userfee = () => {
                   fullWidth
                   label="Phone Number"
                   name="phone"
-                  // Change type from "number" to "tel" for better mobile keyboard support
                   type="number"
                   value={orderDetails.deliveryInfo.phone}
                   onChange={(e) => {
-                    // Only allow digits
                     const value = e.target.value.replace(/\D/g, "");
-                    // Set a maximum length of 10 digits
                     if (value.length <= 10) {
                       handleDeliveryInfoChange({
                         target: {
@@ -226,7 +255,6 @@ const Userfee = () => {
                       });
                     }
                   }}
-                  // Add error state and helper text
                   error={
                     orderDetails.deliveryInfo.phone.length > 0 &&
                     orderDetails.deliveryInfo.phone.length !== 10
@@ -332,6 +360,18 @@ const Userfee = () => {
           </div>
         )}
       </div>
+      
+      {/* Notification system */}
+      <Snackbar 
+        open={notification.open} 
+        autoHideDuration={6000} 
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseNotification} severity={notification.severity}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

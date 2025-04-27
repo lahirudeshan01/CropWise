@@ -1,9 +1,10 @@
 const express = require("express");
 const routes = require("./routes/farmers_set");
-const inventoryRoutes = require("./routes/inventory&resource")
+const inventoryRoutes = require("./routes/inventory&resource");
 const financeRoutes = require('./routes/financeRoutes');
 const router = require("./routes/UserRoute");
 const routess = require("./routes/tasks");
+const orderRoutes = require('./routes/orderset'); // Add this line to import order routes
 const db_connection = require("./config/db_connection");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -28,7 +29,7 @@ app.use("/api/inventory", inventoryRoutes);
 app.use('/api', financeRoutes);
 app.use("/users", router);
 app.use("/api/tasks", routess);
-
+app.use("/api/orders", orderRoutes); // Add this line to use order routes
 
 const PORT = 3000;
 

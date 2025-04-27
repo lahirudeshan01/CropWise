@@ -257,7 +257,7 @@ const TaskList = ({ tasks = [] }) => {
       transition: "border 0.2s",
     },
     reportBtn: {
-      background: "linear-gradient(90deg, #0266c8 0%, #388e3c 100%)",
+      background: "linear-gradient(90deg, #003366 0%, #007bff 100%)",
       color: "#fff",
       border: "none",
       padding: "11px 32px",
@@ -325,7 +325,7 @@ const TaskList = ({ tasks = [] }) => {
       textAlign: "center",
     },
     viewBtn: {
-      background: "linear-gradient(90deg, #33b5e5, #0099cc)",
+      background: "linear-gradient(90deg, #007bff, #33b5e5)",
       color: "#fff",
       border: "none",
       borderRadius: "6px",

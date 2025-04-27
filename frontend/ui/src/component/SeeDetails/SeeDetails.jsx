@@ -177,7 +177,7 @@ const SeeDetails = () => {
             width: "auto", // Let content determine width
           },
         quickUpdateButton: {
-            backgroundColor: "#bed5fa",
+            backgroundColor: "#478cfc",
             color: "white",
             border: "none",
             borderRadius: "4px", // Changed from 50% to make it square
@@ -453,7 +453,7 @@ const SeeDetails = () => {
     return (
         <div style={containerStyle}>
             <button style={styles.backButton} onClick={() => navigate("/inventryshow")}>
-                ←
+                ← Back
             </button>
             <h1 style={styles.categoryHeading}>{item.category}</h1>
             <div style={styles.itemHeader}>

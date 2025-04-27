@@ -4,6 +4,30 @@ import { useNavigate } from "react-router-dom";
 import { format } from 'date-fns';
 
 const styles = {
+  header: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: '2rem',
+  },
+  companyName: {
+    fontSize: '2.5rem',
+    fontWeight: 'bold',
+    color: '#00b834',
+    marginBottom: '0.5rem',
+  },
+  tagline: {
+    fontSize: '1.2rem',
+    color: '#4a5568',
+    fontWeight: '500',
+    marginBottom: '0.5rem',
+  },
+  divider: {
+    width: '100px',
+    height: '2px',
+    backgroundColor: '#2e8b57',
+    marginBottom: '1.5rem',
+  },
   container: {
     maxWidth: '700px',
     margin: '2rem auto',
@@ -23,6 +47,7 @@ const styles = {
     fontWeight: 700,
     marginBottom: '2rem',
     color: '#2d3748',
+    textAlign: 'center',
   },
   label: {
     display: 'block',
@@ -465,7 +490,13 @@ const AddInventoryItem = () => {
 
     return (
         <div style={styles.container}>
-            <h1 style={{...styles.heading, ...styles.mb4, ...styles.text2xl, ...styles.fontBold}}>Add New Item</h1>
+            <div style={styles.header}>
+                <h1 style={styles.companyName}>CropWise</h1>
+                <p style={styles.tagline}>Smart Agriculture</p>
+                <div style={styles.divider}></div>
+            </div>
+            
+            <h1 style={{...styles.heading, ...styles.mb4, ...styles.text2xl, ...styles.fontBold}}>Add Your New Inventory Item</h1>
             <form style={styles.form} onSubmit={handleSubmit}>
                 <label style={styles.label}>Item Category</label>
                 <select 
