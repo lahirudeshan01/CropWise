@@ -6,6 +6,9 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 // import AgricultureIcon from '@mui/icons-material/Agriculture'; 
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import ViewHeadlineRoundedIcon from '@mui/icons-material/ViewHeadlineRounded';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 
 export const SidebarDate = [
@@ -16,20 +19,25 @@ export const SidebarDate = [
         subMenu: [
             {
                 title: "show ",
-                icon: <AddBoxRoundedIcon />,
+                icon: <ViewHeadlineRoundedIcon />,
                 link: "/dashboard"
+            },
+            {
+                title: "soilx ",
+                icon: <AutoFixHighIcon />,
+                link: "/da"
             },
   
         ]
     },
     {
         title: "Finance",
-        icon: <HomeIcon />,
+        icon: <ShowChartIcon />,
         link: "/home",
         subMenu: [
             {
                 title: "show ",
-                icon: <AddBoxRoundedIcon />,
+                icon: <ViewHeadlineRoundedIcon />,
                 link: "/financeshow"
             },
   
@@ -84,7 +92,12 @@ export const SidebarDate = [
                 title: "Show Listning",
                 icon: <ViewHeadlineRoundedIcon />,
                 link: "/showall"
-            }
+            },
+            {
+                title: "Show order",
+                icon: <ShoppingCartCheckoutIcon />,
+                link: "/showorder"
+            },
         ]
     }
 ];

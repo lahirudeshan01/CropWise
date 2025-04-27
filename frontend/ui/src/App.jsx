@@ -32,6 +32,7 @@ import ShowAll from './component/Viewdetaistasks/ShowAlltask'
 import ShowDetails from './component/Showtask/ShowDetailstask.jsx'
 import UpdateEmployee from './component/UpdateEmployee/updateemployee.jsx'
 import GenerateInventoryReport from './component/InventoryReport/GenerateInventoryReport.jsx'
+import Showorder from './component/ordershow/Showorder.jsx'
 
 // import Dashboard01 from './component/dashboard01/Dashboard01'
 
@@ -101,6 +102,7 @@ function App() {
               <Route path="/task" element={<DashboardLayout><TaskForm/></DashboardLayout>} />
               <Route path="/showtask" element={<DashboardLayout><ShowAll/></DashboardLayout>} />
               {<Route path="/financeshow" element={<DashboardLayout><Finance/></DashboardLayout>} /> }
+              {<Route path="/showorder" element={<DashboardLayout><Showorder/></DashboardLayout>} /> }
 
 
               

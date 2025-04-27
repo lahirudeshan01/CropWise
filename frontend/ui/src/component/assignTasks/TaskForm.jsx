@@ -150,7 +150,7 @@ const TaskForm = ({ onSubmit }) => {
       textAlign: "center",
     },
     submitBtn: {
-      background: "linear-gradient(90deg, #0286fa 0%, #43a047 100%)",
+      background: "linear-gradient(90deg, #003366 0%, #007bff 100%)",
       color: "white",
       border: "none",
       padding: "13px 38px",
@@ -163,12 +163,12 @@ const TaskForm = ({ onSubmit }) => {
       letterSpacing: "1px",
     },
     submitBtnHover: {
-      background: "linear-gradient(90deg, #0266c8 0%, #388e3c 100%)",
+      background: "linear-gradient(90deg, #003366 0%, #007bff 100%)",
       boxShadow: "0 4px 16px rgba(2,134,250,0.18)",
     },
     divider: {
       height: "1.5px",
-      background: "linear-gradient(90deg, #0286fa 0%, #43a047 100%)",
+      background: "linear-gradient(90deg, #003366 0%, #007bff 100%)",
       border: "none",
       margin: "30px 0 36px 0",
       opacity: 0.18,
