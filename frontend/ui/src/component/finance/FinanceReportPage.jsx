@@ -157,6 +157,10 @@ const FinanceReportPage = () => {
 
   return (
     <div className="finance-dashboard">
+          <div className="print-only-logo">
+    <img src="/images/croplogo.jpg" alt="Company Logo" />
+    <h1>CropWise</h1>
+  </div>
       <div className="buttons-section report-buttons no-print">
         <button className="button back-button" onClick={handleGoBack}>
           Back
