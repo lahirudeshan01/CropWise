@@ -160,7 +160,7 @@ const TaskList = ({ tasks = [] }) => {
             )}
           </select>
           <button onClick={handlePrint} className="print-btn">
-            Print Report
+            Generate Report
           </button>
         </div>
       </header>
