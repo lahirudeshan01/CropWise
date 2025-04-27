@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
 import { getTransactions, generateReport, deleteTransaction } from "../../api/financeApi";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import BalanceSheet from "./BalanceSheet";
 import "./Finance.css";
 
 const Finance = () => {
@@ -24,6 +25,7 @@ const Finance = () => {
   const [error, setError] = useState(null);
   const [dateError, setDateError] = useState("");
   const [minTransactionDate, setMinTransactionDate] = useState("");
+  const [showBalanceSheet, setShowBalanceSheet] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -133,7 +135,9 @@ const Finance = () => {
     navigate("/finance-report", { state: { transactions, report } });
   };
 
-  
+  const handleBalancedSheet = () => {
+    setShowBalanceSheet(true);
+  };
   const generateAiReport = () => {
     const csvData = generateCSV(transactions);
     sendRequest(csvData);
@@ -228,14 +232,13 @@ const Finance = () => {
           }
           .btn-print {
             background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-            margin-left: 50px;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
           }
           .btn-print:hover {
             background-color: #0056b3;
@@ -266,11 +269,13 @@ const Finance = () => {
       `;
       
       const accesbilityControls = ` 
-        <button class="button back-button" onclick="window.close()">
-          Back
-        </button>
-        <button onclick="window.print()" class="btn-print">Print</button><hr>
-      </div>`;
+  <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <button class="button back-button" onclick="window.close()">
+      Back
+    </button>
+    <button onclick="window.print()" class="btn-print">Print</button>
+  </div>
+  <hr class="no-print">`;
 
       const reportContent = accesbilityControls + contentStyles + content.replace("```html", "").replace("```", "").replace("Losses", `
         Losses<table>
@@ -413,252 +418,260 @@ const Finance = () => {
   const COLORS = ["#008000", "#dc3545"];
 
   return (
-    <div className="finance-dashboard" onClick={handleClickOutside}>
-      {/* Buttons Section at the Top */}
-       {/* Sidebar */}
-      
-      <div className="buttons-section">
-        <div className="button-group-left">
-          <button className="button income" onClick={handleIncome}>
-            Income
-          </button>
-          <button className="button outcome" onClick={handleOutcome}>
-            Outcome
-          </button>
-          <button 
-  className="button salary-management" 
-  onClick={() => navigate('/salary-management')}
->
-  Salaries
-</button>
-        </div>
-        <div className="button-group-right">
-
-        <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>
-            Generate AI Report
-          </button>
-          <button className="button export-pdf" onClick={handleExportPDF}>
-            Generate Report
-          </button>
-        </div>
-      </div>
-
-      {/* Title Below Buttons */}
-      <h1 className="heading">Financial Overview</h1>
-
-      {/* Metrics Section */}
-      <div className="metrics">
-        <div className="metric">
-          <h3>Total Income</h3>
-          <p className="income1">Rs.{report.totalIncome.toLocaleString()}</p>
-        </div>
-        <div className="metric">
-          <h3>Total Outcome</h3>
-          <p className="outcome1">Rs.{report.totalOutcome.toLocaleString()}</p>
-        </div>
-        <div className="metric">
-          <h3>Profit</h3>
-          <p className="profit">Rs.{report.profit.toLocaleString()}</p>
-        </div>
-      </div>
-
-      {/* Filter Section */}
-      <div className="filter-section">
-        <h3>Filter Transactions</h3>
-        {dateError && <div className="error-message">{dateError}</div>}
-        <div className="filters">
-          {/* Date Range Filter */}
-          <div className="date-range-filter">
-            <label>Date Range</label>
-            <div className="date-inputs">
-              <input
-                type="date"
-                name="startDate"
-                value={filters.startDate}
-                onChange={handleFilterChange}
-                placeholder="Start Date"
-                min={minTransactionDate}
-                max={filters.endDate || currentDateString}
-              />
-              <span>to</span>
-              <input
-                type="date"
-                name="endDate"
-                value={filters.endDate}
-                onChange={handleFilterChange}
-                placeholder="End Date"
-                min={filters.startDate || minTransactionDate}
-                max={currentDateString}
-              />
+    <div className="finance-container">
+      {showBalanceSheet ? (
+        <BalanceSheet onBack={() => setShowBalanceSheet(false)} />
+      ) : (
+        <div className="finance-dashboard" onClick={handleClickOutside}>
+          {/* Buttons Section at the Top */}
+           {/* Sidebar */}
+          
+          <div className="buttons-section">
+            <div className="button-group-left">
+              <button className="button income" onClick={handleIncome}>
+                Income
+              </button>
+              <button className="button outcome" onClick={handleOutcome}>
+                Outcome
+              </button>
+              <button 
+    className="button salary-management" 
+    onClick={() => navigate('/salary-management')}
+  >
+    Salaries
+  </button>
+            </div>
+            <div className="button-group-right">
+            <button className="balance" onClick={handleBalancedSheet}>
+                Balanced Sheet
+              </button>
+            <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>
+                Generate AI Report
+              </button>
+              <button className="button export-pdf" onClick={handleExportPDF}>
+                Generate Report
+              </button>
             </div>
           </div>
 
-          {/* Type Filter */}
-          <div className="type-filter">
-            <label>Type</label>
-            <select name="type" value={filters.type} onChange={handleFilterChange}>
-              <option value="">All Types</option>
-              <option value="Income">Income</option>
-              <option value="Outcome">Outcome</option>
-            </select>
-          </div>
+          {/* Title Below Buttons */}
+          <h1 className="heading">Financial Overview</h1>
 
-          {/* Reference Filter */}
-          <div className="reference-filter">
-            <label>Reference</label>
-            <select name="reference" value={filters.reference} onChange={handleFilterChange}>
-              <option value="">All References</option>
-              <option value="Inventory Expense">Inventory Expense</option>
-              <option value="Salary Payment">Salary Payment</option>
-              <option value="Sales Income">Sales Income</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          {/* Amount Range Filter */}
-          <div className="amount-range-filter">
-            <label>Amount Range</label>
-            <div className="amount-inputs">
-              <input
-                type="number"
-                name="minAmount"
-                value={filters.minAmount}
-                onChange={handleFilterChange}
-                placeholder="Min Amount"
-              />
-              <span>to</span>
-              <input
-                type="number"
-                name="maxAmount"
-                value={filters.maxAmount}
-                onChange={handleFilterChange}
-                placeholder="Max Amount"
-              />
+          {/* Metrics Section */}
+          <div className="metrics">
+            <div className="metric">
+              <h3>Total Income</h3>
+              <p className="income1">Rs.{report.totalIncome.toLocaleString()}</p>
+            </div>
+            <div className="metric">
+              <h3>Total Outcome</h3>
+              <p className="outcome1">Rs.{report.totalOutcome.toLocaleString()}</p>
+            </div>
+            <div className="metric">
+              <h3>Profit</h3>
+              <p className="profit">Rs.{report.profit.toLocaleString()}</p>
             </div>
           </div>
-        </div>
 
-        {/* Apply and Reset Buttons */}
-        <div className="filter-buttons">
-          <button className="button reset" onClick={resetFilters}>
-            Reset Filters
-          </button>
-        </div>
-      </div>
-
-      {/* Charts Section */}
-      <div className="charts-container">
-        {/* Line Chart */}
-        <div className="chart-container line-chart">
-          <h3>Income vs. Outcome Analysis</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={lineChartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="income" stroke="#008000" name="Income" />
-              <Line type="monotone" dataKey="outcome" stroke="#dc3545" name="Outcome" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Pie Chart */}
-        <div className="chart-container pie-chart">
-          <h3>Income and Outcome Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={pieChartData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-                nameKey="name"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-              >
-                {pieChartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Loading and Error States */}
-      {loading && <div className="loading">Loading transactions...</div>}
-      {error && <div className="error-message">{error}</div>}
-
-      {/* Transactions Table */}
-      <table>
-        <thead>
-          <tr>
-            <th>TRANSACTION NAME</th>
-            <th>DATE & TIME</th>
-            <th>AMOUNT</th>
-            <th>TYPE</th>
-            <th>REFERENCE</th>
-            <th>ACTIONS</th>
-          </tr>
-        </thead>
-        <tbody>
-          {transactions.length === 0 && !loading ? (
-            <tr>
-              <td colSpan="6" className="no-data">No transactions found</td>
-            </tr>
-          ) : (
-            transactions.map((transaction, index) => (
-              <tr key={transaction._id || index}>
-              <td>{transaction.name}</td>
-              <td>{new Date(transaction.date).toLocaleString()}</td>
-              <td>Rs.{transaction.amount?.toLocaleString() || "0"}</td>
-              <td data-status={transaction.status}>{transaction.status}</td>
-              <td>{transaction.reference}</td>
-              <td>
-                <div className="actions-container">
-                  <button
-                    className="three-dots-button"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent event bubbling
-                      handleMenuClick(index, e);
-                    }}
-                  >
-                    <FaEllipsisV />
-                  </button>
-                  {showMenu === index && (
-                    <div className="dropdown-menu">
-                      <button onClick={() => handleUpdate(index)}>Update</button>
-                      <button onClick={() => confirmDelete(index)}>Delete</button>
-                    </div>
-                  )}
+          {/* Filter Section */}
+          <div className="filter-section">
+            <h3>Filter Transactions</h3>
+            {dateError && <div className="error-message">{dateError}</div>}
+            <div className="filters">
+              {/* Date Range Filter */}
+              <div className="date-range-filter">
+                <label>Date Range</label>
+                <div className="date-inputs">
+                  <input
+                    type="date"
+                    name="startDate"
+                    value={filters.startDate}
+                    onChange={handleFilterChange}
+                    placeholder="Start Date"
+                    min={minTransactionDate}
+                    max={filters.endDate || currentDateString}
+                  />
+                  <span>to</span>
+                  <input
+                    type="date"
+                    name="endDate"
+                    value={filters.endDate}
+                    onChange={handleFilterChange}
+                    placeholder="End Date"
+                    min={filters.startDate || minTransactionDate}
+                    max={currentDateString}
+                  />
                 </div>
-              </td>
-            </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+              </div>
 
-      {/* Delete Confirmation Modal */}
-      {deleteConfirmation !== null && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Are you sure you want to delete this transaction?</h3>
-            <div className="modal-buttons">
-              <button className="button delete" onClick={handleDelete}>
-                Delete
-              </button>
-              <button className="button cancel" onClick={handleCancel}>
-                Cancel
+              {/* Type Filter */}
+              <div className="type-filter">
+                <label>Type</label>
+                <select name="type" value={filters.type} onChange={handleFilterChange}>
+                  <option value="">All Types</option>
+                  <option value="Income">Income</option>
+                  <option value="Outcome">Outcome</option>
+                </select>
+              </div>
+
+              {/* Reference Filter */}
+              <div className="reference-filter">
+                <label>Reference</label>
+                <select name="reference" value={filters.reference} onChange={handleFilterChange}>
+                  <option value="">All References</option>
+                  <option value="Inventory Expense">Inventory Expense</option>
+                  <option value="Salary Payment">Salary Payment</option>
+                  <option value="Sales Income">Sales Income</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              {/* Amount Range Filter */}
+              <div className="amount-range-filter">
+                <label>Amount Range</label>
+                <div className="amount-inputs">
+                  <input
+                    type="number"
+                    name="minAmount"
+                    value={filters.minAmount}
+                    onChange={handleFilterChange}
+                    placeholder="Min Amount"
+                  />
+                  <span>to</span>
+                  <input
+                    type="number"
+                    name="maxAmount"
+                    value={filters.maxAmount}
+                    onChange={handleFilterChange}
+                    placeholder="Max Amount"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Apply and Reset Buttons */}
+            <div className="filter-buttons">
+              <button className="button reset" onClick={resetFilters}>
+                Reset Filters
               </button>
             </div>
           </div>
+
+          {/* Charts Section */}
+          <div className="charts-container">
+            {/* Line Chart */}
+            <div className="chart-container line-chart">
+              <h3>Income vs. Outcome Analysis</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={lineChartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="income" stroke="#008000" name="Income" />
+                  <Line type="monotone" dataKey="outcome" stroke="#dc3545" name="Outcome" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Pie Chart */}
+            <div className="chart-container pie-chart">
+              <h3>Income and Outcome Distribution</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={pieChartData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    nameKey="name"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {pieChartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Loading and Error States */}
+          {loading && <div className="loading">Loading transactions...</div>}
+          {error && <div className="error-message">{error}</div>}
+
+          {/* Transactions Table */}
+          <table>
+            <thead>
+              <tr>
+                <th>TRANSACTION NAME</th>
+                <th>DATE & TIME</th>
+                <th>AMOUNT</th>
+                <th>TYPE</th>
+                <th>REFERENCE</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.length === 0 && !loading ? (
+                <tr>
+                  <td colSpan="6" className="no-data">No transactions found</td>
+                </tr>
+              ) : (
+                transactions.map((transaction, index) => (
+                  <tr key={transaction._id || index}>
+                  <td>{transaction.name}</td>
+                  <td>{new Date(transaction.date).toLocaleString()}</td>
+                  <td>Rs.{transaction.amount?.toLocaleString() || "0"}</td>
+                  <td data-status={transaction.status}>{transaction.status}</td>
+                  <td>{transaction.reference}</td>
+                  <td>
+                    <div className="actions-container">
+                      <button
+                        className="three-dots-button"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent event bubbling
+                          handleMenuClick(index, e);
+                        }}
+                      >
+                        <FaEllipsisV />
+                      </button>
+                      {showMenu === index && (
+                        <div className="dropdown-menu">
+                          <button onClick={() => handleUpdate(index)}>Update</button>
+                          <button onClick={() => confirmDelete(index)}>Delete</button>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+
+          {/* Delete Confirmation Modal */}
+          {deleteConfirmation !== null && (
+            <div className="modal">
+              <div className="modal-content">
+                <h3>Are you sure you want to delete this transaction?</h3>
+                <div className="modal-buttons">
+                  <button className="button delete" onClick={handleDelete}>
+                    Delete
+                  </button>
+                  <button className="button cancel" onClick={handleCancel}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
