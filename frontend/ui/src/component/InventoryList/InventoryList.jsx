@@ -177,6 +177,7 @@ const InventoryList = () => {
                             .replace(/\n\s*\d+\.\s*/g, '\n')
                             .replace(/Generated on \[Current Date\]\n*/g, '')
                             .replace(/Generated on.*?\d{4}\n*/g, '')
+                            .replace(/\\\[.*?\\\]/g, '')  
                             .replace(/\.\.\.\n*/g, '')
                             .replace(/^[\s\n]*/, '')
                             .replace(/\n{3,}/g, '\n\n')  // Replace multiple newlines with max two

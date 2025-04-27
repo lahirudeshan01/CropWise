@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { SidebarDate } from "./SidebarDate";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,14 +15,12 @@ const Sidebar = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
       if (!mobile) setSidebarOpen(true);
     };
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -36,7 +33,6 @@ const Sidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  // Add event listener to close sidebar when clicking outside on mobile
   useEffect(() => {
     const handleClickOutside = (event) => {
       const sidebar = document.getElementById("cropwise-sidebar");
@@ -53,12 +49,10 @@ const Sidebar = () => {
         setSidebarOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMobile, sidebarOpen]);
 
-  // Animation variants for menu items
   const itemVariants = {
     hidden: { opacity: 0, x: -20 },
     visible: (i) => ({
@@ -71,52 +65,32 @@ const Sidebar = () => {
     }),
   };
 
-  // SubMenu animation variants
   const subMenuVariants = {
-    hidden: { 
-      opacity: 0,
-      height: 0,
-      marginTop: 0,
-      marginBottom: 0,
-      overflow: 'hidden'
-    },
+    hidden: { opacity: 0, height: 0, marginTop: 0, marginBottom: 0, overflow: 'hidden' },
     visible: { 
       opacity: 1,
       height: "auto",
       marginTop: 5,
       marginBottom: 5,
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut",
-        when: "beforeChildren",
-        staggerChildren: 0.05
-      }
+      transition: { duration: 0.3, ease: "easeInOut", when: "beforeChildren", staggerChildren: 0.05 }
     },
     exit: { 
       opacity: 0,
       height: 0,
       marginTop: 0,
       marginBottom: 0,
-      transition: {
-        duration: 0.2,
-        ease: "easeInOut",
-      }
+      transition: { duration: 0.2, ease: "easeInOut" }
     }
   };
 
-  // Logo animation variants
   const logoVariants = {
     rest: { rotate: 0 },
-    hover: { 
-      rotate: 5,
-      scale: 1.1,
-      transition: { duration: 0.3 }
-    }
+    hover: { rotate: 5, scale: 1.1, transition: { duration: 0.3 } }
   };
 
   return (
     <>
-      {/* Toggle button with animation */}
+      {/* Toggle Button */}
       <motion.button
         id="sidebar-toggle-button"
         className="sidebar-toggle-button"
@@ -125,16 +99,13 @@ const Sidebar = () => {
         onClick={toggleSidebar}
         aria-label="Toggle sidebar"
         initial={false}
-        animate={{ 
-          left: isMobile ? (sidebarOpen ? "270px" : "10px") : "270px",
-          backgroundColor: "#16A21A"
-        }}
+        animate={{ left: isMobile ? (sidebarOpen ? "270px" : "10px") : "270px", backgroundColor: "#16A21A" }}
         transition={{ duration: 0.3 }}
       >
         {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
       </motion.button>
 
-      {/* Animated sidebar with overlay */}
+      {/* Sidebar Overlay */}
       <AnimatePresence>
         {isMobile && sidebarOpen && (
           <motion.div 
@@ -147,21 +118,17 @@ const Sidebar = () => {
         )}
       </AnimatePresence>
 
-      {/* Sidebar with glass effect */}
+      {/* Sidebar */}
       <motion.div 
         id="cropwise-sidebar" 
         className="sidebar"
         initial={false}
-        animate={{ 
-          x: isMobile && !sidebarOpen ? "-100%" : 0,
-        }}
+        animate={{ x: isMobile && !sidebarOpen ? "-100%" : 0 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
+        {/* Logo Section */}
         <div className="sidebar-header">
-          <Link
-            to="/home"
-            className="logo-link"
-          >
+          <Link to="/home" className="logo-link">
             <motion.img
               src="https://p7.hiclipart.com/preview/976/522/355/natural-environment-earth-ecology-clean-environment.jpg"
               alt="CropWise Logo"
@@ -187,6 +154,7 @@ const Sidebar = () => {
 
         <div className="divider"></div>
 
+        {/* Sidebar Menu */}
         <ul className="sidebar-menu">
           {SidebarDate.map((val, key) => (
             <React.Fragment key={key}>
@@ -212,10 +180,7 @@ const Sidebar = () => {
               >
                 <div className={`active-indicator ${location.pathname === val.link ? "visible" : ""}`} />
                 <div className="icon-container">
-                  <motion.div 
-                    whileHover={{ scale: 1.2 }}
-                    transition={{ duration: 0.2 }}
-                  >
+                  <motion.div whileHover={{ scale: 1.2 }} transition={{ duration: 0.2 }}>
                     {val.icon}
                   </motion.div>
                 </div>
@@ -231,10 +196,10 @@ const Sidebar = () => {
                 )}
               </motion.li>
 
+              {/* SubMenu */}
               <AnimatePresence>
                 {val.subMenu && openDropdown === key && (
                   <motion.ul 
-                     //className="dropdown-menu"
                     variants={subMenuVariants}
                     initial="hidden"
                     animate="visible"
@@ -245,16 +210,17 @@ const Sidebar = () => {
                         key={subKey}
                         variants={itemVariants}
                         onClick={() => {
-                          navigate(subItem.link);
-                          if (isMobile) setSidebarOpen(false);
+                          if (subItem.externalLink) {
+                            window.open(subItem.externalLink, "_blank");
+                          } else if (subItem.link) {
+                            navigate(subItem.link);
+                            if (isMobile) setSidebarOpen(false);
+                          }
                         }}
                         className={`sidebar-item sub-item ${
                           location.pathname === subItem.link ? "active" : ""
                         }`}
-                        whileHover={{ 
-                          x: 5,
-                          transition: { duration: 0.2 }
-                        }}
+                        whileHover={{ x: 5, transition: { duration: 0.2 } }}
                       >
                         <div className={`active-indicator ${location.pathname === subItem.link ? "visible" : ""}`} />
                         <div className="icon-container">{subItem.icon}</div>
@@ -263,44 +229,12 @@ const Sidebar = () => {
                     ))}
                   </motion.ul>
                 )}
-{/* {val.subMenu && openDropdown === key && (
-                <ul style={styles.dropdownMenu}>
-                  {val.subMenu.map((subItem, subKey) => (
-                    <li
-                      key={subKey}
-                      onClick={() => {
-                        navigate(subItem.link);
-                        if (isMobile) setSidebarOpen(false);
-                      }}
-                      style={{
-                        ...styles.sidebarItem,
-                        ...styles.subItem,
-                        ...(location.pathname === subItem.link
-                          ? styles.sidebarItemActive
-                          : {}),
-                      }}
-                    >
-                      <div
-                        style={{
-                          ...styles.activeIndicator,
-                          ...(location.pathname === subItem.link
-                            ? styles.activeIndicatorVisible
-                            : {}),
-                        }}
-                      />
-                      <div style={styles.iconContainer}>{subItem.icon}</div>
-                      <div>{subItem.title}</div>
-                    </li>
-                  ))}
-                </ul>
-              )} */}
-
-
               </AnimatePresence>
             </React.Fragment>
           ))}
         </ul>
 
+        {/* Footer */}
         <div className="sidebar-footer">
           <p>© 2025 CropWise</p>
         </div>

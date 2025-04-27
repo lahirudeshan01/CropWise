@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Inventory = require("../models/inventory");
+const Transaction = require("../models/finance");
 
 // @route   GET /api/inventory/:id
 // @desc    Get a single inventory item by ID
@@ -55,6 +56,30 @@ router.post("/", async (req, res) => {
         }
 
         const item = await newItem.save();
+
+        // Create expense transaction for inventory
+        const parsedUnitPrice = parseFloat(unitPrice) || 0;
+        const parsedAmount = parseFloat(availableAmount) || 0;
+        
+        if (parsedUnitPrice > 0 && parsedAmount > 0) {
+            const totalCost = parsedUnitPrice * parsedAmount;
+            
+            const newTransaction = new Transaction({
+                name: `Purchase of ${itemName}`,
+                amount: totalCost,
+                status: 'Outcome',
+                reference: 'Inventory Expense',
+                date: new Date()
+            });
+            
+            try {
+                await newTransaction.save();
+                console.log('Transaction created:', newTransaction);
+            } catch (transactionErr) {
+                console.error('Error creating transaction:', transactionErr);
+            }
+        }
+
         res.json(item);
     } catch (err) {
         console.error(err.message);
@@ -75,6 +100,11 @@ router.put("/:id", async (req, res) => {
         if (!item) {
             return res.status(404).json({ msg: "Item not found" });
         }
+
+        // Calculate the difference in amount for transaction
+        const oldTotal = item.availableAmount * item.unitPrice;
+        const newTotal = parseFloat(availableAmount) * parseFloat(unitPrice);
+        const costDifference = newTotal - oldTotal;
 
         // Update fields
         item.category = category;
@@ -100,6 +130,25 @@ router.put("/:id", async (req, res) => {
         }
 
         await item.save();
+
+        // Create transaction for the update if there's a cost difference
+        if (costDifference !== 0) {
+            const newTransaction = new Transaction({
+                name: `Update of ${itemName}`,
+                amount: Math.abs(costDifference), // Use absolute value for amount
+                status: costDifference > 0 ? 'Outcome' : 'Income', // If cost increased, it's an expense
+                reference: 'Inventory Expense',
+                date: new Date()
+            });
+
+            try {
+                await newTransaction.save();
+                console.log('Update transaction created:', newTransaction);
+            } catch (transactionErr) {
+                console.error('Error creating update transaction:', transactionErr);
+            }
+        }
+
         res.json(item);
     } catch (err) {
         console.error("Error updating item:", err.message);
