@@ -29,40 +29,74 @@ const InventoryList = () => {
         const ai_pdf_button = document.getElementById("ai-pdf-button");
         ai_pdf_button.setAttribute("disabled", "true");
         ai_pdf_button.innerHTML = "Generating...";
-
-        // Analyze inventory data
+    
+        // Analyze ACTUAL database inventory data
         const lowStockItems = inventory.filter(item => item.availableAmount < 3);
+        const outOfStockItems = inventory.filter(item => item.availableAmount === 0);
         const expiredItems = inventory.filter(item => {
             if (!item.expirationDate) return false;
-            const today = new Date();
-            const expDate = new Date(item.expirationDate);
-            return expDate < today;
+            return new Date(item.expirationDate) < new Date();
         });
         const expiringSoonItems = inventory.filter(item => {
             if (!item.expirationDate) return false;
-            const today = new Date();
-            const expDate = new Date(item.expirationDate);
-            const daysLeft = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+            const daysLeft = Math.ceil((new Date(item.expirationDate) - new Date()) / (1000 * 60 * 60 * 24));
             return daysLeft <= 7 && daysLeft >= 0;
         });
+    
+        // Group by category for better analysis
+        const categoryAnalysis = inventory.reduce((acc, item) => {
+            if (!acc[item.category]) {
+                acc[item.category] = {
+                    count: 0,
+                    lowStock: 0,
+                    outOfStock: 0,
+                    expiringSoon: 0,
+                    items: []
+                };
+            }
+            acc[item.category].count++;
+            acc[item.category].items.push(item);
+            if (item.availableAmount < 3) acc[item.category].lowStock++;
+            if (item.availableAmount === 0) acc[item.category].outOfStock++;
+            if (expiringSoonItems.includes(item)) acc[item.category].expiringSoon++;
+            return acc;
+        }, {});
+    
+        const prompt = `Generate an inventory analysis report EXACTLY like this format:
 
-        const prompt = `Create a detailed inventory analysis report for the following inventory data:
-
-Current Inventory Status:
-- Total Items: ${inventory.length}
-- Low Stock Items: ${lowStockItems.length} items
-${lowStockItems.map(item => `  • ${item.itemName}: ${item.availableAmount} ${item.unit} remaining`).join('\n')}
-- Expired Items: ${expiredItems.length}
-- Items Expiring Soon: ${expiringSoonItems.length}
-
-Please provide a professional analysis that covers:
-1. The current state of inventory
-2. Critical items that need attention
-3. Recommendations for inventory management
-4. Risk assessment
-5. Action items
-
-Format the response as a clear, professional report with proper paragraphs and bullet points where appropriate.`;
+        # Inventory Analysis Report
+        
+        Generated on [Current Date]
+        
+        ## Inventory Analysis
+        
+        1. **Critical Alerts** (❗ Immediate action needed)
+           * Dangerously Low Stock (<3 Units): [List actual low stock items from database]
+           * Expiring in 7 Days: [List actual expiring items from database]
+           * Out-of-Stock: [List actual out-of-stock items from database]
+        
+        2. **Quick Solutions**
+           * Reorder Priorities: [Prioritize based on category importance and stock levels]
+           * Use/Sell Immediately: [List expiring items that should be prioritized]
+           * Discard: [List any expired items]
+        
+        3. **Smart Recommendations**
+           * Ideal Stock Levels: [Suggest based on category patterns]
+           * Waste Reduction: [Specific suggestions for your inventory types]
+           * Storage Tips: [Category-specific storage advice]
+        
+        Use ONLY the following actual inventory data:
+        
+        Categories: ${Object.keys(categoryAnalysis).join(', ')}
+        Total Items: ${inventory.length}
+        Low Stock Items: ${lowStockItems.map(i => `${i.itemName} (${i.availableAmount} ${i.unit})`).join(', ')}
+        Out of Stock: ${outOfStockItems.map(i => i.itemName).join(', ')}
+        Expiring Soon: ${expiringSoonItems.map(i => `${i.itemName} (exp. ${i.expirationDate})`).join(', ')}
+        Expired Items: ${expiredItems.map(i => i.itemName).join(', ')}
+        
+        Keep the report concise, actionable, and under 300 words. Use bullet points. Highlight urgent items with ❗.`;
+        
+    
 
         const requestBody = {
             "contents": [{
@@ -103,60 +137,57 @@ Format the response as a clear, professional report with proper paragraphs and b
             }
 
             const formattedContent = `
-                <div class="report-container" style="
-                    font-family: 'Segoe UI', Arial, sans-serif;
-                    max-width: 900px;
-                    margin: 0 auto;
-                    padding: 40px;
-                    background-color: white;
-                    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-                    border-radius: 12px;
-                    line-height: 1.6;
+            <div class="report-container" style="
+                font-family: 'Segoe UI', Arial, sans-serif;
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 40px;
+                background-color: white;
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                border-radius: 12px;
+                line-height: 1.6;
+            ">
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <h1 style="
+                        color: #1a365d;
+                        font-size: 32px;
+                        font-weight: 600;
+                        margin-bottom: 10px;
+                    ">Inventory Analysis Report</h1>
+                    <p style="color: #666; font-size: 14px;">Generated on ${new Date().toLocaleDateString('en-US', { 
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    })}</p>
+                </div>
+    
+                <div style="
+                    background-color: #f8fafc;
+                    border-left: 4px solid #3b82f6;
+                    padding: 20px;
+                    margin-bottom: 30px;
+                    border-radius: 0 8px 8px 0;
                 ">
-                    <div style="text-align: center; margin-bottom: 40px;">
-                        <h1 style="
-                            color: #1a365d;
-                            font-size: 32px;
-                            font-weight: 600;
-                            margin-bottom: 10px;
-                        ">Inventory Analysis Report</h1>
-                        <p style="color: #666; font-size: 14px;">Generated on ${new Date().toLocaleDateString('en-US', { 
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })}</p>
-                    </div>
-
-                    <div style="
-                        background-color: #f8fafc;
-                        border-left: 4px solid #3b82f6;
-                        padding: 20px;
-                        margin-bottom: 30px;
-                        border-radius: 0 8px 8px 0;
-                    ">
-                        <h2 style="
-                            color: #1e40af;
-                            font-size: 20px;
-                            margin: 0 0 10px 0;
-                        ">Inventory Analysis</h2>
-                        <div style="margin: 0; color: #334155; white-space: pre-line;">${content.replace(/\*\*/g, '')}</div>
-                    </div>
-
-                    <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: right;">
-                        <button onclick="window.print()" style="
-                            background-color: #2563eb;
-                            color: white;
-                            padding: 12px 24px;
-                            border: none;
-                            border-radius: 6px;
-                            cursor: pointer;
-                            font-size: 16px;
-                            transition: background-color 0.3s;
-                        ">Print Report</button>
+                    <h2 style="
+                        color: #1e40af;
+                        font-size: 20px;
+                        margin: 0 0 10px 0;
+                    ">Inventory Analysis</h2>
+                    <div style="margin: 0; color: #334155; white-space: pre-line;">
+                        ${content
+                            .replace(/\*\*Critical Alerts\*\*/g, '<span style="font-weight: bold; color: #2e7d32;">Critical Alerts</span>')
+                            .replace(/\*\*Quick Solutions\*\*/g, '<span style="font-weight: bold; color: #2e7d32;">Quick Solutions</span>')
+                            .replace(/\*\*Smart Recommendations\*\*/g, '<span style="font-weight: bold; color: #2e7d32;">Smart Recommendations</span>')
+                            .replace(/\*\*/g, '')}
                     </div>
                 </div>
-            `;
+    
+                <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: right;">
+                   
+                </div>
+            </div>
+        `;
 
             setReportContent(formattedContent);
             setShowReport(true);

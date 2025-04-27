@@ -275,15 +275,7 @@ const Finance = () => {
             transform: translateY(-2px) scale(1.03);
             box-shadow: 0 4px 16px rgba(229, 57, 53, 0.15);
           }
-          .ai-report-btn.print {
-            background: linear-gradient(90deg, #1976d2, #64b5f6);
-            color: #fff;
-          }
-          .ai-report-btn.print:hover {
-            background: linear-gradient(90deg, #0d47a1, #1976d2);
-            transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15);
-          }
+       
           @media (max-width: 600px) {
             .ai-report-btn {
               padding: 8px 12px;
@@ -298,7 +290,7 @@ const Finance = () => {
     <button class="ai-report-btn back" onclick="window.close()">
       Back
     </button>
-    <button onclick="window.print()" class="ai-report-btn print">Print</button>
+    
   </div>
   <hr class="no-print">`;
 
