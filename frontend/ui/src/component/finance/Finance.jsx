@@ -170,114 +170,139 @@ const Finance = () => {
       const content = data.candidates[0].content.parts[0].text;
       const contentStyles = `
         <style>
-          body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f9;
+          .ai-report-container {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 6px 32px rgba(44, 62, 80, 0.10);
+            padding: 40px 32px;
+            margin: 32px auto;
+            max-width: 900px;
+            border: 1px solid #e0e0e0;
           }
-          h1, h2 {
-            color: #333;
-            margin-bottom: 10px;
-          }
-          h1 {
-            font-size: 32px;
+          .ai-report-container h1 {
+            font-size: 2.5rem;
+            color: #1a237e;
+            font-weight: 700;
             text-align: center;
+            margin-bottom: 32px;
+            letter-spacing: -1px;
           }
-          h2 {
-            font-size: 24px;
-            margin-top: 20px;
+          .ai-report-container h2 {
+            color: #388e3c;
+            font-size: 1.5rem;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            border-left: 5px solid #4CAF50;
+            padding-left: 12px;
           }
-          table {
+          .ai-report-container p {
+            color: #37474f;
+            font-size: 1.08rem;
+            line-height: 1.8;
+            margin-bottom: 18px;
+          }
+          .ai-report-container table {
             width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 24px 0 32px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+            overflow: hidden;
           }
-          th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-          }
-          th {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-          }
-          td {
-            background-color: #f9f9f9;
-          }
-          tr:hover td {
-            background-color: #f1f1f1;
-          }
-          p {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #555;
-          }
-          .button.back-button {
-            background-color: #dc3545;
-            color: white;
-            padding: 10px 20px;
+          .ai-report-container th {
+            background: #43a047;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 16px 0;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 10px;
-            transition: background-color 0.3s ease;
           }
-          .button.back-button:hover {
-            background-color: #c82333;
+          .ai-report-container td {
+            color: #222;
+            font-size: 1.08rem;
+            padding: 14px 0;
+            text-align: center;
+            border: none;
+            background: #fff;
           }
-          .btn-print {
-            background-color: #007bff;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
+          .ai-report-container tr:not(:last-child) td {
+            border-bottom: 1px solid #e0e0e0;
           }
-          .btn-print:hover {
-            background-color: #0056b3;
+          @media (max-width: 600px) {
+            .ai-report-container {
+              padding: 16px 4px;
+            }
+            .ai-report-container h1 {
+              font-size: 1.5rem;
+            }
+            .ai-report-container h2 {
+              font-size: 1.1rem;
+              padding-left: 6px;
+            }
+            .ai-report-container table th, .ai-report-container table td {
+              font-size: 0.95rem;
+              padding: 8px 0;
+            }
           }
-          .accesbility-controls {
+          .ai-report-btn-group {
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            gap: 12px;
           }
-          @media (max-width: 768px) {
-            table, th, td {
-              font-size: 14px;
-            }
-            th, td {
-              padding: 10px 12px;
-            }
+          .ai-report-btn {
+            padding: 12px 28px;
+            font-size: 1.08rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+            outline: none;
+            letter-spacing: 0.5px;
           }
-          @media print {
-            .no-print, .no-print * {
-              display: none !important;
-            }
-            .metrics {
-              display: flex !important;
-              flex-direction: row !important;
+          .ai-report-btn.back {
+            background: linear-gradient(90deg, #e53935, #e35d5b);
+            color: #fff;
+          }
+          .ai-report-btn.back:hover {
+            background: linear-gradient(90deg, #b71c1c, #e53935);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 4px 16px rgba(229, 57, 53, 0.15);
+          }
+          .ai-report-btn.print {
+            background: linear-gradient(90deg, #1976d2, #64b5f6);
+            color: #fff;
+          }
+          .ai-report-btn.print:hover {
+            background: linear-gradient(90deg, #0d47a1, #1976d2);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15);
+          }
+          @media (max-width: 600px) {
+            .ai-report-btn {
+              padding: 8px 12px;
+              font-size: 0.95rem;
             }
           }
         </style>
       `;
       
       const accesbilityControls = ` 
-  <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <button class="button back-button" onclick="window.close()">
+  <div class="ai-report-btn-group no-print">
+    <button class="ai-report-btn back" onclick="window.close()">
       Back
     </button>
-    <button onclick="window.print()" class="btn-print">Print</button>
+    <button onclick="window.print()" class="ai-report-btn print">Print</button>
   </div>
   <hr class="no-print">`;
 
-      const reportContent = accesbilityControls + contentStyles + content.replace("```html", "").replace("```", "").replace("Losses", `
+      const reportContent = accesbilityControls + contentStyles + `<div class="ai-report-container">` + content.replace("```html", "").replace("```", "").replace("Losses", `
         Losses<table>
           <tbody><tr>
             <th>Total Income</th>
@@ -289,7 +314,7 @@ const Finance = () => {
             <td>Rs. ${report.totalOutcome}</td>
             <td>Rs. ${report.profit}</td>
           </tr>
-        </tbody></table>`);
+        </tbody></table>`) + `</div>`;
 
       let newWindow = window.open('', '_blank');
       if (newWindow) {
