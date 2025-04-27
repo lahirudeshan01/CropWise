@@ -9,6 +9,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const app = express();
+
 app.use(cors({ origin: true, credentials: true }));
 
 // Database connection
@@ -27,6 +28,7 @@ app.use("/api/inventory", inventoryRoutes);
 app.use('/api', financeRoutes);
 app.use("/users", router);
 app.use("/api/tasks", routess);
+
 
 const PORT = 3000;
 

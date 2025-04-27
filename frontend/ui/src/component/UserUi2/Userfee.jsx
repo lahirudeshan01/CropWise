@@ -106,20 +106,28 @@ const Userfee = () => {
 
   const handlePaymentSubmit = async (paymentInfo) => {
     try {
-      // Update orderDetails with payment information
-      const updatedOrderDetails = {
-        ...orderDetails,
+      // Format the data according to our backend model field names
+      const orderData = {
+        product: orderDetails.product,
+        quantity: orderDetails.quantity,
+        totalPrice: orderDetails.totalPrice,
+        deliveryInfo: {
+          name: orderDetails.deliveryInfo.name,
+          address: orderDetails.deliveryInfo.address,
+          phone: orderDetails.deliveryInfo.phone,
+          email: orderDetails.deliveryInfo.email,
+        },
         paymentMethod: paymentInfo.paymentMethod,
         paymentDetails: paymentInfo.paymentDetails,
         status: "Pending",
       };
-
+  
       // Send order to the server
       const response = await axios.post(
         "http://localhost:3000/api/orders",
-        updatedOrderDetails
+        orderData
       );
-
+  
       if (response.data) {
         setActiveStep(3); // Move to confirmation step
       }

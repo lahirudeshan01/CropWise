@@ -19,6 +19,9 @@ const UpdateInventoryItem = () => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(true);
 
+    // Define forbidden symbols
+    const forbiddenSymbols = ['@', '#', '$', '*', '=', '+', '~', '^', '`', '|', '{', '}', '[', ']', '<', '>', '"', "'", ':', ';', '**','!','-','?', '.', '_'];
+
     const getCurrentDate = () => {
         return format(new Date(), 'yyyy-MM-dd');
     };
@@ -50,6 +53,23 @@ const UpdateInventoryItem = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        
+        // Add validation for itemName field
+        if (name === 'itemName') {
+            // Check if the first character is a symbol (not letter or number)
+            if (value.length === 1 && !/^[a-zA-Z0-9]/.test(value)) {
+                // If it's a symbol as first character, don't update the state
+                return;
+            }
+            
+            // Check if any of the entered characters are in the forbidden symbols list
+            const lastEnteredChar = value.slice(-1);
+            if (forbiddenSymbols.includes(lastEnteredChar)) {
+                // If it's a forbidden symbol, don't update the state
+                return;
+            }
+        }
+        
         if (name === 'category') {
             let defaultUnit = "Kg";
             if (value === "Farm Machinery & Tools") defaultUnit = "Units";
@@ -137,6 +157,9 @@ const UpdateInventoryItem = () => {
         if (!formData.itemName.trim()) {
             newErrors.itemName = "Item Name is required.";
             isValid = false;
+        } else if (!/^[a-zA-Z0-9]/.test(formData.itemName)) {
+            newErrors.itemName = "Item Name must start with a letter or number.";
+            isValid = false;
         }
 
         if (!formData.availableAmount || isNaN(formData.availableAmount) || parseFloat(formData.availableAmount) <= 0) {
@@ -149,14 +172,12 @@ const UpdateInventoryItem = () => {
             isValid = false;
         }
 
-        // Only validate expiration date if category is not "Farm Machinery & Tools", "Packaging Materials", or "Other"
         if (!["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) && 
             (!formData.expirationDate || new Date(formData.expirationDate) <= new Date())) {
             newErrors.expirationDate = "Expiration Date must be a future date.";
             isValid = false;
         }
 
-        // Only validate unit price if category is "Fertilizers", "Pesticides", or "Seeds"
         if (["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && 
             (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0)) {
             newErrors.unitPrice = "Unit Price must be a positive number.";
@@ -219,7 +240,6 @@ const UpdateInventoryItem = () => {
 
     const availableUnits = getAvailableUnits();
 
-    // Determine if we should show expiration date and unit price fields
     const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
     const showUnitPrice = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
 
@@ -239,7 +259,13 @@ const UpdateInventoryItem = () => {
                 </select>
 
                 <label className="update-label">Item Name</label>
-                <input name="itemName" value={formData.itemName} onChange={handleChange} className="update-input" />
+                <input 
+                    name="itemName" 
+                    value={formData.itemName} 
+                    onChange={handleChange} 
+                    className="update-input"
+                    placeholder="Enter item name (must start with letter or number)"
+                />
                 {errors.itemName && <p className="update-error-message">{errors.itemName}</p>}
 
                 <label className="update-label">Available Amount</label>

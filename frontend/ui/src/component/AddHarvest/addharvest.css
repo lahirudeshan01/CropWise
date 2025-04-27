@@ -474,6 +474,230 @@ body {
   color: white;
 }
 
+/* Add these styles to your addharvest.css file */
+
+/* Chatbot Icon */
+.chatbot-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: #0e9a25;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.chatbot-icon:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.chat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Chatbot Window */
+.chatbot-window {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 400px;
+  height: 500px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  overflow: hidden;
+  animation: slide-up 0.3s ease;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chatbot-header {
+  background-color: #0b3c64;
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatbot-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.chatbot-controls {
+  display: flex;
+  align-items: center;
+}
+
+.minimize-button, .close-button {
+  margin-left: 15px;
+  cursor: pointer;
+  font-size: 18px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.minimize-button:hover, .close-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.chatbot-body {
+  flex: 1;
+  padding: 15px;
+  background-color: #1e1e1e;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-message {
+  margin-bottom: 12px;
+  padding: 10px 15px;
+  border-radius: 18px;
+  max-width: 80%;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.chat-message.bot {
+  align-self: flex-start;
+  background-color: #424242;
+  color: #ffffff;
+  border-bottom-left-radius: 5px;
+}
+
+.chat-message.user {
+  align-self: flex-end;
+  background-color: #063c8d;
+  color: white;
+  border-bottom-right-radius: 5px;
+}
+
+.chatbot-footer {
+  padding: 10px 15px;
+  background-color: #2d2d2d;
+  border-top: 1px solid #3d3d3d;
+}
+
+.chat-input-form {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 20px;
+  background-color: #3d3d3d;
+  color: #ffffff;
+  outline: none;
+}
+
+.chat-input::placeholder {
+  color: #aaaaaa;
+}
+
+.send-button {
+  background-color: #107c09;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.send-button:hover {
+  background-color: #d32f2f;
+}
+
+/* Typing indicator animation */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+  padding: 5px 10px;
+}
+
+.typing-indicator span {
+  height: 8px;
+  width: 8px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: typing-dot 2.4s infinite ease-in-out both;
+}
+
+.typing-indicator span:nth-child(1) {
+  animation-delay: -0.52s;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: -0.46s;
+}
+
+@keyframes typing-dot {
+  0%, 80%, 100% { 
+    transform: scale(0);
+  } 
+  40% { 
+    transform: scale(1.0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chatbot-window {
+    width: 90%;
+    height: 70%;
+    bottom: 70px;
+    right: 5%;
+    left: 5%;
+  }
+}
+
+@media (max-width: 480px) {
+  .chatbot-window {
+    width: 95%;
+    height: 60%;
+    bottom: 80px;
+  }
+}
 /* Responsive adjustments */
 @media (max-width: 576px) {
   .harvest-container {
