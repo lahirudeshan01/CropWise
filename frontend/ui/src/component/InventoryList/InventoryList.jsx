@@ -224,7 +224,14 @@ Format the response as a clear, professional report with proper paragraphs and b
                         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                     }}>
                         <button 
-                            onClick={() => setShowReport(false)}
+                            onClick={() => {
+                                setShowReport(false);
+                                const ai_pdf_button = document.getElementById("ai-pdf-button");
+                                if (ai_pdf_button) {
+                                    ai_pdf_button.removeAttribute("disabled");
+                                    ai_pdf_button.innerHTML = "Generate AI Report";
+                                }
+                            }}
                             style={{
                                 position: 'absolute',
                                 right: '20px',
