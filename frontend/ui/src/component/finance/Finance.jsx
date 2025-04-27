@@ -442,8 +442,8 @@ const Finance = () => {
   </button>
             </div>
             <div className="button-group-right">
-            <button className="balance" onClick={handleBalancedSheet}>
-                Balanced Sheet
+            <button className="button balance" onClick={handleBalancedSheet}>
+                Balance Sheet
               </button>
             <button id="ai-pdf-button" className="button ai-pdf" onClick={generateAiReport}>
                 Generate AI Report
