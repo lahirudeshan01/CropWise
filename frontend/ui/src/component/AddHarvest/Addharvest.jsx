@@ -21,6 +21,13 @@ const AddHarvest = () => {
   const [errors, setErrors] = useState({});
   const [dragActive, setDragActive] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  
+  // Chatbot states
+  const [showChatbot, setShowChatbot] = useState(false);
+  const [chatbotMinimized, setChatbotMinimized] = useState(false);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [userInput, setUserInput] = useState("");
+  const [loadingResponse, setLoadingResponse] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -29,6 +36,8 @@ const AddHarvest = () => {
   // Handling Input Changes
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    // Update form data
     setFormData((prevData) => ({ 
       ...prevData, 
       [name]: value 
@@ -40,6 +49,22 @@ const AddHarvest = () => {
         ...prev,
         [name]: undefined
       }));
+    }
+
+    // Check if both Character and price are filled to trigger the chatbot
+    // Important: Use the current value from the input rather than state
+    const updatedCharacter = name === "Character" ? value : formData.Character;
+    const updatedPrice = name === "price" ? value : formData.price;
+    
+    if ((name === "Character" || name === "price") && 
+        updatedCharacter.trim() && 
+        updatedPrice.trim() && 
+        !showChatbot) {
+      // Small delay to ensure state is updated
+      setTimeout(() => {
+        // Pass the current values to the function
+        showChatbotWithPriceSuggestion(updatedCharacter, updatedPrice);
+      }, 300);
     }
   };
 
@@ -89,6 +114,116 @@ const AddHarvest = () => {
           image: undefined
         }));
       }
+    }
+  };
+
+  const showChatbotWithPriceSuggestion = async (character, price) => {
+    setShowChatbot(true);
+    setChatbotMinimized(false);
+    setLoadingResponse(true);
+    
+    // Add welcome message - using the passed parameters
+    setChatMessages([
+      { 
+        type: 'bot', 
+        text: `Hello! I see you're listing ${character} rice for Rs.${price} per kg. I'll check the current market prices for you...` 
+      }
+    ]);
+
+    // Fetch AI suggestion - using the passed parameters
+    const aiRequestData = {
+      contents: [{
+        parts: [{
+          text: `Give current marketprice of 1kg of ${character}. I'm going to sell 1kg for Rs.${price}. In response give a brief description explaining the difference and what is a good price within 100 words. Don't use ** or \\n, etc.`
+        }]
+      }]
+    };
+  
+    try {
+      const aiResponse = await axios.post(
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyA4e2B4bOhENr6DEbt6covF92CC4VZYa2E",
+        aiRequestData,
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+  
+      const responseText = aiResponse.data.candidates[0].content.parts[0].text;
+      
+      // Add AI response to chat
+      setChatMessages(prev => [
+        ...prev,
+        { type: 'bot', text: responseText }
+      ]);
+      
+    } catch (error) {
+      console.error('Error:', error.response ? error.response.data : error.message);
+      
+      // Add error message to chat
+      setChatMessages(prev => [
+        ...prev,
+        { type: 'bot', text: "Sorry, I couldn't fetch the market price information at this time." }
+      ]);
+    } finally {
+      setLoadingResponse(false);
+    }
+  };
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    
+    if (!userInput.trim()) return;
+    
+    // Add user message to chat
+    setChatMessages(prev => [
+      ...prev,
+      { type: 'user', text: userInput }
+    ]);
+    
+    const userQuestion = userInput;
+    setUserInput(''); // Clear input field
+    setLoadingResponse(true);
+    
+    // Process user question with AI - use current formData values
+    const aiRequestData = {
+      contents: [{
+        parts: [{
+          text: `User asked: "${userQuestion}" about ${formData.Character} rice they're selling for Rs.${formData.price}. Please provide a helpful response about rice farming, market trends, or pricing strategies within 100 words.`
+        }]
+      }]
+    };
+    
+    try {
+      const aiResponse = await axios.post(
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyA4e2B4bOhENr6DEbt6covF92CC4VZYa2E",
+        aiRequestData,
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+  
+      const responseText = aiResponse.data.candidates[0].content.parts[0].text;
+      
+      // Add AI response to chat
+      setChatMessages(prev => [
+        ...prev,
+        { type: 'bot', text: responseText }
+      ]);
+      
+    } catch (error) {
+      console.error('Error:', error.response ? error.response.data : error.message);
+      
+      // Add error message to chat
+      setChatMessages(prev => [
+        ...prev,
+        { type: 'bot', text: "Sorry, I couldn't process your question at this time." }
+      ]);
+    } finally {
+      setLoadingResponse(false);
     }
   };
 
@@ -193,6 +328,26 @@ const AddHarvest = () => {
     }
   };
 
+  // Toggle chatbot visibility with improved behavior
+  const toggleChatbot = () => {
+    if (showChatbot && !chatbotMinimized) {
+      setChatbotMinimized(true);
+    } else {
+      setShowChatbot(true);
+      setChatbotMinimized(false);
+      
+      // If no messages yet, show intro message based on current form data
+      if (chatMessages.length === 0 && formData.Character && formData.price) {
+        showChatbotWithPriceSuggestion(formData.Character, formData.price);
+      }
+    }
+  };
+
+  // Close chatbot
+  const closeChatbot = () => {
+    setShowChatbot(false);
+  };
+
   return (
     <div className={`harvest-container ${isLoaded ? 'fade-in' : ''}`}>
       <div className="page-header">
@@ -246,10 +401,10 @@ const AddHarvest = () => {
           <div className="form-grid">
             {[
               { name: "farmerId", label: "Listing ID", icon: "listing" },
-              { name: "Character", label: "Rice Type", icon: "rice" },
               { name: "verity", label: "Verity", icon: "variety" },
               { name: "quantity", label: "Available Quantity (kg)", type: "number", icon: "quantity" },
               { name: "price", label: "Price (per kg)", type: "number", icon: "price" },
+              { name: "Character", label: "Rice Type", icon: "rice" },
               { name: "address", label: "Address", icon: "address" },
               { name: "location", label: "Location", icon: "location" }
             ].map(({ name, label, type = "text", icon }) => (
@@ -303,6 +458,64 @@ const AddHarvest = () => {
           </div>
         </form>
       </div>
+
+      {/* Chatbot Icon - Always visible when not expanded */}
+      <div className="chatbot-icon" onClick={toggleChatbot} style={{ 
+       position:'fixed',
+        bottom: '10px', 
+        left:'950px',
+        display: (showChatbot && !chatbotMinimized) ? 'none' : 'flex'
+      }}>
+        <div className="chat-icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="#ffffff">
+            <path d="M20,2H4C2.9,2,2,2.9,2,4v18l4-4h14c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2z M20,16H6l-2,2V4h16V16z"/>
+            <path d="M7,9h2v2H7V9z M11,9h2v2h-2V9z M15,9h2v2h-2V9z"/>
+          </svg>
+        </div>
+      </div>
+
+      {/* Chatbot Window */}
+      {(showChatbot && !chatbotMinimized) && (
+        <div className="chatbot-window">
+          <div className="chatbot-header">
+            <div className="chatbot-title">CropWise AI</div>
+            <div className="chatbot-controls">
+              <div className="minimize-button" onClick={toggleChatbot}>─</div>
+              <div className="close-button" onClick={closeChatbot}>×</div>
+            </div>
+          </div>
+          <div className="chatbot-body">
+            <div className="chat-messages">
+              {chatMessages.map((message, index) => (
+                <div key={index} className={`chat-message ${message.type}`}>
+                  {message.text}
+                </div>
+              ))}
+              {loadingResponse && (
+                <div className="chat-message bot loading">
+                  <div className="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="chatbot-footer">
+            <form onSubmit={handleSendMessage} className="chat-input-form">
+              <input
+                type="text"
+                placeholder="Type a message..."
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                className="chat-input"
+              />
+              <button type="submit" className="send-button">Send</button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
