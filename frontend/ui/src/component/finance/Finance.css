@@ -1411,3 +1411,14 @@ td[data-status="Outcome"] {
     background: #f5f5f5;
   }
 }
+.button.balance {
+  background: linear-gradient(135deg, #7b1fa2, #9c27b0);
+  color: white;
+  font-size: 15px;
+}
+
+.button.balance:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0.9;
+}
