@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+ import OrderNotifications from '../ordernotification/OrderNotifications';
 import axios from 'axios';
+import io from 'socket.io-client';
 import {
   Container,
   Typography,
@@ -31,22 +33,40 @@ const Showorder = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
 
-  // Fetch orders when component mounts
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get('http://localhost:3000/api/orders');
-        setOrders(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message || 'Failed to fetch orders');
-        setLoading(false);
-        console.error('Error fetching orders:', err);
-      }
-    };
+  // Fetch orders function
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('http://localhost:3000/api/orders');
+      setOrders(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message || 'Failed to fetch orders');
+      setLoading(false);
+      console.error('Error fetching orders:', err);
+    }
+  };
 
+  // Set up socket connection and fetch orders
+  useEffect(() => {
     fetchOrders();
+
+    // Create socket connection
+    const socket = io('http://localhost:3000/orders', {
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+
+    // Listen for new orders
+    socket.on('new-order', (newOrder) => {
+      console.log('New order received:', newOrder);
+      setOrders(prevOrders => [newOrder, ...prevOrders]);
+    });
+
+    // Cleanup on unmount
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   const handleViewDetails = (order) => {
@@ -265,64 +285,70 @@ const Showorder = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Order Management
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Typography variant="h4" component="h1">
+          Order Management
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {/* Added OrderNotifications component */}
+          {/* <OrderNotifications onNewOrder={fetchOrders} /> */}
+          <Button 
+            onClick={generatePDF} 
+            color="primary" 
+            variant="contained"
+          >
+            Generate Report
+          </Button>
+        </Box>
+      </Box>
 
       {orders.length === 0 ? (
         <Paper sx={{ p: 4, textAlign: 'center' }}>
           <Typography variant="h6">No orders found</Typography>
         </Paper>
       ) : (
-        <>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-            <Button onClick={generatePDF} color="primary" variant="contained">
-              Generate Report
-            </Button>
-          </Box>
-          <TableContainer component={Paper} id="order-table">
-            <Table>
-              <TableHead>
-                <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                  <TableCell><Typography variant="subtitle1" fontWeight="bold">Order ID</Typography></TableCell>
-                  <TableCell><Typography variant="subtitle1" fontWeight="bold">Product</Typography></TableCell>
-                  <TableCell><Typography variant="subtitle1" fontWeight="bold">Customer Name</Typography></TableCell>
-                  <TableCell><Typography variant="subtitle1" fontWeight="bold">Total Price</Typography></TableCell>
-                  <TableCell><Typography variant="subtitle1" fontWeight="bold">Date</Typography></TableCell>
-                  <TableCell><Typography variant="subtitle1" fontWeight="bold">Status</Typography></TableCell>
-                  <TableCell><Typography variant="subtitle1" fontWeight="bold">Actions</Typography></TableCell>
+        <TableContainer component={Paper} id="order-table">
+          <Table>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
+                <TableCell><Typography variant="subtitle1" fontWeight="bold">Order ID</Typography></TableCell>
+                <TableCell><Typography variant="subtitle1" fontWeight="bold">Product</Typography></TableCell>
+                <TableCell><Typography variant="subtitle1" fontWeight="bold">Customer Name</Typography></TableCell>
+                <TableCell><Typography variant="subtitle1" fontWeight="bold">Total Price</Typography></TableCell>
+                <TableCell><Typography variant="subtitle1" fontWeight="bold">Date</Typography></TableCell>
+                <TableCell><Typography variant="subtitle1" fontWeight="bold">Status</Typography></TableCell>
+                <TableCell><Typography variant="subtitle1" fontWeight="bold">Actions</Typography></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {orders.map((order) => (
+                <TableRow key={order._id || Math.random()} hover>
+                  <TableCell>{order._id ? order._id.substring(0, 8) : 'N/A'}...</TableCell>
+                  <TableCell>{order.product && order.product.Character ? order.product.Character : 'N/A'}</TableCell>
+                  <TableCell>{order.deliveryInfo && order.deliveryInfo.name ? order.deliveryInfo.name : 'N/A'}</TableCell>
+                  <TableCell>Rs. {order.totalPrice ? order.totalPrice.toFixed(2) : '0.00'}</TableCell>
+                  <TableCell>{order.dateCreated ? formatDate(order.dateCreated) : 'N/A'}</TableCell>
+                  <TableCell>
+                    <Chip 
+                      label={order.status || 'Unknown'} 
+                      color={getStatusColor(order.status || 'default')} 
+                      size="small" 
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Button 
+                      startIcon={<VisibilityOutlined />} 
+                      size="small" 
+                      onClick={() => handleViewDetails(order)}
+                    >
+                      View
+                    </Button>
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {orders.map((order) => (
-                  <TableRow key={order._id || Math.random()} hover>
-                    <TableCell>{order._id ? order._id.substring(0, 8) : 'N/A'}...</TableCell>
-                    <TableCell>{order.product && order.product.Character ? order.product.Character : 'N/A'}</TableCell>
-                    <TableCell>{order.deliveryInfo && order.deliveryInfo.name ? order.deliveryInfo.name : 'N/A'}</TableCell>
-                    <TableCell>Rs. {order.totalPrice ? order.totalPrice.toFixed(2) : '0.00'}</TableCell>
-                    <TableCell>{order.dateCreated ? formatDate(order.dateCreated) : 'N/A'}</TableCell>
-                    <TableCell>
-                      <Chip 
-                        label={order.status || 'Unknown'} 
-                        color={getStatusColor(order.status || 'default')} 
-                        size="small" 
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Button 
-                        startIcon={<VisibilityOutlined />} 
-                        size="small" 
-                        onClick={() => handleViewDetails(order)}
-                      >
-                        View
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
 
       {/* Order Details Dialog */}

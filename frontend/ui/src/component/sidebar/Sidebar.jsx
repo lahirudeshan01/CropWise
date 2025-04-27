@@ -6,6 +6,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { motion, AnimatePresence } from "framer-motion";
+import OrderNotifications from '../ordernotification/OrderNotifications';
 import "./sidebar.css";
 
 const Sidebar = () => {
@@ -179,6 +180,9 @@ const Sidebar = () => {
               <span className="sidebar-subtitle">Smart Agriculture</span>
             </motion.div>
           </Link>
+          <div className="notification-container">
+            <OrderNotifications />
+          </div>
         </div>
 
         <div className="divider"></div>
