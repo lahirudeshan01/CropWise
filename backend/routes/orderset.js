@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/ordersnew');
+const Transaction = require('../models/finance');
 
 // Create a new order
 router.post('/', async (req, res) => {
@@ -26,22 +27,18 @@ router.post('/', async (req, res) => {
     });
 
     const savedOrder = await newOrder.save();
-    
-    // Get Socket.IO instance from app
-    const io = req.app.get('socketio');
-    
-    // Emit event to notify about new order
-    if (io) {
-      io.of('/orders').emit('new-order', {
-        id: savedOrder._id,
-        product: savedOrder.product,
-        totalPrice: savedOrder.totalPrice,
-        deliveryInfo: savedOrder.deliveryInfo,
-        status: savedOrder.status,
-        timestamp: new Date()
-      });
-      console.log('Order notification emitted for order:', savedOrder._id);
-    }
+
+    // Create transaction for the order
+    const newTransaction = new Transaction({
+      name: `Sale - Order #${savedOrder._id}`,
+      amount: totalPrice,
+      status: 'Income',
+      reference: 'Sales Income',
+      date: new Date()
+    });
+
+    await newTransaction.save();
+    console.log('Sales transaction created successfully:', newTransaction);
 
     res.status(201).json({ 
       success: true,
@@ -49,7 +46,7 @@ router.post('/', async (req, res) => {
       order: savedOrder 
     });
   } catch (error) {
-    console.error('Error creating order:', error);
+    console.error('Error creating order or transaction:', error);
     res.status(500).json({ 
       success: false,
       message: "Failed to create order", 
@@ -78,46 +75,6 @@ router.get('/:id', async (req, res) => {
     res.json(order);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
-  }
-});
-
-// Update order status
-router.patch('/:id/status', async (req, res) => {
-  try {
-    const { status } = req.body;
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true }
-    );
-    
-    if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
-    
-    // Get Socket.IO instance from app
-    const io = req.app.get('socketio');
-    
-    // Emit status update notification
-    if (io) {
-      io.of('/orders').emit('order-status-update', {
-        id: order._id,
-        status: order.status,
-        timestamp: new Date()
-      });
-    }
-    
-    res.json({ 
-      success: true, 
-      message: 'Order status updated successfully',
-      order 
-    });
-  } catch (error) {
-    res.status(500).json({ 
-      success: false,
-      message: 'Error updating order status', 
-      error: error.message 
-    });
   }
 });
 
