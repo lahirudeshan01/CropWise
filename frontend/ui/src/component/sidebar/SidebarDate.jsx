@@ -10,7 +10,6 @@ import ShowChartIcon from '@mui/icons-material/ShowChart';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
-
 export const SidebarDate = [
     {
         title: "Crop Management",
@@ -23,11 +22,10 @@ export const SidebarDate = [
                 link: "/dashboard"
             },
             {
-                title: "soilx ",
+                title: "Moisture Level",
                 icon: <AutoFixHighIcon />,
-                link: "/da"
+                externalLink: "https://app.arduino.cc/dashboards/48ef7fd6-1a94-4b52-8adf-8b74496dbe81"
             },
-  
         ]
     },
     {
@@ -40,7 +38,6 @@ export const SidebarDate = [
                 icon: <ViewHeadlineRoundedIcon />,
                 link: "/financeshow"
             },
-  
         ]
     },
     {
@@ -80,8 +77,7 @@ export const SidebarDate = [
     {
         title: "MarketPlace",
         icon: <DashboardIcon />,
-        link: "#", // No link, acts as a dropdown
-        link: "/show",
+        link: "#",
         subMenu: [
             {
                 title: "Add Harvest",
