@@ -73,24 +73,33 @@ const UpdateInventoryItem = () => {
         if (name === 'category') {
             let defaultUnit = "Kg";
             if (value === "Farm Machinery & Tools") defaultUnit = "Units";
-            setFormData({ 
-                ...formData, 
+            
+            // Convert availableAmount to integer if switching to Units
+            let newAmount = formData.availableAmount;
+            if (defaultUnit === "Units" && newAmount && newAmount.toString().includes('.')) {
+                newAmount = Math.floor(parseFloat(newAmount)).toString();
+            }
+            
+            setFormData(prev => ({ 
+                ...prev, 
                 category: value, 
                 unit: defaultUnit,
-                availableAmount: ["Farm Machinery & Tools", "Packaging Materials", "Pest Control & Storage Protection", "Other"].includes(value) && defaultUnit === "Units"
-                    ? (formData.availableAmount.includes('.')) ? Math.floor(parseFloat(formData.availableAmount)).toString() || "" : formData.availableAmount
-                    : formData.availableAmount
-            });
+                availableAmount: newAmount
+            }));
         } else if (name === 'unit') {
-            setFormData({ 
-                ...formData, 
+            // Convert availableAmount to integer if switching to Units
+            let newAmount = formData.availableAmount;
+            if (value === "Units" && newAmount && newAmount.toString().includes('.')) {
+                newAmount = Math.floor(parseFloat(newAmount)).toString();
+            }
+            
+            setFormData(prev => ({ 
+                ...prev, 
                 unit: value,
-                availableAmount: value === "Units" 
-                    ? (formData.availableAmount.includes('.')) ? Math.floor(parseFloat(formData.availableAmount)).toString() || "" : formData.availableAmount
-                    : formData.availableAmount
-            });
+                availableAmount: newAmount
+            }));
         } else {
-            setFormData({ ...formData, [name]: value });
+            setFormData(prev => ({ ...prev, [name]: value }));
         }
     };
 
@@ -98,11 +107,11 @@ const UpdateInventoryItem = () => {
         const value = e.target.value;
         if (formData.unit === "Units") {
             if (value === '' || /^\d*$/.test(value)) {
-                setFormData({ ...formData, availableAmount: value });
+                setFormData(prev => ({ ...prev, availableAmount: value }));
             }
         } else {
             if (value === '' || /^\d*\.?\d{0,3}$/.test(value)) {
-                setFormData({ ...formData, availableAmount: value });
+                setFormData(prev => ({ ...prev, availableAmount: value }));
             }
         }
     };
@@ -110,7 +119,7 @@ const UpdateInventoryItem = () => {
     const handleUnitPriceChange = (e) => {
         const value = e.target.value;
         if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
-            setFormData({ ...formData, unitPrice: value });
+            setFormData(prev => ({ ...prev, unitPrice: value }));
         }
     };
 
@@ -118,7 +127,7 @@ const UpdateInventoryItem = () => {
         if (formData.unitPrice) {
             const num = parseFloat(formData.unitPrice);
             if (!isNaN(num)) {
-                setFormData({ ...formData, unitPrice: num.toFixed(2) });
+                setFormData(prev => ({ ...prev, unitPrice: num.toFixed(2) }));
             }
         }
     };
@@ -138,7 +147,7 @@ const UpdateInventoryItem = () => {
             ? currentValue.toString() 
             : (currentValue % 1 === 0 ? currentValue.toString() : currentValue.toFixed(3).replace(/\.?0+$/, ''));
         
-        setFormData({ ...formData, availableAmount: newValue });
+        setFormData(prev => ({ ...prev, availableAmount: newValue }));
     };
 
     const adjustUnitPrice = (increment) => {
@@ -147,7 +156,7 @@ const UpdateInventoryItem = () => {
         
         if (currentValue < 0) currentValue = 0;
         
-        setFormData({ ...formData, unitPrice: currentValue.toFixed(2) });
+        setFormData(prev => ({ ...prev, unitPrice: currentValue.toFixed(2) }));
     };
 
     const validateForm = () => {
@@ -167,7 +176,7 @@ const UpdateInventoryItem = () => {
             isValid = false;
         }
 
-        if (formData.unit === "Units" && formData.availableAmount.includes('.')) {
+        if (formData.unit === "Units" && formData.availableAmount.toString().includes('.')) {
             newErrors.availableAmount = "Available Amount must be a whole number when Units is selected.";
             isValid = false;
         }
