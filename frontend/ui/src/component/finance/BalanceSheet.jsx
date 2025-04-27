@@ -245,8 +245,7 @@ const BalanceSheet = ({ onBack }) => {
               <td className="amount">Rs. {assets.totalAssets.toLocaleString()}</td>
               <td>Total Liabilities</td>
               <td className="amount">Rs. {liabilities.totalLiabilities.toLocaleString()}</td>
-              <td>Total Equity</td>
-              <td className="amount">Rs. {equity.totalEquity.toLocaleString()}</td>
+              <td colSpan="2"></td>
             </tr>
           </tbody>
         </table>
