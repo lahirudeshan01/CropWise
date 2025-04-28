@@ -260,6 +260,11 @@ const OrderNotifications = ({ onNewOrder }) => {
                 <Typography variant="body2" noWrap>
                   {notification.message}
                 </Typography>
+                {notification.orderId && (
+                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                    Order ID: {notification.orderId}
+                  </Typography>
+                )}
                 <Typography variant="caption" color="text.secondary">
                   {formatTime(notification.time)}
                 </Typography>
