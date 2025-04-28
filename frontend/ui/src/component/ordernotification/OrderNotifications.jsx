@@ -250,15 +250,23 @@ const OrderNotifications = ({ onNewOrder }) => {
               key={notification.id} 
               sx={{ 
                 backgroundColor: notification.read ? 'inherit' : 'rgba(25, 118, 210, 0.08)',
-                borderBottom: '1px solid #f0f0f0'
+                borderBottom: '1px solid #f0f0f0',
+                py: 1
               }}
               onClick={() => handleNotificationClick(notification)}
             >
               <Box sx={{ width: '100%' }}>
-                <Typography variant="body2" noWrap>
+                <Typography 
+                  variant="body2" 
+                  sx={{
+                    whiteSpace: 'normal',
+                    wordBreak: 'break-word',
+                    lineHeight: 1.4
+                  }}
+                >
                   {notification.message}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
                   {formatTime(notification.time)}
                 </Typography>
               </Box>

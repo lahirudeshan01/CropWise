@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
     const notification = new Notification({
       type: 'new-order',
       orderId: savedOrder._id,
-      message: `New order received for ${product.Character} - ${quantity}kg`
+      message: `New order received for ${product.Character} - ${quantity}kg (Order ID: ${savedOrder._id})`
     });
 
     await notification.save();
@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
     try {
       socketIO.emitNewOrder({
         _id: savedOrder._id,
-        message: `New order received for ${product.Character} - ${quantity}kg`
+        message: `New order received for ${product.Character} - ${quantity}kg (Order ID: ${savedOrder._id})`
       });
     } catch (socketError) {
       console.error('Error emitting socket event:', socketError);
