@@ -187,8 +187,7 @@ const UpdateInventoryItem = () => {
             isValid = false;
         }
 
-        if (["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && 
-            (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0)) {
+        if (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0) {
             newErrors.unitPrice = "Unit Price must be a positive number.";
             isValid = false;
         }
@@ -226,7 +225,7 @@ const UpdateInventoryItem = () => {
             availableAmount: parseFloat(formData.availableAmount),
             unit: formData.unit,
             expirationDate: ["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) ? null : formData.expirationDate,
-            unitPrice: formData.unitPrice ? parseFloat(formData.unitPrice) : 0,
+            unitPrice: parseFloat(formData.unitPrice),
             notes: formData.notes
         };
 
@@ -250,7 +249,6 @@ const UpdateInventoryItem = () => {
     const availableUnits = getAvailableUnits();
 
     const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
-    const showUnitPrice = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
 
     return (
         <div className="update-inventory-item-container">
@@ -327,40 +325,34 @@ const UpdateInventoryItem = () => {
                     </>
                 )}
 
-                {showUnitPrice && (
-                    <>
-                        <label className="update-label">Unit Price (RS.)</label>
-                        <div className="unit-price-container">
-                            <button 
-                                type="button" 
-                                className="unit-price-button" 
-                                onClick={() => adjustUnitPrice(-1)}
-                                disabled={!formData.unitPrice || parseFloat(formData.unitPrice) <= 0}
-                            >
-                                -
-                            </button>
-                            <input 
-                                type="text" 
-                                name="unitPrice" 
-                                value={formData.unitPrice} 
-                                onChange={handleUnitPriceChange}
-                                onBlur={handleUnitPriceBlur}
-                                className="update-input unit-price-input"
-                                placeholder="0.00"
-                            />
-                            <button 
-                                type="button" 
-                                className="unit-price-button" 
-                                onClick={() => adjustUnitPrice(1)}
-                            >
-                                +
-                            </button>
-                        </div>
-                        {["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && errors.unitPrice && (
-                            <p className="update-error-message">{errors.unitPrice}</p>
-                        )}
-                    </>
-                )}
+                <label className="update-label">Unit Price (RS.)</label>
+                <div className="unit-price-container">
+                    <button 
+                        type="button" 
+                        className="unit-price-button" 
+                        onClick={() => adjustUnitPrice(-1)}
+                        disabled={!formData.unitPrice || parseFloat(formData.unitPrice) <= 0}
+                    >
+                        -
+                    </button>
+                    <input 
+                        type="text" 
+                        name="unitPrice" 
+                        value={formData.unitPrice} 
+                        onChange={handleUnitPriceChange}
+                        onBlur={handleUnitPriceBlur}
+                        className="update-input unit-price-input"
+                        placeholder="0.00"
+                    />
+                    <button 
+                        type="button" 
+                        className="unit-price-button" 
+                        onClick={() => adjustUnitPrice(1)}
+                    >
+                        +
+                    </button>
+                </div>
+                {errors.unitPrice && <p className="update-error-message">{errors.unitPrice}</p>}
 
                 <label className="update-label">Notes</label>
                 <textarea name="notes" value={formData.notes} onChange={handleChange} className="update-textarea" />
