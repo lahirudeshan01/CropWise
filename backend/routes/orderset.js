@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/ordersnew');
+const Transaction = require('../models/finance');
 
 // Create a new order
 router.post('/', async (req, res) => {
@@ -26,13 +27,26 @@ router.post('/', async (req, res) => {
     });
 
     const savedOrder = await newOrder.save();
+
+    // Create transaction for the order
+    const newTransaction = new Transaction({
+      name: `Sale - Order #${savedOrder._id}`,
+      amount: totalPrice,
+      status: 'Income',
+      reference: 'Sales Income',
+      date: new Date()
+    });
+
+    await newTransaction.save();
+    console.log('Sales transaction created successfully:', newTransaction);
+
     res.status(201).json({ 
       success: true,
       message: "Order added successfully!",
       order: savedOrder 
     });
   } catch (error) {
-    console.error('Error creating order:', error);
+    console.error('Error creating order or transaction:', error);
     res.status(500).json({ 
       success: false,
       message: "Failed to create order", 
