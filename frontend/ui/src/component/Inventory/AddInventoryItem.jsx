@@ -484,7 +484,7 @@ const AddInventoryItem = () => {
 
     const availableUnits = getAvailableUnits();
 
-    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
+    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category);
 
     return (
         <div style={styles.container}>
@@ -583,7 +583,7 @@ const AddInventoryItem = () => {
                             min={getCurrentDate()}
                             style={styles.dateInput}
                         />
-                        {formData.category !== "Other" && errors.expirationDate && (
+                        {errors.expirationDate && (
                             <p style={styles.errorMessage}>{errors.expirationDate}</p>
                         )}
                     </>
