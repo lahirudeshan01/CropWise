@@ -33,17 +33,19 @@ const OrderNotifications = ({ onNewOrder }) => {
         console.log('Fetching notifications...');
         const response = await axios.get('http://localhost:3000/api/notifications');
         console.log('Raw notifications response:', response.data);
-        const fetchedNotifications = response.data.map(notification => {
-          console.log('Processing notification:', notification);
-          return {
-            id: notification._id,
-            orderId: notification.orderId._id,
-            order: notification.orderId,
-            message: notification.message,
-            time: new Date(notification.createdAt),
-            read: notification.seen
-          };
-        });
+        const fetchedNotifications = response.data
+          .filter(notification => notification.orderId) // Only keep notifications with a valid order
+          .map(notification => {
+            console.log('Processing notification:', notification);
+            return {
+              id: notification._id,
+              orderId: notification.orderId ? notification.orderId._id : null,
+              order: notification.orderId || null,
+              message: notification.message,
+              time: new Date(notification.createdAt),
+              read: notification.seen
+            };
+          });
         console.log('Processed notifications:', fetchedNotifications);
         setNotifications(fetchedNotifications);
         setUnreadCount(fetchedNotifications.filter(n => !n.read).length);
