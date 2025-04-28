@@ -8,7 +8,14 @@ router.get('/', async (req, res) => {
   try {
     const notifications = await Notification.find()
       .sort({ createdAt: -1 })
-      .populate('orderId', 'orderNumber total');
+      .populate({
+        path: 'orderId',
+        select: '-__v',
+        populate: {
+          path: 'product',
+          select: 'Character price'
+        }
+      });
     
     res.status(200).json(notifications);
   } catch (error) {
@@ -40,6 +47,16 @@ router.patch('/mark-all-seen', async (req, res) => {
   try {
     await Notification.updateMany({}, { seen: true });
     res.status(200).json({ message: 'All notifications marked as seen' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Delete all notifications
+router.delete('/clear-all', async (req, res) => {
+  try {
+    await Notification.deleteMany({});
+    res.status(200).json({ message: 'All notifications deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

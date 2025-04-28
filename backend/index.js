@@ -6,6 +6,7 @@ const financeRoutes = require('./routes/financeRoutes');
 const router = require("./routes/UserRoute");
 const routess = require("./routes/tasks");
 const orderRoutes = require('./routes/orderset');
+const notificationRoutes = require('./routes/notificationRoutes');
 const db_connection = require("./config/db_connection");
 const socketIO = require('./config/socketio'); // Import the Socket.IO config
 const bodyParser = require("body-parser");
@@ -41,6 +42,7 @@ app.use('/api', financeRoutes);
 app.use("/users", router);
 app.use("/api/tasks", routess);
 app.use("/api/orders", orderRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 const PORT = 3000;
 
