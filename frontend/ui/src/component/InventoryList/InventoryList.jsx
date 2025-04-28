@@ -303,10 +303,10 @@ const InventoryList = () => {
         return null; // No expiration issue
     };
 
-    // Get stock status
-    const getStockStatus = (availableAmount) => {
+    // Get stock status - Modified to exclude Farm Machinery & Tools from low stock alerts
+    const getStockStatus = (availableAmount, category) => {
         if (availableAmount === 0) return "out-of-stock"; // Out of stock
-        if (availableAmount < 3) return "low-stock"; // Low stock
+        if (availableAmount < 3 && category !== "Farm Machinery & Tools") return "low-stock"; // Low stock (except for Farm Machinery)
         return null; // No stock issue
     };
 
@@ -421,7 +421,7 @@ const InventoryList = () => {
                 <tbody>
                     {filteredInventory.map((item) => {
                         const expirationStatus = getExpirationStatus(item.expirationDate);
-                        const stockStatus = getStockStatus(item.availableAmount);
+                        const stockStatus = getStockStatus(item.availableAmount, item.category);
 
                         return (
                             <tr key={item._id} className="hover:bg-gray-100">
