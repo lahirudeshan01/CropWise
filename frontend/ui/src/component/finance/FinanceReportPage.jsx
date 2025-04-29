@@ -249,19 +249,19 @@ const FinanceReportPage = () => {
             </tbody>
           </table>
 
-          {/* Metrics Section */}
-          <div className="metrics">
-            <div className="metric">
-              <h3>Total Income</h3>
-              <p>Rs.{(monthlyReport ? monthlyReport.totalIncome : dailyReport ? dailyReport.totalIncome : report.totalIncome)?.toLocaleString()}</p>
+          {/* Summary Section */}
+          <div className="report-summary">
+            <div className="summary-item income">
+              <h4>Total Income</h4>
+              <p>Rs.{(monthlyReport ? monthlyReport.totalIncome : dailyReport ? dailyReport.totalIncome : transactions.reduce((sum, t) => t.status === "Income" ? sum + t.amount : sum, 0)).toLocaleString()}</p>
             </div>
-            <div className="metric">
-              <h3>Total Outcome</h3>
-              <p>Rs.{(monthlyReport ? monthlyReport.totalOutcome : dailyReport ? dailyReport.totalOutcome : report.totalOutcome)?.toLocaleString()}</p>
+            <div className="summary-item outcome">
+              <h4>Total Outcome</h4>
+              <p>Rs.{(monthlyReport ? monthlyReport.totalOutcome : dailyReport ? dailyReport.totalOutcome : transactions.reduce((sum, t) => t.status === "Outcome" ? sum + t.amount : sum, 0)).toLocaleString()}</p>
             </div>
-            <div className="metric">
-              <h3>Profit</h3>
-              <p>Rs.{(monthlyReport ? monthlyReport.profit : dailyReport ? dailyReport.profit : report.profit)?.toLocaleString()}</p>
+            <div className="summary-item profit">
+              <h4>Net Profit</h4>
+              <p>Rs.{(monthlyReport ? monthlyReport.totalIncome - monthlyReport.totalOutcome : dailyReport ? dailyReport.totalIncome - dailyReport.totalOutcome : transactions.reduce((sum, t) => t.status === "Income" ? sum + t.amount : sum - t.amount, 0)).toLocaleString()}</p>
             </div>
           </div>
         </div>
