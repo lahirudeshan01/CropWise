@@ -131,12 +131,12 @@ router.put("/:id", async (req, res) => {
 
         await item.save();
 
-        // Create transaction for the update if there's a cost difference
-        if (costDifference !== 0) {
+        // Create transaction for the update only if there's a cost increase (quantity increased)
+        if (costDifference > 0) {
             const newTransaction = new Transaction({
                 name: `Update of ${itemName}`,
-                amount: Math.abs(costDifference), // Use absolute value for amount
-                status: costDifference > 0 ? 'Outcome' : 'Income', // If cost increased, it's an expense
+                amount: costDifference,
+                status: 'Outcome',
                 reference: 'Inventory Expense',
                 date: new Date()
             });

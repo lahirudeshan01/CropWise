@@ -118,10 +118,10 @@ const SeeDetails = () => {
             backgroundColor: "white",
             borderRadius: "10px",
             padding: "1.5rem",
-            width: "430px", // Changed from maxWidth to fixed width
+            width: "430px",
             textAlign: "center",
             boxShadow: "0 10px 25px rgba(0, 0, 0, 0.15)",
-            margin: "0 1rem" // Add some margin on small screens
+            margin: "0 1rem"
         },
         confirmText: {
             marginBottom: "1.5rem",
@@ -161,7 +161,7 @@ const SeeDetails = () => {
         backButton: {
             backgroundColor: "#c7c8c9",
             color: "#63514b",
-            padding: "0.25rem 0.5rem", // Reduced from 0.5rem 1rem (now much narrower)
+            padding: "0.25rem 0.5rem",
             borderRadius: "6px",
             border: "1px solidrgb(31, 206, 95)",
             cursor: "pointer",
@@ -169,31 +169,31 @@ const SeeDetails = () => {
             marginBottom: "1rem",
             display: "inline-flex",
             alignItems: "center",
-            justifyContent: "center", // Center content horizontally
+            justifyContent: "center",
             transition: "all 0.2s",
-            fontSize: "0.8rem", // Slightly smaller font
-            height: "28px", // Reduced height
-            minWidth: "auto", // Don't force minimum width
-            width: "auto", // Let content determine width
-          },
+            fontSize: "0.8rem",
+            height: "28px",
+            minWidth: "auto",
+            width: "auto",
+        },
         quickUpdateButton: {
             backgroundColor: "#478cfc",
             color: "white",
             border: "none",
-            borderRadius: "4px", // Changed from 50% to make it square
-            width: "30px", // Reduced from 24px
-            height: "30px", // Reduced from 24px
+            borderRadius: "4px",
+            width: "30px",
+            height: "30px",
             cursor: "pointer",
             marginLeft: "8px",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "10px", // Reduced from 12px
-            padding: "0", // Ensure no extra padding
-            minWidth: "auto", // Don't force minimum width
-            lineHeight: "1", // Better vertical alignment
-            boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)", // Optional: subtle shadow
-            transition: "all 0.2s ease" // Smooth hover effect
+            fontSize: "10px",
+            padding: "0",
+            minWidth: "auto",
+            lineHeight: "1",
+            boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
+            transition: "all 0.2s ease"
         },
         textError: {
             color: "#ef4444",
@@ -212,12 +212,12 @@ const SeeDetails = () => {
         },
         quantityControls: {
             display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "8px",
-        margin: "1rem auto",
-        width: "100%",
-        maxWidth: "280px" // Reduced from 320px
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            margin: "1rem auto",
+            width: "100%",
+            maxWidth: "280px"
         },
         quantityInput: {
             width: "100px",
@@ -235,7 +235,7 @@ const SeeDetails = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#4ade80 !important", // Changed to light green
+            backgroundColor: "#4ade80 !important",
             border: "1px solid #d1d5db !important",
             borderRadius: "6px !important",
             cursor: "pointer !important",
@@ -245,12 +245,12 @@ const SeeDetails = () => {
             flexShrink: 0,
             padding: "0 !important",
             margin: "0 !important",
-            color: "white !important" // Ensure text color is white for contrast
+            color: "white !important"
         },
         quantityButtonDisabled: {
             opacity: "0.5 !important",
             cursor: "not-allowed !important",
-            backgroundColor: "#86efac !important" // Lighter green for disabled state
+            backgroundColor: "#86efac !important"
         },
         mobileStyles: {
             detailsContainer: {
@@ -302,10 +302,8 @@ const SeeDetails = () => {
         let currentValue = parseFloat(quickUpdateAmount) || 0;
         
         if (item.unit === "Units") {
-            // For Units, only allow whole numbers
             currentValue = Math.floor(currentValue) + increment;
         } else {
-            // For Kg and Liters, allow decimals
             const decimalPart = currentValue % 1;
             currentValue = Math.floor(currentValue) + increment + decimalPart;
         }
@@ -348,7 +346,7 @@ const SeeDetails = () => {
                 unit: item.unit
             };
 
-            if (item.category !== "Farm Machinery & Tools" && item.category !== "Packaging Materials") {
+            if (item.category !== "Farm Machinery & Tools" && item.category !== "Packaging Materials" && item.category !== "Others") {
                 updatedItem.expirationDate = item.expirationDate;
             }
 
@@ -367,20 +365,17 @@ const SeeDetails = () => {
         const value = e.target.value;
         
         if (item.unit === "Units") {
-            // Only allow whole numbers for Units
             if (value === '' || /^\d*$/.test(value)) {
                 setQuickUpdateAmount(value);
                 setValidationError("");
             }
         } else {
-            // Allow up to 3 decimal places for Kg and Liters
             if (value === '' || /^\d*\.?\d{0,3}$/.test(value)) {
                 setQuickUpdateAmount(value);
                 setValidationError("");
             }
         }
 
-        // Show error immediately if value is 0
         if (parseFloat(value) === 0) {
             setValidationError("Available amount must be greater than 0.");
         }
@@ -403,7 +398,9 @@ const SeeDetails = () => {
         return { status: "expiresfar", timeLeft: `${monthsLeft} Month${monthsLeft !== 1 ? 's' : ''} and ${remainingDays} Day${remainingDays !== 1 ? 's' : ''}` };
     };
 
-    const getStockStatus = (availableAmount) => {
+    const getStockStatus = (availableAmount, category) => {
+        if (category === "Farm Machinery & Tools") return null;
+        
         if (availableAmount === 0) return "outOfStock";
         if (availableAmount < 3) return "lowStock";
         return null;
@@ -427,13 +424,14 @@ const SeeDetails = () => {
     }
 
     const expirationStatus = getExpirationStatus(item.expirationDate);
-    const stockStatus = getStockStatus(item.availableAmount);
-    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials"].includes(item.category);
+    const stockStatus = getStockStatus(item.availableAmount, item.category);
+    
+    // Categories that should not show expiration date
+    const noExpirationCategories = ["Farm Machinery & Tools", "Packaging Materials", "Others"];
+    const showExpirationDate = !noExpirationCategories.includes(item.category) && item.expirationDate;
 
-    // Check if mobile view based on window width
     const isMobile = window.innerWidth <= 640;
     
-    // Apply mobile styles conditionally
     const containerStyle = isMobile 
         ? {...styles.detailsContainer, ...styles.mobileStyles.detailsContainer} 
         : styles.detailsContainer;

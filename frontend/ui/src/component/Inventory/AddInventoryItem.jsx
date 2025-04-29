@@ -430,8 +430,7 @@ const AddInventoryItem = () => {
             isValid = false;
         }
 
-        if (["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && 
-            (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0)) {
+        if (!formData.unitPrice || isNaN(formData.unitPrice) || parseFloat(formData.unitPrice) <= 0) {
             newErrors.unitPrice = "Unit Price must be a positive number.";
             isValid = false;
         }
@@ -471,7 +470,7 @@ const AddInventoryItem = () => {
             availableAmount: parseFloat(formData.availableAmount),
             unit: formData.unit,
             expirationDate: ["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category) ? null : formData.expirationDate,
-            unitPrice: formData.unitPrice ? parseFloat(formData.unitPrice) : 0,
+            unitPrice: parseFloat(formData.unitPrice),
             notes: formData.notes
         };
 
@@ -485,8 +484,7 @@ const AddInventoryItem = () => {
 
     const availableUnits = getAvailableUnits();
 
-    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
-    const showUnitPrice = !["Farm Machinery & Tools", "Packaging Materials"].includes(formData.category);
+    const showExpirationDate = !["Farm Machinery & Tools", "Packaging Materials", "Other"].includes(formData.category);
 
     return (
         <div style={styles.container}>
@@ -585,57 +583,51 @@ const AddInventoryItem = () => {
                             min={getCurrentDate()}
                             style={styles.dateInput}
                         />
-                        {formData.category !== "Other" && errors.expirationDate && (
+                        {errors.expirationDate && (
                             <p style={styles.errorMessage}>{errors.expirationDate}</p>
                         )}
                     </>
                 )}
 
-                {showUnitPrice && (
-                    <>
-                        <label style={styles.label}>Unit Price (RS.)</label>
-                        <div style={styles.unitPriceContainer}>
-                            <button 
-                                type="button"
-                                style={{
-                                    ...styles.unitPriceButton,
-                                    ...((!formData.unitPrice || parseFloat(formData.unitPrice) <= 0) ? styles.unitPriceButtonDisabled : {}),
-                                    ...(hoverStates.minusPrice ? styles.unitPriceButtonHover : {})
-                                }}
-                                onClick={() => adjustUnitPrice(-1)}
-                                disabled={!formData.unitPrice || parseFloat(formData.unitPrice) <= 0}
-                                onMouseEnter={() => setHoverStates({...hoverStates, minusPrice: true})}
-                                onMouseLeave={() => setHoverStates({...hoverStates, minusPrice: false})}
-                            >
-                                -
-                            </button>
-                            <input 
-                                type="text" 
-                                name="unitPrice" 
-                                value={formData.unitPrice} 
-                                onChange={handleUnitPriceChange}
-                                onBlur={handleUnitPriceBlur}
-                                style={styles.unitPriceInput}
-                                placeholder="0.00"
-                            />
-                            <button 
-                                type="button"
-                                style={{
-                                    ...styles.unitPriceButton,
-                                    ...(hoverStates.plusPrice ? styles.unitPriceButtonHover : {})
-                                }}
-                                onClick={() => adjustUnitPrice(1)}
-                                onMouseEnter={() => setHoverStates({...hoverStates, plusPrice: true})}
-                                onMouseLeave={() => setHoverStates({...hoverStates, plusPrice: false})}
-                            >
-                                +
-                            </button>
-                        </div>
-                        {["Fertilizers", "Pesticides", "Seeds"].includes(formData.category) && errors.unitPrice && (
-                            <p style={styles.errorMessage}>{errors.unitPrice}</p>
-                        )}
-                    </>
-                )}
+                <label style={styles.label}>Unit Price (RS.)</label>
+                <div style={styles.unitPriceContainer}>
+                    <button 
+                        type="button"
+                        style={{
+                            ...styles.unitPriceButton,
+                            ...((!formData.unitPrice || parseFloat(formData.unitPrice) <= 0) ? styles.unitPriceButtonDisabled : {}),
+                            ...(hoverStates.minusPrice ? styles.unitPriceButtonHover : {})
+                        }}
+                        onClick={() => adjustUnitPrice(-1)}
+                        disabled={!formData.unitPrice || parseFloat(formData.unitPrice) <= 0}
+                        onMouseEnter={() => setHoverStates({...hoverStates, minusPrice: true})}
+                        onMouseLeave={() => setHoverStates({...hoverStates, minusPrice: false})}
+                    >
+                        -
+                    </button>
+                    <input 
+                        type="text" 
+                        name="unitPrice" 
+                        value={formData.unitPrice} 
+                        onChange={handleUnitPriceChange}
+                        onBlur={handleUnitPriceBlur}
+                        style={styles.unitPriceInput}
+                        placeholder="0.00"
+                    />
+                    <button 
+                        type="button"
+                        style={{
+                            ...styles.unitPriceButton,
+                            ...(hoverStates.plusPrice ? styles.unitPriceButtonHover : {})
+                        }}
+                        onClick={() => adjustUnitPrice(1)}
+                        onMouseEnter={() => setHoverStates({...hoverStates, plusPrice: true})}
+                        onMouseLeave={() => setHoverStates({...hoverStates, plusPrice: false})}
+                    >
+                        +
+                    </button>
+                </div>
+                {errors.unitPrice && <p style={styles.errorMessage}>{errors.unitPrice}</p>}
 
                 <label style={styles.label}>Notes</label>
                 <textarea 

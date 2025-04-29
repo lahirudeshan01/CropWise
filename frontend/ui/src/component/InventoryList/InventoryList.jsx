@@ -11,7 +11,14 @@ const InventoryList = () => {
     const [selectedCategory, setSelectedCategory] = useState("All Categories");
     const [showReport, setShowReport] = useState(false);
     const [reportContent, setReportContent] = useState("");
+    const [showNotifications, setShowNotifications] = useState(false);
     const navigate = useNavigate();
+
+    // Get read notification IDs from localStorage
+    const [readNotificationIds, setReadNotificationIds] = useState(() => {
+        const storedIds = localStorage.getItem('readNotificationIds');
+        return storedIds ? JSON.parse(storedIds) : [];
+    });
 
     useEffect(() => {
         const fetchInventory = async () => {
@@ -25,6 +32,7 @@ const InventoryList = () => {
 
         fetchInventory();
     }, []);
+
     const generateAiReport = () => {
         const ai_pdf_button = document.getElementById("ai-pdf-button");
         ai_pdf_button.setAttribute("disabled", "true");
@@ -304,15 +312,119 @@ const InventoryList = () => {
     };
 
     // Get stock status
-    const getStockStatus = (availableAmount) => {
+    const getStockStatus = (availableAmount, category) => {
         if (availableAmount === 0) return "out-of-stock"; // Out of stock
-        if (availableAmount < 3) return "low-stock"; // Low stock
+        // Don't show low stock alert for Farm Machinery & Tools
+        if (availableAmount < 3 && category !== "Farm Machinery & Tools") return "low-stock"; // Low stock
         return null; // No stock issue
+    };
+
+    // Compute expiring soon items for notification
+    const expiringSoonItems = inventory.filter(item => {
+        if (!item.expirationDate) return false;
+        const daysLeft = Math.ceil((new Date(item.expirationDate) - new Date()) / (1000 * 60 * 60 * 24));
+        return daysLeft <= 7 && daysLeft >= 0;
+    });
+
+    // Filter out read notifications
+    const unreadExpiringItems = expiringSoonItems.filter(item => 
+        !readNotificationIds.includes(item._id)
+    );
+
+    // Update read notifications when clicking the bell
+    const handleNotificationClick = () => {
+        setShowNotifications((prev) => !prev);
+        if (!showNotifications) {
+            // Mark all current expiring items as read
+            const newReadIds = [...new Set([...readNotificationIds, ...expiringSoonItems.map(item => item._id)])];
+            setReadNotificationIds(newReadIds);
+            localStorage.setItem('readNotificationIds', JSON.stringify(newReadIds));
+        }
     };
 
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Stock Management</h1>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginBottom: '1.5rem'
+            }}>
+              <h1 className="text-2xl font-bold" style={{ margin: 0 }}>Stock Management</h1>
+              {/* Notification Bell Button */}
+              <div
+                style={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  marginLeft: '18px',
+                  cursor: 'pointer'
+                }}
+                onClick={handleNotificationClick}
+                aria-label="Notifications"
+                tabIndex={0}
+              >
+                <span
+                  role="img"
+                  aria-label="bell"
+                  style={{
+                    fontSize: '28px',
+                    color: '#fbbf24',
+                    verticalAlign: 'middle',
+                    lineHeight: 1
+                  }}
+                >
+                  🔔
+                </span>
+                {unreadExpiringItems.length > 0 && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '-8px',
+                    right: '-6px',
+                    background: 'red',
+                    color: 'white',
+                    borderRadius: '50%',
+                    padding: '2px 6px',
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                    minWidth: '20px',
+                    textAlign: 'center',
+                    boxSizing: 'border-box'
+                  }}>
+                    {unreadExpiringItems.length}
+                  </span>
+                )}
+                {showNotifications && (
+                  <div style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '35px',
+                    background: 'white',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                    zIndex: 100,
+                    minWidth: '250px',
+                    borderRadius: '8px',
+                    padding: '10px'
+                  }}>
+                    <h4 style={{margin: '0 0 10px 0'}}>Expiring Soon</h4>
+                    {expiringSoonItems.length === 0 ? (
+                      <div style={{ color: '#888' }}>No items expiring soon.</div>
+                    ) : (
+                      <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
+                        {expiringSoonItems.map(item => (
+                          <li key={item._id} style={{ 
+                            marginBottom: '8px', 
+                            fontSize: '14px',
+                            opacity: readNotificationIds.includes(item._id) ? 0.7 : 1
+                          }}>
+                            <b>{item.itemName}</b> ({item.category})<br />
+                            <span style={{ color: '#e67e22' }}>Exp: {new Date(item.expirationDate).toLocaleDateString('en-CA')}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
             
             {/* Report Modal */}
             {showReport && (
@@ -421,7 +533,7 @@ const InventoryList = () => {
                 <tbody>
                     {filteredInventory.map((item) => {
                         const expirationStatus = getExpirationStatus(item.expirationDate);
-                        const stockStatus = getStockStatus(item.availableAmount);
+                        const stockStatus = getStockStatus(item.availableAmount, item.category);
 
                         return (
                             <tr key={item._id} className="hover:bg-gray-100">
