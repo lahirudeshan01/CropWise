@@ -171,10 +171,15 @@ function EditUserDetails() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('userData');
+    navigate('/');
+  };
+
   return (
     <div className="edit-user-page">
       <div className="edit-user-container">
-        <h2>Edit Farmer Details</h2>
+        <h2>Farmer Details</h2>
         <form className="edit-user-form" onSubmit={handleUpdate}>
           {/* Personal Information */}
           <div className="form-row">
@@ -300,6 +305,14 @@ function EditUserDetails() {
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Updating...' : 'Update'}
+            </button>
+            <button
+              type="button"
+              className="logout-btn"
+              onClick={handleLogout}
+              disabled={isSubmitting}
+            >
+              Logout
             </button>
             <button
               type="button"

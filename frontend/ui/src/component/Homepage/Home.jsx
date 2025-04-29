@@ -7,6 +7,7 @@ function Dashboard01() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [harvestDate, setHarvestDate] = useState('');
+  const [generatedTime, setGeneratedTime] = useState(new Date());
   const [cropDates, setCropDates] = useState({
     landPrep: '',
     planting: '',
@@ -20,6 +21,10 @@ function Dashboard01() {
     ongoing: '',
     upcoming: ''
   });
+
+  useEffect(() => {
+    setGeneratedTime(new Date());
+  }, []);
 
   useEffect(() => {
     const today = new Date();
@@ -121,10 +126,25 @@ function Dashboard01() {
 
   return (
     <div className="dashboard-container">
+      {/* Logo and Title for Print */}
+      {/* Logo and Title for Print */}
+<div className="print-header">
+  <img src="/images/croplogo.jpg" alt="CropWise Logo" className="print-logo" />
+  <h1 className="print-title">CropWise</h1>
+  <div className="print-divider"></div>
+  <p className="generation-time">
+    Generated on: {generatedTime.toLocaleDateString()} at {generatedTime.toLocaleTimeString()}
+  </p>
+  <h2 className="print-report-title">Crop Prediction Report</h2>
+</div>
+
       {/* Header Section */}
       <div className="header">
         <h1>Farm and Crop Management</h1>
-        <button className="edit-button" onClick={handleEditClick}>Edit</button>
+        <div className="header-buttons">
+          <button className="print-button" onClick={() => window.print()}>Generate Report</button>
+          <button className="edit-button" onClick={handleEditClick}>Profile</button>
+        </div>
       </div>
 
       {/* Current State Section */}

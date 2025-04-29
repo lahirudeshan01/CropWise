@@ -163,3 +163,30 @@
       width: 100%;
   }
 }
+
+.logout-btn {
+  padding: 10px 20px;
+  background-color: #4a6fa5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #3a5a8a;
+}
+
+.logout-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}

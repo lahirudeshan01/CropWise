@@ -18,41 +18,54 @@ function Register() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [minDate, setMinDate] = useState('');
-  const [maxDate, setMaxDate] = useState(''); // Added maxDate state
+  const [maxDate, setMaxDate] = useState('');
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
 
   useEffect(() => {
-    // Calculate the date range (3 months ago to 3 months from today)
     const today = new Date();
-    
-    // Calculate min date (3 months ago)
+
     const threeMonthsAgo = new Date();
     threeMonthsAgo.setMonth(today.getMonth() - 3);
-    
-    // Calculate max date (3 months from now)
+
     const threeMonthsLater = new Date();
     threeMonthsLater.setMonth(today.getMonth() + 3);
-    
-    // Format for date input (YYYY-MM-DD)
+
     const formattedMinDate = threeMonthsAgo.toISOString().split('T')[0];
     const formattedMaxDate = threeMonthsLater.toISOString().split('T')[0];
-    
+
     setMinDate(formattedMinDate);
-    setMaxDate(formattedMaxDate); // Set max date
+    setMaxDate(formattedMaxDate);
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    // Additional validation for startDate
+
+    // Validation for only letters in firstName and lastName
+    if (name === "firstName" || name === "lastName") {
+      const onlyLetters = /^[A-Za-z]*$/;
+      if (!onlyLetters.test(value)) {
+        return; // Ignore invalid character
+      }
+    }
+
+    // Validation for area not being 0 or less
+    if (name === "area") {
+      if (value !== '' && Number(value) <= 0) {
+        setErrorMessage("Cultivation Area must be greater than 0");
+      } else {
+        setErrorMessage('');
+      }
+    }
+
+    // Validation for startDate within 3 months
     if (name === 'startDate') {
       const selectedDate = new Date(value);
       const threeMonthsAgo = new Date();
       threeMonthsAgo.setMonth(new Date().getMonth() - 3);
       const threeMonthsLater = new Date();
       threeMonthsLater.setMonth(new Date().getMonth() + 3);
-      
+
       if (selectedDate < threeMonthsAgo) {
         setErrorMessage('Start date cannot be older than 3 months ago');
         return;
@@ -61,9 +74,9 @@ function Register() {
         setErrorMessage('Start date cannot be more than 3 months in the future');
         return;
       }
-      setErrorMessage(''); // Clear error if valid
+      setErrorMessage('');
     }
-    
+
     setInputs(prev => ({ ...prev, [name]: value }));
   };
 
@@ -87,6 +100,12 @@ function Register() {
     e.preventDefault();
     if (!validatePasswords()) return;
 
+    // Final cultivation area validation before submit
+    if (Number(inputs.area) <= 0) {
+      setErrorMessage("Cultivation Area must be greater than 0");
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMessage('');
 
@@ -106,11 +125,11 @@ function Register() {
 
       if (response.data) {
         alert("Registration Successful!");
-        navigate('/log', { 
-          state: { 
+        navigate('/log', {
+          state: {
             registrationSuccess: true,
-            email: inputs.email 
-          } 
+            email: inputs.email
+          }
         });
       }
     } catch (error) {
@@ -132,6 +151,7 @@ function Register() {
       <div className="registration-container">
         <h2>Farmer Registration</h2>
         <form onSubmit={handleSubmit} className="registration-form">
+
           {/* Personal Information */}
           <div className="form-row">
             <div className="input-group">
@@ -213,7 +233,7 @@ function Register() {
                 value={inputs.startDate}
                 onChange={handleChange}
                 min={minDate}
-                max={maxDate} // Added max date restriction
+                max={maxDate}
                 required
               />
               <label htmlFor="startDate">Cultivation Start Date</label>
@@ -281,7 +301,6 @@ function Register() {
             type="submit"
             className="submit-btn4"
             disabled={isSubmitting}
-            
           >
             {isSubmitting ? 'Registering...' : 'Register Now'}
           </button>
