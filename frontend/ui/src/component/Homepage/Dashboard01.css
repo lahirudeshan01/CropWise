@@ -39,6 +39,29 @@ body {
     padding-top: 10px;
 }
 
+.header-buttons {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    right: 20px;
+    top: 0;
+}
+
+.print-button {
+    padding: 8px 16px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.print-button:hover {
+    background-color: #27ae60;
+}
+
 .edit-button {
     padding: 8px 16px;
     background-color: #3498db;
@@ -48,9 +71,6 @@ body {
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s;
-    position: absolute;
-    right: 20px;
-    top: 0;
 }
 
 .edit-button:hover {
@@ -340,4 +360,268 @@ body {
         display: block;
         overflow-x: auto;
     }
+}
+
+/* Print Styles */
+@media print {
+    /* Reset and basic setup for printing */
+    * {
+        background: none !important;
+        color: black !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        filter: none !important;
+        -ms-filter: none !important;
+    }
+
+    body {
+        margin: 0;
+        padding: 2cm;
+        background: white;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 12pt;
+        line-height: 1.3;
+    }
+
+    /* Hide unnecessary elements */
+    .header,
+    button,
+    .close-button,
+    .modal-close,
+    .current-states h2,
+    [role="dialog"],
+    [aria-modal="true"],
+    .planting-text,
+    .current-states,
+    .ai-recommendations,
+    .recommendations-list {
+        display: none !important;
+    }
+
+    /* Main container formatting */
+    .dashboard-container {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        box-shadow: none;
+        border: none;
+    }
+
+    /* Center the current state section */
+    .planting-section {
+        margin: 2cm 0;
+        padding: 0;
+        page-break-inside: avoid;
+        text-align: center;
+    }
+
+    .planting-text {
+        font-size: 16pt;
+        font-weight: bold;
+        margin: 0.5cm auto;
+        padding: 0;
+        border: none;
+        text-align: center;
+        display: block;
+    }
+
+    /* Center the harvest day section */
+    .harvest-day {
+        margin: 0.5cm auto;
+        padding: 0;
+        text-align: center;
+        page-break-inside: avoid;
+        width: 100%;
+    }
+
+    .harvest-day h2 {
+        font-size: 16pt;
+        margin: 0 0 0.2cm 0;
+        text-align: center;
+    }
+
+    .harvest-day span {
+        font-size: 14pt;
+        display: block;
+        text-align: center;
+    }
+
+    /* Crop Tracker table */
+    .crop-tracker {
+        margin: 0.5cm 0;
+        width: 100%;
+        page-break-inside: avoid;
+    }
+
+    .crop-tracker h2 {
+        font-size: 14pt;
+        margin-bottom: 0.5cm;
+    }
+
+    .crop-tracker table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 0.5cm;
+    }
+
+    .crop-tracker th,
+    .crop-tracker td {
+        border: 1px solid black;
+        padding: 0.2cm;
+        text-align: left;
+        font-size: 12pt;
+    }
+
+    .crop-tracker th {
+        background-color: #f0f0f0 !important;
+        font-weight: bold;
+    }
+
+    /* Current Tasks section */
+    .current-tasks {
+        margin: 0.5cm 0;
+        page-break-inside: avoid;
+    }
+
+    .current-tasks h2 {
+        font-size: 14pt;
+        margin-bottom: 0.5cm;
+    }
+
+    .task-list {
+        border: 1px solid black;
+    }
+
+    .task-header,
+    .task-item {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        padding: 0.2cm;
+        border-bottom: 1px solid black;
+    }
+
+    .task-header {
+        font-weight: bold;
+        background-color: #f0f0f0 !important;
+    }
+
+    .task-item span {
+        padding: 0.1cm;
+    }
+
+    /* Harvest Prediction section */
+    .harvest-prediction {
+        margin: 0.5cm 0;
+        page-break-inside: avoid;
+    }
+
+    .harvest-prediction h2 {
+        font-size: 14pt;
+        margin-bottom: 0.5cm;
+    }
+
+    .prediction-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5cm;
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+
+    .prediction-item {
+        border: 1px solid black;
+        padding: 0.2cm;
+    }
+
+    /* Page break control */
+    h2 {
+        page-break-after: avoid;
+    }
+
+    table, figure {
+        page-break-inside: avoid;
+    }
+
+    @media print {
+        /* ... existing print styles ... */
+        
+        .print-header {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-bottom: 1cm;
+          page-break-inside: avoid;
+        }
+      
+        .print-logo {
+          width: 80px;
+          height: auto;
+          margin-bottom: 0.2cm;
+        }
+      
+        .print-title {
+          font-size: 22pt;
+          font-weight: bold;
+          color: #000 !important;
+          margin: 0;
+          margin-bottom: 0.2cm;
+          text-align: center;
+          font-family: "Times New Roman", Times, serif;
+        }
+      
+        .print-divider {
+          width: 80%;
+          height: 1px;
+          background-color: #000 !important;
+          margin: 0.2cm 0;
+        }
+      
+        .print-report-title {
+          font-size: 20pt;
+          font-weight: bold;
+          color: #000 !important;
+          margin: 0.2cm 0 0.3cm;
+          text-align: center;
+          font-family: "Times New Roman", Times, serif;
+          text-transform: uppercase;
+          letter-spacing: 0.5pt;
+        }
+      
+        .generation-time {
+          font-size: 12pt;
+          color: #000 !important;
+          margin: 0.2cm 0;
+          text-align: center;
+          font-family: "Times New Roman", Times, serif;
+        }
+      
+        /* Hide regular header but show print header */
+        .header {
+          display: none !important;
+        }
+      
+        .print-header {
+          display: flex !important;
+        }
+      }
+      
+      /* Hide print header in normal view */
+      .print-header {
+        display: none;
+      }
+    }
+
+/* Hide print header in normal view */
+.print-header {
+    display: none;
+}
+
+/* Hide print elements in normal view */
+.print-divider {
+    display: none;
+}
+
+@page {
+    margin: 2cm;
+    size: A4;
 }
