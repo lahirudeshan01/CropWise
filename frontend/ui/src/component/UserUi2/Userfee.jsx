@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -39,6 +39,15 @@ const Userfee = () => {
     paymentDetails: null,
   });
   
+  // Add state for validation errors
+  const [errors, setErrors] = useState({
+    quantity: "",
+    name: "",
+    address: "",
+    phone: "",
+    email: ""
+  });
+  
   // Add state for notification
   const [notification, setNotification] = useState({
     open: false,
@@ -67,6 +76,19 @@ const Userfee = () => {
     const maxQuantity = orderDetails.product.quantity;
     const validQuantity = Math.min(enteredQuantity, maxQuantity);
 
+    // Validate quantity
+    let quantityError = "";
+    if (validQuantity < 1000) {
+      quantityError = "Minimum order quantity is 1000 kg";
+    } else if (validQuantity > maxQuantity) {
+      quantityError = `Maximum available quantity is ${maxQuantity} kg`;
+    }
+
+    setErrors(prev => ({
+      ...prev,
+      quantity: quantityError
+    }));
+
     setOrderDetails((prev) => ({
       ...prev,
       quantity: validQuantity,
@@ -76,6 +98,46 @@ const Userfee = () => {
 
   const handleDeliveryInfoChange = (e) => {
     const { name, value } = e.target;
+    
+    // Validation for different fields
+    let error = "";
+    
+    if (name === "name") {
+      // Only allow letters and spaces
+      const onlyLettersAndSpaces = /^[A-Za-z\s]*$/;
+      if (!onlyLettersAndSpaces.test(value)) {
+        error = "Name can only contain letters";
+        // Don't update the field if invalid
+        return;
+      }
+    }
+    
+    if (name === "phone") {
+      // Only allow digits
+      const onlyDigits = /^\d*$/;
+      if (!onlyDigits.test(value)) {
+        return; // Ignore non-digit input
+      }
+      
+      if (value.length > 0 && value.length !== 10) {
+        error = "Phone number must be exactly 10 digits";
+      }
+    }
+    
+    if (name === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (value && !emailRegex.test(value)) {
+        error = "Please enter a valid email address";
+      }
+    }
+    
+    // Update error state
+    setErrors(prev => ({
+      ...prev,
+      [name]: error
+    }));
+    
+    // Update form data
     setOrderDetails((prev) => ({
       ...prev,
       deliveryInfo: {
@@ -86,8 +148,23 @@ const Userfee = () => {
   };
 
   const handleNext = () => {
-    if (activeStep === 1 && validateDeliveryInfo()) {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep === 1) {
+      // Validate all fields before proceeding
+      const formErrors = validateAllFields();
+      
+      if (Object.values(formErrors).every(error => error === "")) {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      } else {
+        // Update errors state to display all validation errors
+        setErrors(formErrors);
+        
+        // Show notification for validation errors
+        setNotification({
+          open: true,
+          message: "Please fix the errors in the form before proceeding",
+          severity: "error"
+        });
+      }
     }
   };
 
@@ -99,15 +176,69 @@ const Userfee = () => {
     }
   };
 
+  const validateAllFields = () => {
+    const { name, address, phone, email } = orderDetails.deliveryInfo;
+    const { quantity, product } = orderDetails;
+    
+    const formErrors = {
+      quantity: "",
+      name: "",
+      address: "",
+      phone: "",
+      email: ""
+    };
+    
+    // Validate quantity
+    if (quantity < 1000) {
+      formErrors.quantity = "Minimum order quantity is 1000 kg";
+    } else if (product && quantity > product.quantity) {
+      formErrors.quantity = `Maximum available quantity is ${product.quantity} kg`;
+    }
+    
+    // Validate name
+    if (!name.trim()) {
+      formErrors.name = "Name is required";
+    } else if (!/^[A-Za-z\s]*$/.test(name)) {
+      formErrors.name = "Name can only contain letters";
+    }
+    
+    // Validate address
+    if (!address.trim()) {
+      formErrors.address = "Address is required";
+    }
+    
+    // Validate phone
+    if (!phone.trim()) {
+      formErrors.phone = "Phone number is required";
+    } else if (phone.length !== 10) {
+      formErrors.phone = "Phone number must be exactly 10 digits";
+    }
+    
+    // Validate email
+    if (!email.trim()) {
+      formErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      formErrors.email = "Please enter a valid email address";
+    }
+    
+    return formErrors;
+  };
+
   const validateDeliveryInfo = () => {
     const { name, address, phone, email } = orderDetails.deliveryInfo;
+    const { quantity, product } = orderDetails;
+    
+    // Check if there are any validation errors
     return (
       name.trim() &&
       address.trim() &&
       phone.trim() &&
+      phone.length === 10 &&
       email.trim() &&
-      orderDetails.quantity >= 1000 &&
-      orderDetails.quantity <= orderDetails.product.quantity
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
+      quantity >= 1000 &&
+      product && quantity <= product.quantity &&
+      Object.values(errors).every(error => error === "")
     );
   };
 
@@ -126,10 +257,10 @@ const Userfee = () => {
         quantity: orderDetails.quantity,
         totalPrice: orderDetails.totalPrice,
         deliveryInfo: {
-          name: orderDetails.deliveryInfo.name,
-          address: orderDetails.deliveryInfo.address,
-          phone: orderDetails.deliveryInfo.phone,
-          email: orderDetails.deliveryInfo.email,
+          name: orderDetails.deliveryInfo.name.trim(),
+          address: orderDetails.deliveryInfo.address.trim(),
+          phone: orderDetails.deliveryInfo.phone.trim(),
+          email: orderDetails.deliveryInfo.email.toLowerCase().trim(),
         },
         paymentMethod: paymentInfo.paymentMethod,
         paymentDetails: paymentInfo.paymentDetails,
@@ -202,6 +333,8 @@ const Userfee = () => {
                       onInput={(e) => {
                         e.target.value = e.target.value.replace(/^0+/, "");
                       }}
+                      error={!!errors.quantity}
+                      helperText={errors.quantity}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -220,10 +353,13 @@ const Userfee = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
+                  type="text"
                   label="Full Name"
                   name="name"
                   value={orderDetails.deliveryInfo.name}
                   onChange={handleDeliveryInfoChange}
+                  error={!!errors.name}
+                  helperText={errors.name}
                   required
                 />
               </Grid>
@@ -234,6 +370,8 @@ const Userfee = () => {
                   name="address"
                   value={orderDetails.deliveryInfo.address}
                   onChange={handleDeliveryInfoChange}
+                  error={!!errors.address}
+                  helperText={errors.address}
                   required
                 />
               </Grid>
@@ -242,29 +380,11 @@ const Userfee = () => {
                   fullWidth
                   label="Phone Number"
                   name="phone"
-                  type="number"
+                  type="text"
                   value={orderDetails.deliveryInfo.phone}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, "");
-                    if (value.length <= 10) {
-                      handleDeliveryInfoChange({
-                        target: {
-                          name: e.target.name,
-                          value: value,
-                        },
-                      });
-                    }
-                  }}
-                  error={
-                    orderDetails.deliveryInfo.phone.length > 0 &&
-                    orderDetails.deliveryInfo.phone.length !== 10
-                  }
-                  helperText={
-                    orderDetails.deliveryInfo.phone.length > 0 &&
-                    orderDetails.deliveryInfo.phone.length !== 10
-                      ? "Phone number must be exactly 10 digits"
-                      : ""
-                  }
+                  onChange={handleDeliveryInfoChange}
+                  error={!!errors.phone}
+                  helperText={errors.phone || "Must be exactly 10 digits"}
                   inputProps={{ maxLength: 10 }}
                   required
                 />
@@ -277,6 +397,8 @@ const Userfee = () => {
                   type="email"
                   value={orderDetails.deliveryInfo.email}
                   onChange={handleDeliveryInfoChange}
+                  error={!!errors.email}
+                  helperText={errors.email}
                   required
                 />
               </Grid>
@@ -349,11 +471,7 @@ const Userfee = () => {
               variant="contained"
               color="primary"
               onClick={handleNext}
-              disabled={
-                orderDetails.quantity <= 999 ||
-                orderDetails.quantity > orderDetails.product.quantity ||
-                !validateDeliveryInfo()
-              }
+              disabled={!validateDeliveryInfo()}
             >
               Next
             </Button>
