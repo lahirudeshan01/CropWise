@@ -57,26 +57,28 @@ router.post("/", async (req, res) => {
 
         const item = await newItem.save();
 
-        // Create expense transaction for inventory
-        const parsedUnitPrice = parseFloat(unitPrice) || 0;
-        const parsedAmount = parseFloat(availableAmount) || 0;
-        
-        if (parsedUnitPrice > 0 && parsedAmount > 0) {
-            const totalCost = parsedUnitPrice * parsedAmount;
+        // Create expense transaction for inventory only if not Farm Machinery & Tools
+        if (category !== "Farm Machinery & Tools") {
+            const parsedUnitPrice = parseFloat(unitPrice) || 0;
+            const parsedAmount = parseFloat(availableAmount) || 0;
             
-            const newTransaction = new Transaction({
-                name: `Purchase of ${itemName}`,
-                amount: totalCost,
-                status: 'Outcome',
-                reference: 'Inventory Expense',
-                date: new Date()
-            });
-            
-            try {
-                await newTransaction.save();
-                console.log('Transaction created:', newTransaction);
-            } catch (transactionErr) {
-                console.error('Error creating transaction:', transactionErr);
+            if (parsedUnitPrice > 0 && parsedAmount > 0) {
+                const totalCost = parsedUnitPrice * parsedAmount;
+                
+                const newTransaction = new Transaction({
+                    name: `Purchase of ${itemName}`,
+                    amount: totalCost,
+                    status: 'Outcome',
+                    reference: 'Inventory Expense',
+                    date: new Date()
+                });
+                
+                try {
+                    await newTransaction.save();
+                    console.log('Transaction created:', newTransaction);
+                } catch (transactionErr) {
+                    console.error('Error creating transaction:', transactionErr);
+                }
             }
         }
 

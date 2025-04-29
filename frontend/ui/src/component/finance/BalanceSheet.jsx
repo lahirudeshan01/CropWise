@@ -1,27 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { getTransactions } from "../../api/financeApi";
+import axios from "axios";
 import "./Finance.css";
 
 const BalanceSheet = ({ onBack }) => {
   const [transactions, setTransactions] = useState([]);
+  const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
-    fetchTransactions();
-  }, [date]);
+    fetchData();
+  }, [selectedDate]);
 
-  const fetchTransactions = async () => {
+  const fetchData = async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getTransactions({
-        endDate: date
-      });
-      setTransactions(data);
+      // Fetch transactions
+      const filters = selectedDate ? { endDate: selectedDate } : {};
+      const transactionsData = await getTransactions(filters);
+      setTransactions(transactionsData);
+
+      // Fetch inventory data
+      const inventoryResponse = await axios.get("http://localhost:3000/api/inventory");
+      setInventory(inventoryResponse.data);
     } catch (err) {
-      setError("Failed to fetch transactions");
+      setError("Failed to fetch data");
       console.error(err);
     } finally {
       setLoading(false);
@@ -32,16 +38,28 @@ const BalanceSheet = ({ onBack }) => {
     window.print();
   };
 
+  const handleDateChange = (e) => {
+    setSelectedDate(e.target.value);
+  };
+
+  const clearDate = () => {
+    setSelectedDate("");
+  };
+
   const calculateAssets = () => {
     // Current Assets
     const cashAndBank = transactions
       .filter(t => t.status === 'Income' && t.reference === 'Sales Income')
       .reduce((sum, t) => sum + (t.amount || 0), 0);
 
-    // Calculate inventory value from inventory expenses
-    const inventory = transactions
-      .filter(t => t.reference === 'Inventory Expense' && t.status === 'Outcome')
-      .reduce((sum, t) => sum + (t.amount || 0), 0);
+    // Calculate inventory value from actual inventory data for Farm Machinery & Tools
+    const farmMachineryValue = inventory
+      .filter(item => item.category === "Farm Machinery & Tools")
+      .reduce((sum, item) => {
+        const amount = parseFloat(item.availableAmount) || 0;
+        const unitPrice = parseFloat(item.unitPrice) || 0;
+        return sum + (amount * unitPrice);
+      }, 0);
 
     const accountsReceivable = transactions
       .filter(t => t.reference === 'Accounts Receivable')
@@ -55,15 +73,15 @@ const BalanceSheet = ({ onBack }) => {
     return {
       currentAssets: {
         cashAndBank,
-        inventory,
+        inventory: farmMachineryValue,
         accountsReceivable,
-        total: cashAndBank + inventory + accountsReceivable
+        total: cashAndBank + farmMachineryValue + accountsReceivable
       },
       fixedAssets: {
         equipment,
         total: equipment
       },
-      totalAssets: cashAndBank + inventory + accountsReceivable + equipment
+      totalAssets: cashAndBank + farmMachineryValue + accountsReceivable + equipment
     };
   };
 
@@ -134,7 +152,7 @@ const BalanceSheet = ({ onBack }) => {
         </div>
         <div className="document-title">
           <h2>Balance Sheet</h2>
-          <p className="balance-date">As of: {new Date(date).toLocaleDateString()}</p>
+          <p className="balance-date">As of: {new Date().toLocaleDateString()}</p>
         </div>
       </div>
 
@@ -159,10 +177,15 @@ const BalanceSheet = ({ onBack }) => {
           <input
             type="date"
             id="balance-sheet-date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={selectedDate}
+            onChange={handleDateChange}
             max={new Date().toISOString().split('T')[0]}
           />
+          {selectedDate && (
+            <button className="button clear-date-button" onClick={clearDate}>
+              Clear Date
+            </button>
+          )}
         </div>
       </div>
 
