@@ -70,7 +70,7 @@ body {
 
 .login-btn {
     background: linear-gradient(to right, #01210f, #043417);
-    color: white;
+    color: rgb(239, 235, 235);
     padding: 12px 24px;
     border: none;
     border-radius: 25px;
@@ -93,6 +93,14 @@ body {
 .login-btn:active {
     transform: translateY(0);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.login-btn {
+    background: linear-gradient(to right, #c8d9cf, #97c4aa);
+    color: #011e0d;
+}
+
+.login-btn:hover {
+    background: linear-gradient(to right, #2ecc71, #27ae60);
 }
 
 .hero {
