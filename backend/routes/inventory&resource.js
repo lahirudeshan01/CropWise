@@ -133,28 +133,31 @@ router.put("/:id", async (req, res) => {
 
         await item.save();
 
-        // Create transaction for the update only if there's a cost increase (quantity increased)
-        if (costDifference > 0) {
+        // Create transaction only if:
+        // 1. The category is not "Farm Machinery & Tools"
+        // 2. There is a cost difference
+        // 3. The cost difference is positive (increase in value)
+        if (category !== "Farm Machinery & Tools" && costDifference > 0) {
             const newTransaction = new Transaction({
-                name: `Update of ${itemName}`,
+                name: `Inventory Update: ${itemName}`,
                 amount: costDifference,
                 status: 'Outcome',
                 reference: 'Inventory Expense',
                 date: new Date()
             });
-
+            
             try {
                 await newTransaction.save();
-                console.log('Update transaction created:', newTransaction);
+                console.log('Transaction created:', newTransaction);
             } catch (transactionErr) {
-                console.error('Error creating update transaction:', transactionErr);
+                console.error('Error creating transaction:', transactionErr);
             }
         }
 
         res.json(item);
     } catch (err) {
-        console.error("Error updating item:", err.message);
-        res.status(500).send("Failed to update item. Please try again later.");
+        console.error(err.message);
+        res.status(500).send("Server Error");
     }
 });
 
