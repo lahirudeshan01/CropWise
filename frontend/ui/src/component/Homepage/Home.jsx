@@ -191,9 +191,9 @@ function Dashboard01() {
         <h2>Current Tasks</h2>
         <div className="task-list">
           <div className="task-header">
-            <span>TASK</span>
+            <span>TITLE</span>
             <span>DATE</span>
-            <span>TYPE</span>
+            <span>CATAGORY</span>
             <span>STATUS</span>
           </div>
           <div className="task-item">
@@ -231,17 +231,7 @@ function Dashboard01() {
           </div>
         </div>
         
-        <div className="ai-recommendations">
-          <h3>AI Recommendations</h3>
-          <div className="recommendations-list">
-            <div className="recommendation-item">
-              <span>• Increase irrigation</span>
-            </div>
-            <div className="recommendation-item">
-              <span>• Schedule fertilization</span>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
   );

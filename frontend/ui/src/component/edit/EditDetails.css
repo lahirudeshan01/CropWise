@@ -8,6 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative; /* Added for logout button positioning */
 }
 
 .edit-user-container {
@@ -17,6 +18,7 @@
   padding: 30px;
   width: 100%;
   max-width: 800px;
+  position: relative; /* Added for logout button positioning */
 }
 
 .edit-user-container h2 {
@@ -164,23 +166,29 @@
   }
 }
 
+/* Updated Logout Button Styles */
 .logout-btn {
   padding: 10px 20px;
-  background-color: #4a6fa5;
-  color: white;
-  border: none;
+  background-color: white;
+  color: #e74c3c;
+  border: 2px solid #e74c3c;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
+  position: absolute;
+  top: 30px;
+  right: 30px;
 }
 
 .logout-btn:hover {
-  background-color: #3a5a8a;
+  background-color: #fde8e8;
 }
 
 .logout-btn:disabled {
   background-color: #cccccc;
+  color: #999;
+  border-color: #999;
   cursor: not-allowed;
 }
 
