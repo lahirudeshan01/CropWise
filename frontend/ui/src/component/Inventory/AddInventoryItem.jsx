@@ -297,7 +297,7 @@ const AddInventoryItem = () => {
     });
 
     // Define forbidden symbols
-    const forbiddenSymbols = ['@', '#', '$', '*', '=', '+', '~', '^', '`', '|', '{', '}', '[', ']', '<', '>', '"', "'", ':', ';', '**','!','-','?', '.', '_'];
+    const forbiddenSymbols = ['@', '#', '$', '*', '=', '+', '~', '^', '`', '|', '{', '}', '[', ']', '<', '>', '"', "'", ':', ';', '**','!','-','?', '.', '_',',','.'];
 
     const getCurrentDate = () => {
         return format(new Date(), 'yyyy-MM-dd');
