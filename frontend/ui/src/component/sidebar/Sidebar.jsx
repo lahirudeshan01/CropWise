@@ -7,6 +7,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { motion, AnimatePresence } from "framer-motion";
 import OrderNotifications from '../ordernotification/OrderNotifications';
 import "./sidebar.css";
+import icon from "../../assets/icon.png"
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -130,7 +131,7 @@ const Sidebar = () => {
         <div className="sidebar-header">
           <Link to="/home" className="logo-link">
             <motion.img
-              src="https://p7.hiclipart.com/preview/976/522/355/natural-environment-earth-ecology-clean-environment.jpg"//new link 1
+              src={icon}//new link 1
               alt="CropWise Logo"
               className="sidebar-logo"
               variants={logoVariants}
