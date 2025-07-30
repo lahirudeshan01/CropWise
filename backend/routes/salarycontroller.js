@@ -11,11 +11,11 @@ const extractBaseEmployeeId = (name) => {
 const calculateEPF = (salary) => salary * 0.08;
 const calculateETF = (salary) => salary * 0.03;
 
-// Get all salaries
+// Get all salaries (for current user)
 const getSalaries = async (req, res) => {
   try {
     const { month, year, status } = req.query;
-    const filter = {};
+    const filter = { userId: req.user._id }; // Add user filter
     
     if (month && year) {
       filter.monthYear = `${year}-${String(month).padStart(2, '0')}`;
@@ -40,6 +40,7 @@ const processSalaries = async (req, res) => {
     const monthEnd = new Date(year, month, 0, 23, 59, 59);
 
     const existingPaidSalaries = await Salary.find({ 
+      userId: req.user._id, // Add user filter
       monthYear,
       status: 'Paid'
     });
@@ -47,6 +48,7 @@ const processSalaries = async (req, res) => {
     const salaryPayments = await Transaction.aggregate([
       {
         $match: {
+          userId: req.user._id, // Add user filter
           reference: { $regex: /salary payment/i },
           status: 'Outcome',
           date: { $gte: monthStart, $lte: monthEnd }
@@ -94,6 +96,7 @@ const processSalaries = async (req, res) => {
       const netSalary = basicSalary - epf;
 
       return {
+        userId: req.user._id, // Add user ID
         employeeId: payment._id,
         monthYear,
         basicSalary,
@@ -110,6 +113,7 @@ const processSalaries = async (req, res) => {
     const bulkOps = salaries.map(salary => ({
       updateOne: {
         filter: { 
+          userId: req.user._id, // Add user filter
           employeeId: salary.employeeId,
           monthYear: salary.monthYear
         },
@@ -142,7 +146,7 @@ const markAsPaid = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const salary = await Salary.findById(id);
+    const salary = await Salary.findOne({ _id: id, userId: req.user._id }); // Add user filter
     if (!salary) {
       return res.status(404).json({ 
         message: 'Salary record not found',
@@ -160,8 +164,8 @@ const markAsPaid = async (req, res) => {
       });
     }
 
-    const updatedSalary = await Salary.findByIdAndUpdate(
-      id,
+    const updatedSalary = await Salary.findOneAndUpdate(
+      { _id: id, userId: req.user._id }, // Add user filter
       { 
         status: 'Paid',
         paymentDate: new Date()

@@ -4,6 +4,10 @@ const Order = require('../models/ordersnew');
 const Transaction = require('../models/finance');
 const Notification = require('../models/notificationModel');
 const socketIO = require('../config/socketio');
+const auth = require('../middleware/auth'); // Import auth middleware
+
+// Apply auth middleware to all routes
+router.use(auth);
 
 // Create a new order
 router.post('/', async (req, res) => {
@@ -19,6 +23,7 @@ router.post('/', async (req, res) => {
     } = req.body;
 
     const newOrder = new Order({
+      userId: req.user._id, // Add user ID
       product,
       quantity,
       totalPrice,
@@ -32,6 +37,7 @@ router.post('/', async (req, res) => {
 
     // Create transaction for the order
     const newTransaction = new Transaction({
+      userId: req.user._id, // Add user ID
       name: `Sale - Order #${savedOrder._id}`,
       amount: totalPrice,
       status: 'Income',
@@ -44,6 +50,7 @@ router.post('/', async (req, res) => {
 
     // Create notification for the new order
     const notification = new Notification({
+      userId: req.user._id, // Add user ID
       type: 'new-order',
       orderId: savedOrder._id,
       message: `New order received for ${product.Character} - ${quantity}kg`
@@ -76,20 +83,20 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all orders
+// Get all orders (for current user)
 router.get('/', async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find({ userId: req.user._id });
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
-// Get order by ID
+// Get order by ID (for current user)
 router.get('/:id', async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findOne({ _id: req.params.id, userId: req.user._id });
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }

@@ -3,6 +3,10 @@ const router = express.Router();
 const Task = require("../models/task");
 const Transaction = require("../models/finance");
 const Salary = require("../models/salary");
+const auth = require("../middleware/auth"); // Import auth middleware
+
+// Apply auth middleware to all routes
+router.use(auth);
 
 //test
 router.get("/test",(req,res)=>res.send("Tasks routes working"));
@@ -14,6 +18,7 @@ router.post("/", async (req, res) => {
 
         // Create the task
         const newTask = new Task({
+            userId: req.user._id, // Add user ID
             title,
             category,
             employeeID,
@@ -27,6 +32,7 @@ router.post("/", async (req, res) => {
 
         // Create a transaction for the salary payment with current date and time
         const transaction = new Transaction({
+            userId: req.user._id, // Add user ID
             name: `${employeeID}-${category}`, // Employee ID with task category
             category: 'Salary Payment',
             amount: parseFloat(payment),
@@ -50,11 +56,12 @@ router.post("/", async (req, res) => {
 
         // Update or create salary record
         const salary = await Salary.findOneAndUpdate(
-            { employeeId: employeeID, monthYear: monthYear },
+            { userId: req.user._id, employeeId: employeeID, monthYear: monthYear }, // Add user filter
             {
                 $inc: { basicSalary: basicSalary },
                 $push: { transactionRefs: transaction._id },
                 $setOnInsert: {
+                    userId: req.user._id, // Add user ID
                     epf: epf,
                     etf: etf,
                     netSalary: netSalary,
@@ -82,20 +89,20 @@ router.post("/", async (req, res) => {
     }
 });
 
-// Get all tasks
+// Get all tasks (for current user)
 router.get("/", async (req, res) => {
     try {
-        const tasks = await Task.find().sort({ date: -1 });
+        const tasks = await Task.find({ userId: req.user._id }).sort({ date: -1 });
         res.json(tasks);
     } catch (error) {
         res.status(400).json({ msg: "No tasks found" });
     }
 });
 
-// Get a specific task
+// Get a specific task (for current user)
 router.get("/:id", async (req, res) => {
     try {
-        const task = await Task.findById(req.params.id);
+        const task = await Task.findOne({ _id: req.params.id, userId: req.user._id });
         if (!task) {
             return res.status(404).json({ msg: "Task not found" });
         }
@@ -105,11 +112,11 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Update a task
+// Update a task (for current user)
 router.put("/:id", async (req, res) => {
     try {
-        const task = await Task.findByIdAndUpdate(
-            req.params.id,
+        const task = await Task.findOneAndUpdate(
+            { _id: req.params.id, userId: req.user._id }, // Add user filter
             req.body,
             { new: true }
         );
@@ -122,10 +129,10 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// Delete a task
+// Delete a task (for current user)
 router.delete("/:id", async (req, res) => {
     try {
-        const task = await Task.findByIdAndDelete(req.params.id);
+        const task = await Task.findOneAndDelete({ _id: req.params.id, userId: req.user._id });
         if (!task) {
             return res.status(404).json({ msg: "Task not found" });
         }

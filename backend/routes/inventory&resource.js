@@ -2,16 +2,20 @@ const express = require("express");
 const router = express.Router();
 const Inventory = require("../models/inventory");
 const Transaction = require("../models/finance");
+const auth = require("../middleware/auth"); // Import auth middleware
+
+// Apply auth middleware to all routes
+router.use(auth);
 
 // @route   GET /api/inventory/:id
 // @desc    Get a single inventory item by ID
-// @access  Public
+// @access  Private
 // @route   GET /api/inventory
-// @desc    Get all inventory items
-// @access  Public
+// @desc    Get all inventory items for current user
+// @access  Private
 router.get("/", async (req, res) => {
     try {
-        const inventoryItems = await Inventory.find();
+        const inventoryItems = await Inventory.find({ userId: req.user._id });
         res.json(inventoryItems);
     } catch (err) {
         console.error(err.message);
@@ -20,11 +24,11 @@ router.get("/", async (req, res) => {
 });
 
 // @route   GET /api/inventory/:id
-// @desc    Get a single inventory item by ID
-// @access  Public
+// @desc    Get a single inventory item by ID (for current user)
+// @access  Private
 router.get("/:id", async (req, res) => {
     try {
-        const item = await Inventory.findById(req.params.id);
+        const item = await Inventory.findOne({ _id: req.params.id, userId: req.user._id });
         if (!item) {
             return res.status(404).json({ msg: "Item not found" });
         }
@@ -34,14 +38,16 @@ router.get("/:id", async (req, res) => {
         res.status(500).send("Server Error");
     }
 });
+
 // @route   POST /api/inventory
 // @desc    Add a new inventory item
-// @access  Public
+// @access  Private
 router.post("/", async (req, res) => {
     const { category, itemName, availableAmount, unit, unitPrice, expirationDate, notes } = req.body;
 
     try {
         const newItem = new Inventory({
+            userId: req.user._id, // Add user ID
             category,
             itemName,
             availableAmount,
@@ -66,6 +72,7 @@ router.post("/", async (req, res) => {
                 const totalCost = parsedUnitPrice * parsedAmount;
                 
                 const newTransaction = new Transaction({
+                    userId: req.user._id, // Add user ID
                     name: `Purchase of ${itemName}`,
                     amount: totalCost,
                     status: 'Outcome',
@@ -89,15 +96,14 @@ router.post("/", async (req, res) => {
     }
 });
 
-
 // @route   PUT /api/inventory/:id
-// @desc    Update an inventory item
-// @access  Public
+// @desc    Update an inventory item (for current user)
+// @access  Private
 router.put("/:id", async (req, res) => {
     const { category, itemName, availableAmount, unit, unitPrice, expirationDate, notes } = req.body;
 
     try {
-        let item = await Inventory.findById(req.params.id);
+        let item = await Inventory.findOne({ _id: req.params.id, userId: req.user._id });
 
         if (!item) {
             return res.status(404).json({ msg: "Item not found" });
@@ -139,6 +145,7 @@ router.put("/:id", async (req, res) => {
         // 3. The cost difference is positive (increase in value)
         if (category !== "Farm Machinery & Tools" && costDifference > 0) {
             const newTransaction = new Transaction({
+                userId: req.user._id, // Add user ID
                 name: `Inventory Update: ${itemName}`,
                 amount: costDifference,
                 status: 'Outcome',
@@ -162,14 +169,11 @@ router.put("/:id", async (req, res) => {
 });
 
 // @route   DELETE /api/inventory/:id
-// @desc    Delete an inventory item
-// @access  Public
-// @route   DELETE /api/inventory/:id
-// @desc    Delete an inventory item
-// @access  Public
+// @desc    Delete an inventory item (for current user)
+// @access  Private
 router.delete("/:id", async (req, res) => {
     try {
-        const item = await Inventory.findById(req.params.id);
+        const item = await Inventory.findOne({ _id: req.params.id, userId: req.user._id });
 
         if (!item) {
             return res.status(404).json({ msg: "Item not found" });
@@ -182,4 +186,5 @@ router.delete("/:id", async (req, res) => {
         res.status(500).send("Server Error");
     }
 });
+
 module.exports = router;

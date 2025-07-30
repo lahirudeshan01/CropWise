@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import logo from "../../assets/logo.png";
 // import "../App.css";
 import "./all.css"
 
@@ -13,8 +14,8 @@ const Header = () => {
       className="navbar"
     >
       <div className="logo">
-        <img src="https://p7.hiclipart.com/preview/976/522/355/natural-environment-earth-ecology-clean-environment.jpg" alt="CropWise Logo" className="logo-image" />
-        <span className="logo-text">CropWise</span>
+        <img src={logo} alt="CropWise Logo" className="logo-image" />
+        {/* <span className="logo-text">CropWise</span> */}
       </div>
       <ul>
         <li>

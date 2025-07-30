@@ -1,6 +1,6 @@
-import axios from 'axios';
+import api from './apiUtils';
 
-const API_URL = 'http://localhost:3000/api'; // Replace with your backend URL
+const API_URL = '/api'; // Use relative URL since baseURL is set in apiUtils
 
 // Get transactions with optional filters
 export const getTransactions = async (filters = {}) => {
@@ -16,7 +16,7 @@ export const getTransactions = async (filters = {}) => {
   
   console.log("Clean filters:", cleanFilters);
   
-  const response = await axios.get(`${API_URL}/transactions`, {
+  const response = await api.get(`${API_URL}/transactions`, {
     params: cleanFilters,
   });
   return response.data;
@@ -24,19 +24,19 @@ export const getTransactions = async (filters = {}) => {
 
 // Add a new transaction
 export const addTransaction = async (transactionData) => {
-  const response = await axios.post(`${API_URL}/transactions`, transactionData);
+  const response = await api.post(`${API_URL}/transactions`, transactionData);
   return response.data;
 };
 
 // Generate financial report
 export const generateReport = async () => {
-  const response = await axios.get(`${API_URL}/report`);
+  const response = await api.get(`${API_URL}/report`);
   return response.data;
 };
 
 // Generate monthly financial report
 export const generateMonthlyReport = async (month, year) => {
-  const response = await axios.get(`${API_URL}/monthly-report`, {
+  const response = await api.get(`${API_URL}/monthly-report`, {
     params: { month, year },
   });
   return response.data;
@@ -44,7 +44,7 @@ export const generateMonthlyReport = async (month, year) => {
 
 // Generate daily financial report
 export const generateDailyReport = async (date) => {
-  const response = await axios.get(`${API_URL}/daily-report`, {
+  const response = await api.get(`${API_URL}/daily-report`, {
     params: { date },
   });
   return response.data;
@@ -52,19 +52,19 @@ export const generateDailyReport = async (date) => {
 
 // Update a transaction
 export const updateTransaction = async (transaction) => {
-  const response = await axios.put(`${API_URL}/transactions/${transaction._id}`, transaction);
+  const response = await api.put(`${API_URL}/transactions/${transaction._id}`, transaction);
   return response.data;
 };
 
 // Delete a transaction
 export const deleteTransaction = async (id) => {
-  const response = await axios.delete(`${API_URL}/transactions/${id}`);
+  const response = await api.delete(`${API_URL}/transactions/${id}`);
   return response.data;
 };
-// Add to existing exports
 
+// Add to existing exports
 export const processSalaries = async (month, year) => {
-  const response = await axios.post(`${API_URL}/salaries/process`, { month, year });
+  const response = await api.post(`${API_URL}/salaries/process`, { month, year });
   return response.data;
 };
 
@@ -78,7 +78,7 @@ export const getSalaries = async (filters = {}) => {
     processedFilters.year = parseInt(processedFilters.year);
   }
   
-  const response = await axios.get(`${API_URL}/salaries`, { 
+  const response = await api.get(`${API_URL}/salaries`, { 
     params: processedFilters 
   });
   return response.data;
@@ -86,7 +86,7 @@ export const getSalaries = async (filters = {}) => {
 
 export const markSalaryAsPaid = async (id) => {
   try {
-    const response = await axios.put(`${API_URL}/salaries/${id}/paid`);
+    const response = await api.put(`${API_URL}/salaries/${id}/paid`);
     return response;
   } catch (error) {
     if (error.response) {

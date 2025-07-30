@@ -1,9 +1,12 @@
 const express = require('express');
 const financeController = require('./financecontroller');
 const salaryController = require('./salarycontroller');
+const auth = require('../middleware/auth'); // Import auth middleware
 
 const router = express.Router();
 
+// Apply auth middleware to all routes
+router.use(auth);
 
 //Add transactions
 router.post('/transactions', financeController.addTransaction);
@@ -32,6 +35,5 @@ router.post('/transactions', financeController.logUniversalTransaction);
 router.post('/salaries/process', salaryController.processSalaries);
 router.get('/salaries', salaryController.getSalaries);
 router.put('/salaries/:id/paid', salaryController.markAsPaid);
-
 
 module.exports = router;

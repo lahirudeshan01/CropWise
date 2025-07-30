@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { addInventoryItem } from "../../api/inventoryApi";
 import { useNavigate } from "react-router-dom";
 import { format } from 'date-fns';
 
@@ -475,7 +475,7 @@ const AddInventoryItem = () => {
         };
 
         try {
-            await axios.post("http://localhost:3000/api/inventory", newItem);
+            await addInventoryItem(newItem);
             navigate("/inventryshow");
         } catch (err) {
             console.error("Error adding item:", err);

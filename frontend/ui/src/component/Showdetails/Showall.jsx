@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { getFarmers } from "../../api/farmersApi";
 import FarmerList from "./FarmerList";
-
-
 
 const Showall = () => {
   const [farmers, setFarmers] = useState([]);
@@ -11,10 +9,9 @@ const Showall = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get("http://localhost:3000/api/farmers")
-      .then((res) => {
-        setFarmers(res.data);
+    getFarmers()
+      .then((data) => {
+        setFarmers(data);
         setLoading(false);
       })
       .catch((err) => {

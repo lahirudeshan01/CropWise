@@ -2,14 +2,17 @@ const express = require("express");
 const router = express.Router();
 const Farmers = require("../models/farmers");
 const upload = require("../middleware/upload"); // Import multer middleware
+const auth = require("../middleware/auth"); // Import auth middleware
 const fs = require('fs');
 const path = require('path');
 
+// Apply auth middleware to all routes
+router.use(auth);
 
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     // Find the existing farmer to handle potential image replacement
-    const existingFarmer = await Farmers.findById(req.params.id);
+    const existingFarmer = await Farmers.findOne({ _id: req.params.id, userId: req.user._id });
     
     if (!existingFarmer) {
       return res.status(404).json({ msg: "Farmer not found" });
@@ -63,7 +66,6 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-
 // Test route
 router.get("/test", (req, res) => res.send("routes working..."));
 
@@ -74,6 +76,7 @@ router.post("/", upload.single("image"), async (req, res) => {
     
     // Construct farmer data
     const newFarmer = new Farmers({
+      userId: req.user._id, // Add user ID
       farmerId,
       Character,
       verity,
@@ -92,20 +95,20 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// GET method - Fetch all farmers
+// GET method - Fetch all farmers for the current user
 router.get("/", async (req, res) => {
   try {
-    const farmers = await Farmers.find();
+    const farmers = await Farmers.find({ userId: req.user._id });
     res.json(farmers);
   } catch (error) {
     res.status(404).json({ msg: "No Farmers found" });
   }
 });
 
-// GET by ID - Fetch a single farmer by ID
+// GET by ID - Fetch a single farmer by ID (for current user)
 router.get("/:id", async (req, res) => {
   try {
-    const farmer = await Farmers.findById(req.params.id);
+    const farmer = await Farmers.findOne({ _id: req.params.id, userId: req.user._id });
     if (!farmer) {
       return res.status(404).json({ msg: "Farmer not found" });
     }
@@ -115,20 +118,27 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// UPDATE by ID - Update a farmer
+// UPDATE by ID - Update a farmer (for current user)
 router.put("/:id", async (req, res) => {
   try {
-    await Farmers.findByIdAndUpdate(req.params.id, req.body);
-    res.json({ msg: "Update successful" });
+    const updatedFarmer = await Farmers.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user._id }, 
+      req.body,
+      { new: true }
+    );
+    if (!updatedFarmer) {
+      return res.status(404).json({ msg: "Farmer not found" });
+    }
+    res.json({ msg: "Update successful", data: updatedFarmer });
   } catch (error) {
     res.status(400).json({ msg: "Update failed" });
   }
 });
 
-// DELETE by ID - Remove a farmer
+// DELETE by ID - Remove a farmer (for current user)
 router.delete("/:id", async (req, res) => {
   try {
-    const farmer = await Farmers.findByIdAndDelete(req.params.id);
+    const farmer = await Farmers.findOneAndDelete({ _id: req.params.id, userId: req.user._id });
     if (!farmer) {
       return res.status(404).json({ msg: "Farmer not found" });
     }

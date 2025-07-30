@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { getFarmerById, deleteFarmer } from "../../api/farmersApi";
 import "./viewdetail.css";
 
 
@@ -13,10 +13,9 @@ function Detailsview() {
 
   useEffect(() => {
     if (id) {
-      axios
-        .get(`http://localhost:3000/api/farmers/${id}`)
-        .then((res) => {
-          setFarmer(res.data);
+      getFarmerById(id)
+        .then((data) => {
+          setFarmer(data);
           setLoading(false);
         })
         .catch(() => {
@@ -31,8 +30,7 @@ function Detailsview() {
 
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to delete this farmer?")) {
-      axios
-        .delete(`http://localhost:3000/api/farmers/${id}`)
+      deleteFarmer(id)
         .then(() => {
           navigate("/showall");
         })

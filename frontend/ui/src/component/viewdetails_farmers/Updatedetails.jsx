@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { getFarmerById, updateFarmer } from "../../api/farmersApi";
 import { useParams, useNavigate } from "react-router-dom";
 import './updatedetails.css';
 
@@ -28,24 +28,23 @@ function Updatedetails() {
     console.log("Fetching farmer with ID:", id);
     setLoading(true);
     
-    axios
-      .get(`http://localhost:3000/api/farmers/${id}`)
-      .then((res) => {
-        console.log("Farmer data received:", res.data);
+    getFarmerById(id)
+      .then((data) => {
+        console.log("Farmer data received:", data);
         setFarmer({
-          farmerId: res.data.farmerId || "",
-          Character: res.data.Character || "",
-          verity: res.data.verity || "",
-          quantity: res.data.quantity || "",
-          price: res.data.price || "",
-          address: res.data.address || "",
-          location: res.data.location || "",
-          image: res.data.image || null
+          farmerId: data.farmerId || "",
+          Character: data.Character || "",
+          verity: data.verity || "",
+          quantity: data.quantity || "",
+          price: data.price || "",
+          address: data.address || "",
+          location: data.location || "",
+          image: data.image || null
         });
         
         // Set image preview if image exists
-        if (res.data.image) {
-          setImagePreview(`http://localhost:3000/uploads/${res.data.image}`);
+        if (data.image) {
+          setImagePreview(`http://localhost:3000/uploads/${data.image}`);
         }
         
         setLoading(false);
@@ -123,12 +122,7 @@ function Updatedetails() {
       formData.append('image', selectedFile);
     }
     
-    axios
-      .put(`http://localhost:3000/api/farmers/${id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
+    updateFarmer(id, formData)
       .then((res) => {
         console.log("Update response:", res.data);
         // Navigate to the farmer details page after successful update

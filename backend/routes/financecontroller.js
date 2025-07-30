@@ -1,12 +1,12 @@
 const Transaction = require('../models/finance');
 
-// Get transactions with filters
+// Get transactions with filters (for current user)
 const getTransactions = async (req, res) => {
   try {
     const { startDate, endDate, type, reference, minAmount, maxAmount } = req.query;
    
     // Build the filter object
-    const filter = {};
+    const filter = { userId: req.user._id }; // Add user filter
     if (startDate && endDate) {
       filter.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
     } else if (startDate) {
@@ -37,11 +37,12 @@ const getTransactions = async (req, res) => {
   }
 };
 
-// Add a new transaction
+// Add a new transaction (for current user)
 const addTransaction = async (req, res) => {
   try {
     const { name, amount, reference, status, date } = req.body;
     const newTransaction = new Transaction({
+      userId: req.user._id, // Add user ID
       name,
       amount,
       reference,
@@ -55,10 +56,10 @@ const addTransaction = async (req, res) => {
   }
 };
 
-// Generate financial report
+// Generate financial report (for current user)
 const generateReport = async (req, res) => {
   try {
-    const transactions = await Transaction.find();
+    const transactions = await Transaction.find({ userId: req.user._id });
     const totalIncome = transactions
       .filter((t) => t.status === 'Income')
       .reduce((sum, t) => sum + t.amount, 0);
@@ -73,7 +74,7 @@ const generateReport = async (req, res) => {
   }
 };
 
-// Generate monthly financial report
+// Generate monthly financial report (for current user)
 const generateMonthlyReport = async (req, res) => {
   try {
     const { month, year } = req.query;
@@ -86,6 +87,7 @@ const generateMonthlyReport = async (req, res) => {
     const endDate = new Date(year, month, 0, 23, 59, 59);
 
     const transactions = await Transaction.find({
+      userId: req.user._id, // Add user filter
       date: { $gte: startDate, $lte: endDate },
     });
 
@@ -103,7 +105,7 @@ const generateMonthlyReport = async (req, res) => {
   }
 };
 
-// Generate daily financial report
+// Generate daily financial report (for current user)
 const generateDailyReport = async (req, res) => {
   try {
     const { date } = req.query;
@@ -117,6 +119,7 @@ const generateDailyReport = async (req, res) => {
     endDate.setHours(23, 59, 59, 999);
 
     const transactions = await Transaction.find({
+      userId: req.user._id, // Add user filter
       date: { $gte: selectedDate, $lte: endDate },
     });
 
@@ -134,8 +137,8 @@ const generateDailyReport = async (req, res) => {
   }
 };
 
-// Universal transaction logger
-const logUniversalTransaction = async ({ name, amount, reference }) => {
+// Universal transaction logger (for current user)
+const logUniversalTransaction = async (req, { name, amount, reference }) => {
   try {
     if (!name || amount === undefined || !reference) {
       throw new Error('name, amount, and reference are required');
@@ -144,6 +147,7 @@ const logUniversalTransaction = async ({ name, amount, reference }) => {
     const status = reference.toLowerCase().includes('sale') ? 'Income' : 'Outcome';
 
     const newTransaction = new Transaction({
+      userId: req.user._id, // Add user ID
       name,
       amount: Math.abs(amount),
       status,
@@ -159,14 +163,14 @@ const logUniversalTransaction = async ({ name, amount, reference }) => {
   }
 };
 
-// Update a transaction
+// Update a transaction (for current user)
 const updateTransaction = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, amount, reference, status, date } = req.body;
 
-    const updatedTransaction = await Transaction.findByIdAndUpdate(
-      id,
+    const updatedTransaction = await Transaction.findOneAndUpdate(
+      { _id: id, userId: req.user._id }, // Add user filter
       { name, amount, reference, status, date },
       { new: true }
     );
@@ -181,12 +185,12 @@ const updateTransaction = async (req, res) => {
   }
 };
 
-// Delete a transaction
+// Delete a transaction (for current user)
 const deleteTransaction = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedTransaction = await Transaction.findByIdAndDelete(id);
+    const deletedTransaction = await Transaction.findOneAndDelete({ _id: id, userId: req.user._id });
 
     if (!deletedTransaction) {
       return res.status(404).json({ message: "Transaction not found" });

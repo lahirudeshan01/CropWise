@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./addharvest.css";
+import { addFarmer } from "../../api/farmersApi";
 
 const AddHarvest = () => {
   const navigate = useNavigate();
@@ -283,9 +284,7 @@ const AddHarvest = () => {
     }
 
     try {
-      await axios.post("http://localhost:3000/api/farmers", formDataWithImage, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await addFarmer(formDataWithImage);
 
       // Show success message with animation
       const successNotification = document.createElement('div');

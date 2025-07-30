@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { getInventory } from "../../api/inventoryApi";
 import { useNavigate } from "react-router-dom";
 import './InventoryList.css';
 import GenerateInventoryReport from "../InventoryReport/GenerateInventoryReport";
@@ -23,8 +23,8 @@ const InventoryList = () => {
     useEffect(() => {
         const fetchInventory = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/inventory");
-                setInventory(response.data);
+                const data = await getInventory();
+                setInventory(data);
             } catch (err) {
                 console.error("Error fetching inventory:", err);
             }

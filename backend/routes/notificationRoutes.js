@@ -2,11 +2,15 @@
 const express = require('express');
 const router = express.Router();
 const Notification = require('../models/notificationModel');
+const auth = require('../middleware/auth'); // Import auth middleware
 
-// Get all notifications
+// Apply auth middleware to all routes
+router.use(auth);
+
+// Get all notifications (for current user)
 router.get('/', async (req, res) => {
   try {
-    const notifications = await Notification.find()
+    const notifications = await Notification.find({ userId: req.user._id })
       .sort({ createdAt: -1 })
       .populate({
         path: 'orderId',
@@ -23,11 +27,11 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Mark notification as seen
+// Mark notification as seen (for current user)
 router.patch('/:id/seen', async (req, res) => {
   try {
-    const notification = await Notification.findByIdAndUpdate(
-      req.params.id,
+    const notification = await Notification.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user._id }, // Add user filter
       { seen: true },
       { new: true }
     );
@@ -42,30 +46,30 @@ router.patch('/:id/seen', async (req, res) => {
   }
 });
 
-// Mark all notifications as seen
+// Mark all notifications as seen (for current user)
 router.patch('/mark-all-seen', async (req, res) => {
   try {
-    await Notification.updateMany({}, { seen: true });
+    await Notification.updateMany({ userId: req.user._id }, { seen: true }); // Add user filter
     res.status(200).json({ message: 'All notifications marked as seen' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Delete all notifications
+// Delete all notifications (for current user)
 router.delete('/clear-all', async (req, res) => {
   try {
-    await Notification.deleteMany({});
+    await Notification.deleteMany({ userId: req.user._id }); // Add user filter
     res.status(200).json({ message: 'All notifications deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Delete notification
+// Delete notification (for current user)
 router.delete('/:id', async (req, res) => {
   try {
-    const deletedNotification = await Notification.findByIdAndDelete(req.params.id);
+    const deletedNotification = await Notification.findOneAndDelete({ _id: req.params.id, userId: req.user._id }); // Add user filter
     
     if (!deletedNotification) {
       return res.status(404).json({ message: 'Notification not found' });
