@@ -21,11 +21,11 @@ export const SidebarDate = [
                 icon: <ViewHeadlineRoundedIcon />,
                 link: "/dashboard"
             },
-            {
-                title: "Moisture Level",
-                icon: <AutoFixHighIcon />,
-                externalLink: "https://app.arduino.cc/dashboards/48ef7fd6-1a94-4b52-8adf-8b74496dbe81"
-            },
+            // {
+            //     //title: "Moisture Level",
+            //     //icon: <AutoFixHighIcon />,
+            //    // externalLink: "https://app.arduino.cc/dashboards/48ef7fd6-1a94-4b52-8adf-8b74496dbe81"
+            // },
         ]
     },
     {

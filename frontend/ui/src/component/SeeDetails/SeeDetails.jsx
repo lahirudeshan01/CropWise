@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from '../../api/apiUtils';
 import { useNavigate, useParams } from "react-router-dom";
 
 const SeeDetails = () => {
@@ -275,7 +276,7 @@ const SeeDetails = () => {
     useEffect(() => {
         const fetchItem = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/inventory/${id}`);
+                const response = await api.get(`/api/inventory/${id}`);
                 setItem(response.data);
                 setLoading(false);
             } catch (err) {
@@ -290,7 +291,7 @@ const SeeDetails = () => {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`http://localhost:3000/api/inventory/${id}`);
+            await api.delete(`/api/inventory/${id}`);
             navigate("/inventryshow");
         } catch (err) {
             console.error("Error deleting item:", err);
@@ -350,7 +351,7 @@ const SeeDetails = () => {
                 updatedItem.expirationDate = item.expirationDate;
             }
 
-            await axios.put(`http://localhost:3000/api/inventory/${id}`, updatedItem);
+            await api.put(`/api/inventory/${id}`, updatedItem);
             setItem(updatedItem);
             setShowQuickUpdateModal(false);
             setQuickUpdateAmount("");
@@ -501,7 +502,7 @@ const SeeDetails = () => {
                 </div>
             </div>
             <div style={styles.actionButtons}>
-                <button style={styles.updateButton} onClick={() => navigate(`/edit-item/${id}`)}>
+                <button style={styles.updateButton} onClick={() => { console.log("Navigating to update with id:", id); navigate(`/edit-item/${id}`); }}>
                     Update
                 </button>
                 <button style={styles.deleteButton} onClick={() => setShowDeleteConfirmation(true)}>
