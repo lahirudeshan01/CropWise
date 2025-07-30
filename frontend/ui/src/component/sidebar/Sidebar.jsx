@@ -130,7 +130,7 @@ const Sidebar = () => {
         <div className="sidebar-header">
           <Link to="/home" className="logo-link">
             <motion.img
-              src="https://p7.hiclipart.com/preview/976/522/355/natural-environment-earth-ecology-clean-environment.jpg"
+              src="https://p7.hiclipart.com/preview/976/522/355/natural-environment-earth-ecology-clean-environment.jpg"//new link 1
               alt="CropWise Logo"
               className="sidebar-logo"
               variants={logoVariants}
