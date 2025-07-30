@@ -16,6 +16,16 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Authenticated: Get only the current user's listings (for farmer dashboard)
+router.get("/my", auth, async (req, res) => {
+  try {
+    const myListings = await Farmers.find({ userId: req.user._id });
+    res.json(myListings);
+  } catch (error) {
+    res.status(404).json({ msg: "No listings found for this user" });
+  }
+});
+
 // Protect all routes below this line
 router.use(auth);
 
