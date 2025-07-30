@@ -6,7 +6,17 @@ const auth = require("../middleware/auth"); // Import auth middleware
 const fs = require('fs');
 const path = require('path');
 
-// Apply auth middleware to all routes
+// Public: Get all farmers' harvest listings (for buyers)
+router.get("/", async (req, res) => {
+  try {
+    const farmers = await Farmers.find({});
+    res.json(farmers);
+  } catch (error) {
+    res.status(404).json({ msg: "No Farmers found" });
+  }
+});
+
+// Protect all routes below this line
 router.use(auth);
 
 router.put("/:id", upload.single("image"), async (req, res) => {
@@ -34,7 +44,6 @@ router.put("/:id", upload.single("image"), async (req, res) => {
       // If there was a previous image, delete it
       if (existingFarmer.image) {
         const oldImagePath = path.join(__dirname, '../uploads', existingFarmer.image);
-        
         // Check if file exists before trying to delete
         try {
           if (fs.existsSync(oldImagePath)) {
@@ -44,7 +53,6 @@ router.put("/:id", upload.single("image"), async (req, res) => {
           console.error("Error deleting old image:", err);
         }
       }
-      
       // Add new image filename to update data
       updateData.image = req.file.filename;
     }
@@ -73,7 +81,6 @@ router.get("/test", (req, res) => res.send("routes working..."));
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { farmerId, Character, verity, quantity, price, address, location } = req.body;
-    
     // Construct farmer data
     const newFarmer = new Farmers({
       userId: req.user._id, // Add user ID
@@ -86,22 +93,11 @@ router.post("/", upload.single("image"), async (req, res) => {
       location,
       image: req.file ? req.file.filename : null, // Save image filename if uploaded
     });
-
     await newFarmer.save();
     res.json({ msg: "Harvest added successfully", data: newFarmer });
   } catch (error) {
     console.error("Error adding harvest:", error);
     res.status(400).json({ msg: "Harvest add failed" });
-  }
-});
-
-// GET method - Fetch all farmers for the current user
-router.get("/", async (req, res) => {
-  try {
-    const farmers = await Farmers.find({ userId: req.user._id });
-    res.json(farmers);
-  } catch (error) {
-    res.status(404).json({ msg: "No Farmers found" });
   }
 });
 
