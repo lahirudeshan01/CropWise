@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from '../../api/apiUtils';
 import { useNavigate, useParams } from "react-router-dom";
 import { format } from 'date-fns';
 import "./UpdateInventoryItem.css";
@@ -29,7 +30,7 @@ const UpdateInventoryItem = () => {
     useEffect(() => {
         const fetchItem = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/inventory/${id}`);
+                const response = await api.get(`/api/inventory/${id}`);
                 const item = response.data;
                 setFormData({
                     category: item.category,
@@ -230,7 +231,7 @@ const UpdateInventoryItem = () => {
         };
 
         try {
-            await axios.put(`http://localhost:3000/api/inventory/${id}`, updatedItem);
+            await api.put(`/api/inventory/${id}`, updatedItem);
             navigate("/inventryshow");
         } catch (err) {
             console.error("Error updating item:", err);
