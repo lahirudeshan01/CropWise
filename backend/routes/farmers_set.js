@@ -9,20 +9,20 @@ const path = require('path');
 // Public: Get all farmers' harvest listings (for buyers)
 router.get("/", async (req, res) => {
   try {
-    const farmers = await Farmers.find({});
+    const farmers = await Farmers.find({}).populate('userId', 'firstName lastName farmName');
     res.json(farmers);
   } catch (error) {
     res.status(404).json({ msg: "No Farmers found" });
   }
 });
 
-// Authenticated: Get only the current user's listings (for farmer dashboard)
-router.get("/my", auth, async (req, res) => {
+// This gets ONLY the listings for the logged-in farmer
+router.get("/my-listings", auth, async (req, res) => {
   try {
-    const myListings = await Farmers.find({ userId: req.user._id });
-    res.json(myListings);
+    const farmers = await Farmers.find({ userId: req.user._id });
+    res.json(farmers);
   } catch (error) {
-    res.status(404).json({ msg: "No listings found for this user" });
+    res.status(404).json({ msg: "No Farmers found" });
   }
 });
 
@@ -43,7 +43,7 @@ router.put("/:id", upload.single("image"), async (req, res) => {
       farmerId: req.body.farmerId,
       Character: req.body.Character,
       verity: req.body.verity,
-      quantity: req.body.quantity,
+      quantity: parseFloat(req.body.quantity) || existingFarmer.quantity, // Convert to number
       price: req.body.price,
       address: req.body.address,
       location: req.body.location
@@ -91,13 +91,17 @@ router.get("/test", (req, res) => res.send("routes working..."));
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { farmerId, Character, verity, quantity, price, address, location } = req.body;
+    
+    // Convert quantity to number
+    const numericQuantity = parseFloat(quantity) || 0;
+    
     // Construct farmer data
     const newFarmer = new Farmers({
       userId: req.user._id, // Add user ID
       farmerId,
       Character,
       verity,
-      quantity,
+      quantity: numericQuantity, // Save as number
       price,
       address,
       location,

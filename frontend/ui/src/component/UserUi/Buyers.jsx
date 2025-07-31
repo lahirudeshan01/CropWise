@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { getAllFarmers } from "../../api/farmersApi";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Header from "./Header";
@@ -20,44 +20,16 @@ const Buyers = () => {
   const fetchAllListings = async () => {
     setLoading(true);
     setError(null);
-    
     try {
-      // Try multiple endpoints to get all listings
-      const response = await axios.get("http://localhost:3000/api/farmers", {
-        // Remove any authentication for now to test
-        timeout: 10000, // 10 second timeout
-      });
-
-      console.log("API Response:", response.data); // Debug log
-      
-      if (response.data && Array.isArray(response.data)) {
-        setFarmers(response.data);
-        setFilteredFarmers(response.data);
-        console.log(`Loaded ${response.data.length} listings`); // Debug log
+      const data = await getAllFarmers();
+      if (data && Array.isArray(data)) {
+        setFarmers(data);
+        setFilteredFarmers(data);
       } else {
-        console.warn("API response is not an array:", response.data);
         setError("Invalid data format received from server.");
       }
     } catch (err) {
-      console.error("Error fetching farmers data:", err);
-      
-      // More detailed error handling
-      if (err.response) {
-        // Server responded with error
-        if (err.response.status === 401) {
-          setError("Authentication required. Please log in to view listings.");
-        } else if (err.response.status === 404) {
-          setError("Listings endpoint not found. Please check your server configuration.");
-        } else {
-          setError(`Server error: ${err.response.status}. Please try again later.`);
-        }
-      } else if (err.request) {
-        // Request made but no response
-        setError("Cannot connect to server. Please make sure the server is running on http://localhost:3000");
-      } else {
-        // Other errors
-        setError("An unexpected error occurred. Please try again.");
-      }
+      setError("Failed to fetch listings.");
     } finally {
       setLoading(false);
     }

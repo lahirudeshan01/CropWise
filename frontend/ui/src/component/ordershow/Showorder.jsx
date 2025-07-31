@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
  import OrderNotifications from '../ordernotification/OrderNotifications';
-import axios from 'axios';
+import api from '../../api/apiUtils';
 import io from 'socket.io-client';
 import {
   Container,
@@ -37,7 +37,22 @@ const Showorder = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3000/api/orders');
+      // Check if user is a farmer (has farmer listings) or customer
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      
+      // For now, let's try both endpoints and see which one works
+      // In a real app, you'd have a user role field
+      let response;
+      try {
+        // First try farmer orders (orders placed on their listings)
+        response = await api.get('/api/orders/farmer-orders');
+        console.log('Fetched farmer orders:', response.data);
+      } catch (error) {
+        // If farmer orders fail, try customer orders (orders they placed)
+        response = await api.get('/api/orders');
+        console.log('Fetched customer orders:', response.data);
+      }
+      
       setOrders(response.data);
       setLoading(false);
     } catch (err) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/apiUtils";
 import {
   Stepper,
   Step,
@@ -265,13 +265,19 @@ const Userfee = () => {
         paymentMethod: paymentInfo.paymentMethod,
         paymentDetails: paymentInfo.paymentDetails,
         status: "Pending",
+        farmerId: orderDetails.product._id, // Add the farmer listing ID
       };
+
+      console.log('Sending order data:', orderData);
+      console.log('Product ID (farmerId):', orderDetails.product._id);
   
       // Send order to the server
-      const response = await axios.post(
-        "http://localhost:3000/api/orders",
+      const response = await api.post(
+        "/orders",
         orderData
       );
+
+      console.log('Order response:', response.data);
   
       if (response.data && response.data.success) {
         // Show success notification

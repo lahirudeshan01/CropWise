@@ -16,13 +16,13 @@ const Showall = () => {
       })
       .catch((err) => {
         console.error("Error getting farmers data:", err);
-        setError("Failed to load farmers data. Please try again later.");
+        setError("Failed to load your listings. Please try again later.");
         setLoading(false);
       });
   }, []);
 
   if (loading) {
-    return <div className="loading">Loading farmers data...</div>;
+    return <div className="loading">Loading your listings...</div>;
   }
 
   if (error) {
@@ -31,7 +31,7 @@ const Showall = () => {
 
   return (
     <div className="borrowers-page">
-      <h1>Farmers List</h1>
+      <h1>My Harvest Listings</h1>
       <FarmerList farmers={farmers} />
     </div>
   );

@@ -34,6 +34,7 @@ import UpdateEmployee from './component/UpdateEmployee/updateemployee.jsx'
 import GenerateInventoryReport from './component/InventoryReport/GenerateInventoryReport.jsx'
 import Showorder from './component/ordershow/Showorder.jsx'
 
+
 // import Dashboard01 from './component/dashboard01/Dashboard01'
 
 // import ShowDetails from './component/ShowDetailsemployee/ShowDetailsemployee'

@@ -19,8 +19,9 @@ const FarmerSchema = new mongoose.Schema({
         required: true
     },
     quantity: {
-        type: String,
-        required: true
+        type: Number,
+        required: true,
+        min: 0
     },
     price: {
         type: String,
@@ -34,10 +35,20 @@ const FarmerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    image: { // Add this field
+    image: {
         type: String,
         required: false
     }
 });
+
+// Method to update quantity when order is placed
+FarmerSchema.methods.updateQuantity = function(orderedQuantity) {
+    if (this.quantity >= orderedQuantity) {
+        this.quantity -= orderedQuantity;
+        return this.save();
+    } else {
+        throw new Error('Insufficient quantity available');
+    }
+};
 
 module.exports = mongoose.model("farmers", FarmerSchema);

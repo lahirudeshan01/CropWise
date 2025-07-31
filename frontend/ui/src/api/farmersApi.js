@@ -2,9 +2,15 @@ import api from './apiUtils';
 
 const API_URL = '/api/farmers';
 
-// Get all farmers for current user
-export const getFarmers = async () => {
+// Get all farmers (public - for buyers)
+export const getAllFarmers = async () => {
   const response = await api.get(API_URL);
+  return response.data;
+};
+
+// Get farmers for current user only
+export const getFarmers = async () => {
+  const response = await api.get(`${API_URL}/my-listings`);
   return response.data;
 };
 
