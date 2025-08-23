@@ -1,3 +1,6 @@
+/* Import responsive utilities */
+@import './component/common/ResponsiveComponents.css';
+
 /* Global responsive styles */
 * {
   box-sizing: border-box;
@@ -8,6 +11,7 @@ body {
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow-x: hidden;
+  line-height: 1.6;
 }
 
 .app-container {
@@ -24,7 +28,29 @@ body {
   width: 100%;
 }
 
+/* Dashboard layout improvements */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.dashboard-content {
+  flex: 1;
+  margin-left: 275px;
+  padding: 20px;
+  overflow-x: hidden;
+  transition: margin-left 0.3s ease;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
 /* Responsive breakpoints */
+@media (max-width: 1200px) {
+  .dashboard-content {
+    margin-left: 250px;
+  }
+}
+
 @media (max-width: 768px) {
   .content-area {
     padding: 15px;
@@ -34,10 +60,19 @@ body {
   .app-container {
     flex-direction: column;
   }
+  
+  .dashboard-content {
+    margin-left: 0;
+    padding: 15px;
+  }
 }
 
 @media (max-width: 480px) {
   .content-area {
+    padding: 10px;
+  }
+  
+  .dashboard-content {
     padding: 10px;
   }
 }
@@ -232,5 +267,229 @@ input, select, textarea {
 @media (max-width: 768px) {
   input, select, textarea {
     font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Enhanced responsive utilities */
+.responsive-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .responsive-container {
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .responsive-container {
+    padding: 0 10px;
+  }
+}
+
+/* Responsive card system */
+.responsive-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  padding: clamp(20px, 5vw, 40px);
+  margin: 20px 0;
+  transition: all 0.3s ease;
+}
+
+.responsive-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive button system */
+.btn-responsive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 3vw, 16px) clamp(20px, 5vw, 32px);
+  font-size: clamp(14px, 3.5vw, 16px);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.btn-responsive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive grid system */
+.grid-responsive {
+  display: grid;
+  gap: clamp(15px, 4vw, 25px);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.grid-2-responsive {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-3-responsive {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-4-responsive {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Responsive flexbox layouts */
+.flex-responsive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(15px, 4vw, 25px);
+}
+
+.flex-center-responsive {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between-responsive {
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Responsive visibility utilities */
+.hide-on-mobile {
+  display: block;
+}
+
+.show-on-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hide-on-mobile {
+    display: none;
+  }
+  
+  .show-on-mobile {
+    display: block;
+  }
+}
+
+/* Responsive spacing scale */
+.space-xs { margin: 0.5rem; }
+.space-sm { margin: 1rem; }
+.space-md { margin: 1.5rem; }
+.space-lg { margin: 2rem; }
+.space-xl { margin: 3rem; }
+
+@media (max-width: 768px) {
+  .space-xs { margin: 0.25rem; }
+  .space-sm { margin: 0.5rem; }
+  .space-md { margin: 1rem; }
+  .space-lg { margin: 1.5rem; }
+  .space-xl { margin: 2rem; }
+}
+
+/* Responsive typography scale */
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.875rem; }
+.text-base { font-size: 1rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-3xl { font-size: 1.875rem; }
+
+@media (max-width: 768px) {
+  .text-xs { font-size: 0.7rem; }
+  .text-sm { font-size: 0.8rem; }
+  .text-base { font-size: 0.9rem; }
+  .text-lg { font-size: 1rem; }
+  .text-xl { font-size: 1.1rem; }
+  .text-2xl { font-size: 1.3rem; }
+  .text-3xl { font-size: 1.5rem; }
+}
+
+/* Responsive shadows */
+.shadow-responsive {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-hover-responsive:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive animations */
+.animate-responsive {
+  transition: all 0.3s ease;
+}
+
+.animate-responsive:hover {
+  transform: translateY(-2px);
+}
+
+/* Responsive borders */
+.border-responsive {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .border-responsive {
+    border-radius: 6px;
+  }
+}
+
+/* Responsive focus states */
+.focus-responsive:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+}
+
+/* Responsive print styles */
+@media print {
+  .responsive-card,
+  .btn-responsive {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .responsive-card {
+    border: 2px solid #000;
+  }
+  
+  .btn-responsive {
+    border: 2px solid #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .animate-responsive,
+  .btn-responsive:hover,
+  .responsive-card:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .responsive-card {
+    background: #2c3e50;
+    color: white;
+  }
+  
+  .dashboard-content {
+    background-color: #1a252f;
   }
 }
