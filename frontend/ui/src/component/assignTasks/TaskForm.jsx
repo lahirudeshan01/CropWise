@@ -176,12 +176,89 @@ const TaskForm = ({ onSubmit }) => {
     },
     '@media (maxWidth: 600px)': {
       formCard: {
-        padding: "18px 4vw",
-        margin: "18px 0",
+        padding: "1rem",
+        margin: "1rem",
+        maxWidth: "calc(100% - 2rem)",
+        borderRadius: "12px",
       },
       formRow: {
         flexDirection: "column",
         gap: "0",
+      },
+      halfWidth: {
+        flex: "1 1 100%",
+        minWidth: "100%",
+      },
+      heading: {
+        fontSize: "1.25rem",
+        marginBottom: "1.5rem",
+      },
+      companyName: {
+        fontSize: "1.8rem",
+      },
+      tagline: {
+        fontSize: "1rem",
+      },
+      hero: {
+        padding: "2rem 1rem",
+        borderRadius: "0 0 20px 20px",
+      },
+      heroTitle: {
+        fontSize: "2rem",
+      },
+      heroDesc: {
+        fontSize: "1rem",
+      },
+      filterRow: {
+        flexDirection: "column",
+        gap: "1rem",
+        alignItems: "stretch",
+      },
+      filterInput: {
+        minWidth: "100%",
+      },
+      submitBtn: {
+        width: "100%",
+        padding: "1rem",
+        fontSize: "1rem",
+      },
+    },
+    '@media (maxWidth: 480px)': {
+      formCard: {
+        padding: "0.75rem",
+        margin: "0.5rem",
+        maxWidth: "calc(100% - 1rem)",
+      },
+      heading: {
+        fontSize: "1.125rem",
+        marginBottom: "1rem",
+      },
+      companyName: {
+        fontSize: "1.5rem",
+      },
+      tagline: {
+        fontSize: "0.9rem",
+      },
+      hero: {
+        padding: "1.5rem 0.75rem",
+      },
+      heroTitle: {
+        fontSize: "1.75rem",
+      },
+      heroDesc: {
+        fontSize: "0.9rem",
+      },
+      input: {
+        padding: "0.75rem",
+        fontSize: "1rem",
+      },
+      select: {
+        padding: "0.75rem",
+        fontSize: "1rem",
+      },
+      submitBtn: {
+        padding: "0.875rem",
+        fontSize: "0.95rem",
       },
     },
   };
