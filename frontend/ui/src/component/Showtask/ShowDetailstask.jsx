@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from '../../api/apiUtils';
 
 function ShowDetailstask() {
   const [task, setTask] = useState(null);
@@ -101,7 +102,7 @@ function ShowDetailstask() {
 
   useEffect(() => {
     if (id) {
-      axios.get(`http://localhost:3000/api/tasks/${id}`)
+      api.get(`/api/tasks/${id}`)
         .then((res) => {
           setTask(res.data);
           setLoading(false);
@@ -118,8 +119,8 @@ function ShowDetailstask() {
 
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to delete this task?")) {
-      axios
-        .delete(`http://localhost:3000/api/tasks/${id}`)
+      api
+        .delete(`/api/tasks/${id}`)
         .then(() => {
           navigate("/showtask"); // Redirect to task list page
         })

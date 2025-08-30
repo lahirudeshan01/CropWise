@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from '../../api/apiUtils';
 import TaskList from "./TaskList";
 
 const ShowAll = () => {
@@ -9,8 +10,8 @@ const ShowAll = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get("http://localhost:3000/api/tasks")
+    api
+      .get("/api/tasks")
       .then((res) => {
         setTasks(res.data);
         setLoading(false);

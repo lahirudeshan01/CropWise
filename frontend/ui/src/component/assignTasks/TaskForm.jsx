@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import api from '../../api/apiUtils';
 
 const LOGO_URL =
   "https://p7.hiclipart.com/preview/976/522/355/natural-environment-earth-ecology-clean-environment.jpg";
@@ -230,7 +231,7 @@ const TaskForm = ({ onSubmit }) => {
     e.preventDefault();
     if (!validateForm()) return;
     try {
-      await axios.post("http://localhost:3000/api/tasks", formData);
+      await api.post("/api/tasks", formData);
       alert("Task assigned successfully!");
       setFormData({
         title: "",
