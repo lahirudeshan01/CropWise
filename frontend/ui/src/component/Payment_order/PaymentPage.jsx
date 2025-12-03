@@ -61,13 +61,12 @@ const PaymentPage = ({ orderDetails, onPaymentSubmit, onBack }) => {
     // Special handling for cardholder name - only allow letters and spaces
     else if (name === 'cardholderName') {
       // Only allow letters and spaces
-      if (/^[A-Za-z\s]*$/.test(value)) {
+      if (/^[A-Za-z\s]*$/.test(value) || value === '') {
         setPaymentDetails({
           ...paymentDetails,
           [name]: value
         });
       }
-      // If the input doesn't match the pattern, don't update the state
     }
     // Special handling for expiry date to format as MM/YY
     else if (name === 'expiryDate') {
@@ -83,6 +82,16 @@ const PaymentPage = ({ orderDetails, onPaymentSubmit, onBack }) => {
       setPaymentDetails({
         ...paymentDetails,
         [name]: formatted
+      });
+    }
+    // Special handling for CVV - only allow numbers
+    else if (name === 'cvv') {
+      const numbersOnly = value.replace(/\D/g, '');
+      const limitedValue = numbersOnly.slice(0, 4);
+      
+      setPaymentDetails({
+        ...paymentDetails,
+        [name]: limitedValue
       });
     } else {
       setPaymentDetails({
@@ -151,11 +160,11 @@ const PaymentPage = ({ orderDetails, onPaymentSubmit, onBack }) => {
         }
       }
       
-      // CVV validation - maximum 3 digits
+      // CVV validation - 3 or 4 digits
       if (!paymentDetails.cvv) {
         newErrors.cvv = 'CVV is required';
-      } else if (!/^\d{3}$/.test(paymentDetails.cvv)) {
-        newErrors.cvv = 'CVV must be exactly 3 digits';
+      } else if (!/^\d{3,4}$/.test(paymentDetails.cvv)) {
+        newErrors.cvv = 'CVV must be 3 or 4 digits';
       }
     } 
     else if (paymentMethod === 'bankTransfer') {
@@ -440,7 +449,7 @@ const PaymentPage = ({ orderDetails, onPaymentSubmit, onBack }) => {
                   error={!!errors.cvv}
                   helperText={errors.cvv}
                   inputProps={{ 
-                    maxLength: 3,
+                    maxLength: 4,
                     inputMode: 'numeric',
                     pattern: '[0-9]*'
                   }}

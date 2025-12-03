@@ -118,6 +118,92 @@ const AddHarvest = () => {
     }
   };
 
+  // Handling Form Submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      // Scroll to first error
+      const firstErrorField = document.querySelector('.error');
+      if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    setSubmitting(true);
+
+    const formDataWithImage = new FormData();
+    Object.keys(formData).forEach((key) => {
+      formDataWithImage.append(key, formData[key]);
+    });
+
+    if (image) {
+      formDataWithImage.append("image", image);
+    }
+
+    try {
+      const response = await addFarmer(formDataWithImage);
+      console.log("Harvest added successfully:", response);
+
+      // Show success message with animation
+      const successNotification = document.createElement('div');
+      successNotification.className = 'success-notification';
+      successNotification.innerHTML = '<div class="success-icon">✓</div><div>Harvest added successfully!</div>';
+      document.body.appendChild(successNotification);
+      
+      setTimeout(() => {
+        successNotification.classList.add('show');
+      }, 100);
+      
+      setTimeout(() => {
+        successNotification.classList.remove('show');
+        setTimeout(() => {
+          document.body.removeChild(successNotification);
+          navigate("/showall"); // Redirect after success message
+        }, 500);
+      }, 2000);
+      
+    } catch (error) {
+      console.error("Error adding harvest:", error);
+      
+      // Enhanced error logging
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        console.error("Error status:", error.response.status);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+      } else {
+        console.error("Error message:", error.message);
+      }
+      
+      setSubmitting(false);
+      
+      // Show specific error message
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          "Failed to add harvest. Please check your connection and try again.";
+      
+      const errorNotification = document.createElement('div');
+      errorNotification.className = 'error-notification';
+      errorNotification.innerHTML = `<div class="error-icon">!</div><div>${errorMessage}</div>`;
+      document.body.appendChild(errorNotification);
+      
+      setTimeout(() => {
+        errorNotification.classList.add('show');
+      }, 100);
+      
+      setTimeout(() => {
+        errorNotification.classList.remove('show');
+        setTimeout(() => {
+          if (document.body.contains(errorNotification)) {
+            document.body.removeChild(errorNotification);
+          }
+        }, 500);
+      }, 3000);
+    }
+  };
+
   const showChatbotWithPriceSuggestion = async (character, price) => {
     setShowChatbot(true);
     setChatbotMinimized(false);
@@ -135,14 +221,14 @@ const AddHarvest = () => {
     const aiRequestData = {
       contents: [{
         parts: [{
-          text: `Give current marketprice of 1kg of ${character}. I'm going to sell 1kg for Rs.${price}. In response give a brief description explaining the difference and what is a good price within 100 words. Don't use ** or \\n, etc.`
+          text: `Give current market price of 1kg of ${character} rice. The seller wants to sell for Rs.${price}. Provide a brief description explaining the difference and suggest a good price range. Keep response under 100 words. Use plain text only.`
         }]
       }]
     };
   
     try {
       const aiResponse = await axios.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyA4e2B4bOhENr6DEbt6covF92CC4VZYa2E",
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyA4e2B4bOhENr6DEbt6covF92CC4VZYa2E`,
         aiRequestData,
         {
           headers: {
@@ -151,7 +237,8 @@ const AddHarvest = () => {
         }
       );
   
-      const responseText = aiResponse.data.candidates[0].content.parts[0].text;
+      const responseText = aiResponse.data?.candidates?.[0]?.content?.parts?.[0]?.text || 
+                          "Unable to fetch market price information.";
       
       // Add AI response to chat
       setChatMessages(prev => [
@@ -160,12 +247,12 @@ const AddHarvest = () => {
       ]);
       
     } catch (error) {
-      console.error('Error:', error.response ? error.response.data : error.message);
+      console.error('AI Error:', error.response ? error.response.data : error.message);
       
       // Add error message to chat
       setChatMessages(prev => [
         ...prev,
-        { type: 'bot', text: "Sorry, I couldn't fetch the market price information at this time." }
+        { type: 'bot', text: "Sorry, I couldn't fetch the market price information at this time. Please try again later." }
       ]);
     } finally {
       setLoadingResponse(false);
@@ -257,74 +344,6 @@ const AddHarvest = () => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  // Handling Form Submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      // Scroll to first error
-      const firstErrorField = document.querySelector('.error');
-      if (firstErrorField) {
-        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-      return;
-    }
-
-    setSubmitting(true);
-
-    const formDataWithImage = new FormData();
-    Object.keys(formData).forEach((key) => {
-      formDataWithImage.append(key, formData[key]);
-    });
-
-    if (image) {
-      formDataWithImage.append("image", image);
-    }
-
-    try {
-      await addFarmer(formDataWithImage);
-
-      // Show success message with animation
-      const successNotification = document.createElement('div');
-      successNotification.className = 'success-notification';
-      successNotification.innerHTML = '<div class="success-icon">✓</div><div>Harvest added successfully!</div>';
-      document.body.appendChild(successNotification);
-      
-      setTimeout(() => {
-        successNotification.classList.add('show');
-      }, 100);
-      
-      setTimeout(() => {
-        successNotification.classList.remove('show');
-        setTimeout(() => {
-          document.body.removeChild(successNotification);
-          navigate("/showall"); // Redirect after success message
-        }, 500);
-      }, 2000);
-      
-    } catch (error) {
-      console.error("Error adding harvest:", error);
-      setSubmitting(false);
-      
-      // Show error notification
-      const errorNotification = document.createElement('div');
-      errorNotification.className = 'error-notification';
-      errorNotification.innerHTML = '<div class="error-icon">!</div><div>Failed to add harvest. Please try again.</div>';
-      document.body.appendChild(errorNotification);
-      
-      setTimeout(() => {
-        errorNotification.classList.add('show');
-      }, 100);
-      
-      setTimeout(() => {
-        errorNotification.classList.remove('show');
-        setTimeout(() => {
-          document.body.removeChild(errorNotification);
-        }, 500);
-      }, 3000);
-    }
   };
 
   // Toggle chatbot visibility with improved behavior
