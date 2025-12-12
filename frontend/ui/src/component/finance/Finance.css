@@ -999,6 +999,19 @@ td[data-status="Outcome"] {
   }
 }
 
+/* Center finance report table and summary on print */
+@media print {
+  .report-page table {
+    width: 90% !important;
+    margin: 0 auto 12px auto !important;
+  }
+
+  .report-summary {
+    width: 90% !important;
+    margin: 10px auto 0 auto !important;
+  }
+}
+
 /* Balance Sheet Styles */
 .balance-sheet-container {
   padding: 20px;
@@ -1101,6 +1114,43 @@ td[data-status="Outcome"] {
   background-color: #fde8e8;
   border-radius: 4px;
   margin: 20px;
+}
+
+.error-banner {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.error-message {
+  color: #856404;
+  flex: 1;
+  font-size: 14px;
+}
+
+.retry-button {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.retry-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #f57c00, #e65100);
 }
 
 /* Balance Sheet Header Layout */
@@ -1451,14 +1501,27 @@ td[data-status="Outcome"] {
 
 /* Print specific styles */
 @media print {
+  /* Balance sheet: force full width and tighter layout for printing */
+  @page {
+    size: A4 landscape;
+    margin: 6mm;
+  }
+
   .balance-sheet-report {
-    margin: 0;
-    width: 100%;
+    margin: 0 auto !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    padding: 0 !important;
   }
 
   .report-table {
     page-break-inside: avoid;
-    margin-top: 20px;
+    margin: 10px auto !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    table-layout: auto !important;
+    border-collapse: collapse !important;
+    font-size: 13px !important;
   }
 
   .print-header {
@@ -1482,6 +1545,16 @@ td[data-status="Outcome"] {
   .report-table,
   .report-table td {
     border-color: #000 !important;
+  }
+
+  .report-table td,
+  .report-table th {
+    white-space: normal !important;
+    word-break: break-word !important;
+    padding: 4px 5px !important;
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+    vertical-align: top !important;
   }
 }
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getTransactions } from "../../api/financeApi";
-import axios from "axios";
+import { getInventory } from "../../api/inventoryApi";
 import "./Finance.css";
 
 const BalanceSheet = ({ onBack }) => {
@@ -21,14 +21,30 @@ const BalanceSheet = ({ onBack }) => {
       // Fetch transactions
       const filters = selectedDate ? { endDate: selectedDate } : {};
       const transactionsData = await getTransactions(filters);
-      setTransactions(transactionsData);
+      setTransactions(Array.isArray(transactionsData) ? transactionsData : []);
 
       // Fetch inventory data
-      const inventoryResponse = await axios.get("http://localhost:3000/api/inventory");
-      setInventory(inventoryResponse.data);
+      const inventoryData = await getInventory();
+      setInventory(Array.isArray(inventoryData) ? inventoryData : []);
     } catch (err) {
-      setError("Failed to fetch data");
-      console.error(err);
+      let errorMessage = "Failed to fetch data";
+      
+      if (err.response) {
+        // Server responded with error status
+        errorMessage = err.response.data?.message || err.response.data?.error || `Server error: ${err.response.status}`;
+      } else if (err.request) {
+        // Request was made but no response received
+        errorMessage = "No response from server. Please check if the backend is running.";
+      } else {
+        // Something else happened
+        errorMessage = err.message || "An unexpected error occurred";
+      }
+      
+      setError(`${errorMessage}. Please check your connection and try again.`);
+      console.error("Balance Sheet Error:", err);
+      // Set empty arrays as fallback so the balance sheet can still render
+      setTransactions([]);
+      setInventory([]);
     } finally {
       setLoading(false);
     }
@@ -132,8 +148,13 @@ const BalanceSheet = ({ onBack }) => {
     };
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (loading) {
+    return (
+      <div className="balance-sheet-container">
+        <div className="loading">Loading balance sheet data...</div>
+      </div>
+    );
+  }
 
   const assets = calculateAssets();
   const liabilities = calculateLiabilities();
@@ -141,6 +162,14 @@ const BalanceSheet = ({ onBack }) => {
 
   return (
     <div className="balance-sheet-container">
+      {error && (
+        <div className="error-banner">
+          <div className="error-message">{error}</div>
+          <button className="button retry-button" onClick={fetchData}>
+            Retry
+          </button>
+        </div>
+      )}
       {/* Print-only header */}
       <div className="print-header print-only">
         <div className="company-logo">

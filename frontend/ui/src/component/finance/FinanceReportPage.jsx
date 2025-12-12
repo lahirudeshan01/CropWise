@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/apiUtils";
 import "./Finance.css";
 
 const FinanceReportPage = () => {
@@ -112,7 +112,7 @@ const FinanceReportPage = () => {
 
     const [year, month] = selectedMonth.split("-");
     try {
-      const response = await axios.get(`http://localhost:3000/api/monthly-report`, {
+      const response = await api.get(`/api/monthly-report`, {
         params: { month, year },
       });
       setMonthlyReport(response.data);
@@ -131,7 +131,7 @@ const FinanceReportPage = () => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:3000/api/daily-report`, {
+      const response = await api.get(`/api/daily-report`, {
         params: { date: selectedDate },
       });
       setDailyReport(response.data);
