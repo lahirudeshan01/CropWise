@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../api/apiUtils";
 import { useNavigate } from "react-router-dom";
 
 const GenerateInventoryReport = () => {
@@ -11,7 +11,7 @@ const GenerateInventoryReport = () => {
     useEffect(() => {
         const fetchInventory = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/inventory");
+                const response = await api.get("/api/inventory");
                 if (response.data && Array.isArray(response.data)) {
                     setInventory(response.data);
                 } else {
