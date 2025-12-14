@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getFarmerById, updateFarmer } from "../../api/farmersApi";
 import { useParams, useNavigate } from "react-router-dom";
+import { getBackendUrl } from "../../api/apiUtils";
 import './updatedetails.css';
 
 
@@ -44,7 +45,7 @@ function Updatedetails() {
         
         // Set image preview if image exists
         if (data.image) {
-          setImagePreview(`http://localhost:3000/uploads/${data.image}`);
+          setImagePreview(`${getBackendUrl()}/uploads/${data.image}`);
         }
         
         setLoading(false);

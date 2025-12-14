@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/apiUtils';
 import './Dashboard01.css';
 
 function Dashboard01() {
@@ -51,10 +51,11 @@ function Dashboard01() {
       try {
         const user = JSON.parse(localStorage.getItem('userData'));
         if (user && user._id) {
-          const response = await axios.get(`/users/${user._id}`);
-          setUserData(response.data.user);
-          
-          if (response.data.user.startDate) {
+          const response = await api.get(`/users/${user._id}`);
+          if (response.data && response.data.user) {
+            setUserData(response.data.user);
+            
+            if (response.data.user.startDate) {
             const startDate = new Date(response.data.user.startDate);
             
             // Calculate harvest date (start date + 6 months)
@@ -93,6 +94,7 @@ function Dashboard01() {
             } else if (today >= harvestDate) {
               setCurrentState('Harvesting');
             }
+          }
           }
         }
       } catch (error) {

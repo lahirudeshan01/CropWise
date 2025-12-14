@@ -16,8 +16,7 @@ import {
 } from '@mui/material';
 import { Notifications as NotificationsIcon } from '@mui/icons-material';
 import io from 'socket.io-client';
-import axios from 'axios';
-import api from '../../api/apiUtils';
+import api, { getBackendUrl } from '../../api/apiUtils';
 
 const OrderNotifications = ({ onNewOrder }) => {
   const [notifications, setNotifications] = useState([]);
@@ -32,9 +31,11 @@ const OrderNotifications = ({ onNewOrder }) => {
     const fetchNotifications = async () => {
       try {
         console.log('Fetching notifications...');
-        const response = await axios.get('/api/notifications');
+        const response = await api.get('/api/notifications');
         console.log('Raw notifications response:', response.data);
-        const fetchedNotifications = response.data
+        // Ensure response.data is an array
+        const notificationsData = Array.isArray(response.data) ? response.data : [];
+        const fetchedNotifications = notificationsData
           .filter(notification => notification.orderId) // Only keep notifications with a valid order
           .map(notification => {
             console.log('Processing notification:', notification);
@@ -61,7 +62,7 @@ const OrderNotifications = ({ onNewOrder }) => {
   // Socket.IO connection
   useEffect(() => {
     // Create socket with reconnection options
-    const socket = io('http://localhost:3000', {
+    const socket = io(getBackendUrl(), {
       path: '/socket.io',
       transports: ['websocket'],
       reconnectionAttempts: 5,
@@ -128,10 +129,10 @@ const OrderNotifications = ({ onNewOrder }) => {
   const handleClose = async () => {
     setAnchorEl(null);
     
-    // Mark all as read when closing the menu
-    if (unreadCount > 0) {
-      try {
-        await axios.patch('/api/notifications/mark-all-seen');
+      // Mark all as read when closing the menu
+      if (unreadCount > 0) {
+        try {
+          await api.patch('/api/notifications/mark-all-seen');
         setNotifications(prev => 
           prev.map(notification => ({ ...notification, read: true }))
         );
@@ -146,7 +147,7 @@ const OrderNotifications = ({ onNewOrder }) => {
     console.log('Notification clicked:', notification);
     try {
       // Mark notification as read
-      await axios.patch(`/api/notifications/${notification.id}/seen`);
+      await api.patch(`/api/notifications/${notification.id}/seen`);
       
       // Update local notification state
       setNotifications(prevNotifications =>
@@ -165,7 +166,7 @@ const OrderNotifications = ({ onNewOrder }) => {
         setAnchorEl(null);
       } else {
         console.log('Fetching order details for orderId:', notification.orderId);
-        const response = await axios.get(`/api/orders/${notification.orderId}`);
+        const response = await api.get(`/api/orders/${notification.orderId}`);
         console.log('Order details response:', response.data);
         setSelectedOrder(response.data);
         setOrderDetailsOpen(true);
@@ -192,7 +193,7 @@ const OrderNotifications = ({ onNewOrder }) => {
   const handleClearAll = async () => {
     try {
       // Delete all notifications using the bulk delete endpoint
-      await axios.delete('/api/notifications/clear-all');
+      await api.delete('/api/notifications/clear-all');
       
       // Clear notifications from frontend state
       setNotifications([]);

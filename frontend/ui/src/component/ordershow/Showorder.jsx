@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
  import OrderNotifications from '../ordernotification/OrderNotifications';
-import api from '../../api/apiUtils';
+import api, { getBackendUrl } from '../../api/apiUtils';
 import io from 'socket.io-client';
 import {
   Container,
@@ -67,7 +67,8 @@ const Showorder = () => {
     fetchOrders();
 
     // Create socket connection
-    const socket = io('http://localhost:3000/orders', {
+    const socket = io(getBackendUrl(), {
+      path: '/socket.io',
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
     });

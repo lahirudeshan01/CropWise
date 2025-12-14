@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { getFarmerById, deleteFarmer } from "../../api/farmersApi";
+import { getBackendUrl } from "../../api/apiUtils";
 import "./viewdetail.css";
 
 
@@ -58,7 +59,7 @@ function Detailsview() {
         {farmer.image && (
           <div className="image-container">
             <img
-              src={`http://localhost:3000/uploads/${farmer.image}`}
+              src={`${getBackendUrl()}/uploads/${farmer.image}`}
               alt="Harvest"
               className="farmer-image"
             />

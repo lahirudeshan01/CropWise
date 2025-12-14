@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getAllFarmers } from "../../api/farmersApi";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { getBackendUrl } from "../../api/apiUtils";
 import Header from "./Header";
 import "./card.css";
 
@@ -298,7 +299,7 @@ const Buyers = () => {
                 {/* Image Section */}
                 <div className="image-container">
                   <img
-                    src={farmer.image ? `http://localhost:3000/uploads/${farmer.image}` : "/default-image.jpg"}
+                    src={farmer.image ? `${getBackendUrl()}/uploads/${farmer.image}` : "/default-image.jpg"}
                     alt={`${farmer.Character || 'Rice'} harvest listing`}
                     className="farmer-image"
                     onError={(e) => {

@@ -7,8 +7,9 @@ module.exports = {
   init: (server) => {
     io = socketIO(server, {
       cors: {
-        origin: "http://localhost:5173", // Update this to your frontend URL
-        methods: ["GET", "POST"]
+        origin: ["http://localhost:5173", "https://cropwise.kgkpr.online"], // Support both local and production
+        methods: ["GET", "POST"],
+        credentials: true
       }
     });
     

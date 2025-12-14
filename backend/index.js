@@ -32,7 +32,7 @@ const io = socketIO.init(server);
 // Store io instance in app for use in routes
 app.set('socketio', io);
 
-app.use(cors({ origin: true, credentials: true }));
+
 
 // Database connection
 db_connection();

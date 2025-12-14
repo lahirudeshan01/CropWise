@@ -273,7 +273,7 @@ const Userfee = () => {
   
       // Send order to the server
       const response = await api.post(
-        "/orders",
+        "/api/orders",
         orderData
       );
 

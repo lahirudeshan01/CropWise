@@ -1,12 +1,19 @@
 import axios from 'axios';
 
+// Get backend URL from environment variable or use default
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://cropwise-backend-umx9.onrender.com';
+
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: 'https://cropwise-backend-umx9.onrender.com',
+  baseURL: BACKEND_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+// Export backend URL for use in other components (e.g., Socket.IO, image URLs)
+export const getBackendUrl = () => BACKEND_URL;
+export default api;
 
 // Request interceptor to add user data to headers
 api.interceptors.request.use(
