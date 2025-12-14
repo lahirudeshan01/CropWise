@@ -145,7 +145,7 @@ const OrderNotifications = ({ onNewOrder }) => {
     console.log('Notification clicked:', notification);
     try {
       // Mark notification as read
-      await axios.patch(`:3000/api/notifications/${notification.id}/seen`);
+      await axios.patch(`/api/notifications/${notification.id}/seen`);
       
       // Update local notification state
       setNotifications(prevNotifications =>
@@ -164,7 +164,7 @@ const OrderNotifications = ({ onNewOrder }) => {
         setAnchorEl(null);
       } else {
         console.log('Fetching order details for orderId:', notification.orderId);
-        const response = await axios.get(`:3000/api/orders/${notification.orderId}`);
+        const response = await axios.get(`/api/orders/${notification.orderId}`);
         console.log('Order details response:', response.data);
         setSelectedOrder(response.data);
         setOrderDetailsOpen(true);
