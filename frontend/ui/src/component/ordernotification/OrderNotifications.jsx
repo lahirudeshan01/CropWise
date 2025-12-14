@@ -17,6 +17,7 @@ import {
 import { Notifications as NotificationsIcon } from '@mui/icons-material';
 import io from 'socket.io-client';
 import axios from 'axios';
+import api from '../../api/apiUtils';
 
 const OrderNotifications = ({ onNewOrder }) => {
   const [notifications, setNotifications] = useState([]);

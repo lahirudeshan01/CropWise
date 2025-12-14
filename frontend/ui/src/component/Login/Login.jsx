@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
+import api from '../../api/apiUtils';
 
 function Login() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ function Login() {
     setErrorMessage('');
 
     try {
-      const response = await axios.post('/users/login', {
+      const response = await api.post('/users/login', {
         email: inputs.email,
         password: inputs.password
       });

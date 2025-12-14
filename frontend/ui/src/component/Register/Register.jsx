@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './Register.css';
+import api from '../../api/apiUtils';
 
 function Register() {
   const navigate = useNavigate();
@@ -112,7 +112,7 @@ function Register() {
     try {
       const formattedDate = new Date(inputs.startDate).toISOString();
 
-      const response = await axios.post("/users", {
+      const response = await api.post("/users", {
         firstName: inputs.firstName.trim(),
         lastName: inputs.lastName.trim(),
         email: inputs.email.toLowerCase().trim(),
