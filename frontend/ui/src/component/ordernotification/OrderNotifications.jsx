@@ -145,8 +145,9 @@ const OrderNotifications = ({ onNewOrder }) => {
 
   const handleNotificationClick = async (notification) => {
     console.log('Notification clicked:', notification);
+    
+    // Try to mark notification as read, but don't fail if it doesn't work
     try {
-      // Mark notification as read
       await api.patch(`/api/notifications/${notification.id}/seen`);
       
       // Update local notification state
@@ -158,22 +159,31 @@ const OrderNotifications = ({ onNewOrder }) => {
       
       // Update unread count
       setUnreadCount(prevCount => Math.max(0, prevCount - 1));
+    } catch (markReadError) {
+      console.warn('Failed to mark notification as read:', markReadError);
+      // Continue anyway - we still want to show the order details
+    }
 
+    // Show order details - use cached data if available, otherwise fetch
+    try {
       if (notification.order) {
         console.log('Using cached order data:', notification.order);
         setSelectedOrder(notification.order);
         setOrderDetailsOpen(true);
         setAnchorEl(null);
-      } else {
+      } else if (notification.orderId) {
         console.log('Fetching order details for orderId:', notification.orderId);
         const response = await api.get(`/api/orders/${notification.orderId}`);
         console.log('Order details response:', response.data);
         setSelectedOrder(response.data);
         setOrderDetailsOpen(true);
         setAnchorEl(null);
+      } else {
+        console.error('No order data or orderId available');
+        alert('Unable to load order details. Please try again later.');
       }
     } catch (error) {
-      console.error('Error handling notification click:', error);
+      console.error('Error fetching order details:', error);
       alert('Error fetching order details. Please try again.');
     }
   };

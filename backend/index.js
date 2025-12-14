@@ -19,8 +19,9 @@ const app = express();
 
 app.use(cors({
   origin: ['https://cropwise.kgkpr.online'],
-  methods: ['GET','POST','PUT','DELETE'],
-  credentials: true
+  methods: ['GET','POST','PUT','DELETE','PATCH'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'user-data']
 }));
 
 // Create HTTP server

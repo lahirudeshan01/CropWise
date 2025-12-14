@@ -11,10 +11,6 @@ const api = axios.create({
   },
 });
 
-// Export backend URL for use in other components (e.g., Socket.IO, image URLs)
-export const getBackendUrl = () => BACKEND_URL;
-export default api;
-
 // Request interceptor to add user data to headers
 api.interceptors.request.use(
   (config) => {
@@ -44,4 +40,6 @@ api.interceptors.response.use(
   }
 );
 
+// Export backend URL for use in other components (e.g., Socket.IO, image URLs)
+export const getBackendUrl = () => BACKEND_URL;
 export default api; 
