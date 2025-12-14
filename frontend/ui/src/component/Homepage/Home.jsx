@@ -51,7 +51,7 @@ function Dashboard01() {
       try {
         const user = JSON.parse(localStorage.getItem('userData'));
         if (user && user._id) {
-          const response = await axios.get(`http://localhost:3000/users/${user._id}`);
+          const response = await axios.get(`:3000/users/${user._id}`);
           setUserData(response.data.user);
           
           if (response.data.user.startDate) {

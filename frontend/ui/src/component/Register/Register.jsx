@@ -112,7 +112,7 @@ function Register() {
     try {
       const formattedDate = new Date(inputs.startDate).toISOString();
 
-      const response = await axios.post("http://localhost:3000/users", {
+      const response = await axios.post("/users", {
         firstName: inputs.firstName.trim(),
         lastName: inputs.lastName.trim(),
         email: inputs.email.toLowerCase().trim(),

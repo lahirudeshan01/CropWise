@@ -31,7 +31,7 @@ const OrderNotifications = ({ onNewOrder }) => {
     const fetchNotifications = async () => {
       try {
         console.log('Fetching notifications...');
-        const response = await axios.get('http://localhost:3000/api/notifications');
+        const response = await axios.get('/api/notifications');
         console.log('Raw notifications response:', response.data);
         const fetchedNotifications = response.data
           .filter(notification => notification.orderId) // Only keep notifications with a valid order
@@ -130,7 +130,7 @@ const OrderNotifications = ({ onNewOrder }) => {
     // Mark all as read when closing the menu
     if (unreadCount > 0) {
       try {
-        await axios.patch('http://localhost:3000/api/notifications/mark-all-seen');
+        await axios.patch('/api/notifications/mark-all-seen');
         setNotifications(prev => 
           prev.map(notification => ({ ...notification, read: true }))
         );
@@ -145,7 +145,7 @@ const OrderNotifications = ({ onNewOrder }) => {
     console.log('Notification clicked:', notification);
     try {
       // Mark notification as read
-      await axios.patch(`http://localhost:3000/api/notifications/${notification.id}/seen`);
+      await axios.patch(`:3000/api/notifications/${notification.id}/seen`);
       
       // Update local notification state
       setNotifications(prevNotifications =>
@@ -164,7 +164,7 @@ const OrderNotifications = ({ onNewOrder }) => {
         setAnchorEl(null);
       } else {
         console.log('Fetching order details for orderId:', notification.orderId);
-        const response = await axios.get(`http://localhost:3000/api/orders/${notification.orderId}`);
+        const response = await axios.get(`:3000/api/orders/${notification.orderId}`);
         console.log('Order details response:', response.data);
         setSelectedOrder(response.data);
         setOrderDetailsOpen(true);
@@ -191,7 +191,7 @@ const OrderNotifications = ({ onNewOrder }) => {
   const handleClearAll = async () => {
     try {
       // Delete all notifications using the bulk delete endpoint
-      await axios.delete('http://localhost:3000/api/notifications/clear-all');
+      await axios.delete('/api/notifications/clear-all');
       
       // Clear notifications from frontend state
       setNotifications([]);

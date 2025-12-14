@@ -62,7 +62,7 @@ function UpdateEmployee() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:3000/api/tasks/${id}`, { employeeID, status });
+      await axios.put(`:3000/api/tasks/${id}`, { employeeID, status });
       alert("Employee ID and Status updated successfully!");
       navigate(`/Showtask`); // Redirect to the details page
     } catch (error) {

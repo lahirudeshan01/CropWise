@@ -22,7 +22,7 @@ const NotificationDialog: React.FC = () => {
   const handleNotificationClick = async (notification: Notification) => {
     try {
       // Mark notification as read
-      await axios.put(`http://localhost:5000/api/notifications/${notification.id}/read`);
+      await axios.put(`:5000/api/notifications/${notification.id}/read`);
       
       // Update the notification in the list
       setNotifications(prevNotifications =>

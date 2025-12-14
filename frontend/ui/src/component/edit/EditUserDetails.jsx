@@ -53,7 +53,7 @@ function EditUserDetails() {
           // If page was refreshed, get data from localStorage or API
           const user = JSON.parse(localStorage.getItem('userData'));
           if (user && user._id) {
-            const response = await axios.get(`http://localhost:3000/users/${user._id}`);
+            const response = await axios.get(`:3000/users/${user._id}`);
             const userData = response.data.user;
             const formattedDate = userData.startDate ? 
               new Date(userData.startDate).toISOString().split('T')[0] : '';
@@ -115,7 +115,7 @@ function EditUserDetails() {
 
       const formattedDate = new Date(inputs.startDate).toISOString();
       
-      const response = await axios.put(`http://localhost:3000/users/${user._id}`, {
+      const response = await axios.put(`:3000/users/${user._id}`, {
         firstName: inputs.firstName.trim(),
         lastName: inputs.lastName.trim(),
         email: inputs.email.toLowerCase().trim(),
@@ -157,7 +157,7 @@ function EditUserDetails() {
         throw new Error("User not authenticated");
       }
 
-      await axios.delete(`http://localhost:3000/users/${user._id}`);
+      await axios.delete(`:3000/users/${user._id}`);
       
       // Clear user data and redirect to login
       localStorage.removeItem('userData');
