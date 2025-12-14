@@ -18,7 +18,7 @@ const path = require("path");
 const app = express();
 
 app.use(cors({
-  origin: 'https://cropwise.kgkpr.online/', // replace with your Cloudflare frontend URL
+  origin: 'https://cropwise.kgkpr.online',
   methods: ['GET','POST','PUT','DELETE'],
   credentials: true
 }));
