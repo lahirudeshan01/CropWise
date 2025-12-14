@@ -115,7 +115,7 @@ function EditUserDetails() {
 
       const formattedDate = new Date(inputs.startDate).toISOString();
       
-      const response = await axios.put(`:3000/users/${user._id}`, {
+      const response = await axios.put(`/users/${user._id}`, {
         firstName: inputs.firstName.trim(),
         lastName: inputs.lastName.trim(),
         email: inputs.email.toLowerCase().trim(),
