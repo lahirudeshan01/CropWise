@@ -1,3 +1,6 @@
+require("dotenv").config();
+
+
 const express = require("express");
 const http = require("http");
 const routes = require("./routes/farmers_set");
@@ -44,7 +47,8 @@ app.use("/api/tasks", routess);
 app.use("/api/orders", orderRoutes);
 app.use("/api/notifications", notificationRoutes);
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
 
 // Use server.listen instead of app.listen for Socket.IO to work
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
