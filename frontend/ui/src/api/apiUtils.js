@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://cropwise-backend-umx9.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   },

@@ -17,6 +17,12 @@ const cors = require("cors");
 const path = require("path");
 const app = express();
 
+app.use(cors({
+  origin: 'https://cropwise.kgkpr.online/', // replace with your Cloudflare frontend URL
+  methods: ['GET','POST','PUT','DELETE'],
+  credentials: true
+}));
+
 // Create HTTP server
 const server = http.createServer(app);
 
