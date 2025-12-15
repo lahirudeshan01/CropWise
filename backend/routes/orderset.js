@@ -74,19 +74,6 @@ router.post('/', async (req, res) => {
     const savedOrder = await newOrder.save();
     console.log('Order saved:', savedOrder._id);
 
-    // Create transaction for the order (for the customer)
-    const newTransaction = new Transaction({
-      userId: req.user._id, // Customer's transaction
-      name: `Purchase - Order #${savedOrder._id}`,
-      amount: totalPrice,
-      status: 'Outcome', // Customer is spending money
-      reference: 'Purchase Expense',
-      date: new Date()
-    });
-
-    await newTransaction.save();
-    console.log('Customer transaction created:', newTransaction._id);
-
     // Create a transaction for the farmer (income)
     const farmerTransaction = new Transaction({
       userId: farmerListing.userId, // Farmer's transaction
