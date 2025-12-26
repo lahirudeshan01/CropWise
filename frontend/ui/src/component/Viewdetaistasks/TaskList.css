@@ -175,6 +175,16 @@ TaskList.css
   transform: scale(1.05);
 }
 
+/* View Details button styling to match Stock Management */
+.view-details-link {
+  text-decoration: none;
+}
+
+.view-details-link:hover {
+  background-color: #22c55e !important;
+  text-decoration: none;
+}
+
 /* ================================ */
 
 .total-payment {
@@ -187,6 +197,26 @@ TaskList.css
   border-top: 2px solid #ddd;
 }
 
+
+/* Generate Report button styling */
+.generate-report-btn {
+  background-color: #1e40af !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.25rem !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease !important;
+  text-align: center !important;
+  display: inline-block !important;
+}
+
+.generate-report-btn:hover {
+  background-color: #1e3a8a !important; /* darker blue on hover */
+}
 
 /* ================================ */
 /* ================================ */

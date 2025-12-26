@@ -257,17 +257,18 @@ const TaskList = ({ tasks = [] }) => {
       transition: "border 0.2s",
     },
     reportBtn: {
-      background: "linear-gradient(90deg, #003366 0%, #007bff 100%)",
+      background: "#1e40af", // solid dark blue to match image
       color: "#fff",
       border: "none",
-      padding: "11px 32px",
-      borderRadius: "8px",
-      fontWeight: 700,
-      fontSize: "1.13em",
-      letterSpacing: "1px",
-      boxShadow: "0 2px 8px rgba(2,134,250,0.10)",
+      padding: "0.5rem 1rem", // standard button padding
+      borderRadius: "0.25rem", // slightly rounded corners (4px)
+      fontWeight: 600, // medium to semi-bold
+      fontSize: "1rem", // standard font size
+      fontFamily: "'Segoe UI', 'Roboto', Arial, sans-serif", // sans-serif
       cursor: "pointer",
-      transition: "background 0.2s, box-shadow 0.2s",
+      transition: "background-color 0.3s ease",
+      textAlign: "center",
+      display: "inline-block",
     },
     tableCard: {
       background: "#fff",
@@ -325,16 +326,17 @@ const TaskList = ({ tasks = [] }) => {
       textAlign: "center",
     },
     viewBtn: {
-      background: "linear-gradient(90deg, #007bff, #33b5e5)",
+      background: "#4ade80", // green to match Stock Management button
       color: "#fff",
       border: "none",
-      borderRadius: "6px",
-      padding: "7px 18px",
-      fontWeight: 600,
-      fontSize: "1em",
+      borderRadius: "0.25rem", // 4px - matches Stock Management
+      padding: "0.5rem 1rem", // 8px 16px - matches Stock Management
+      fontWeight: 600, // bold/semi-bold
+      fontSize: "0.875rem", // 14px - matches Stock Management
       cursor: "pointer",
-      boxShadow: "0 1px 4px rgba(2,134,250,0.10)",
-      transition: "background 0.2s",
+      textAlign: "center",
+      display: "inline-block",
+      transition: "background-color 0.3s ease",
     },
     totalSection: {
       marginTop: "18px",
@@ -406,6 +408,7 @@ const TaskList = ({ tasks = [] }) => {
         <button
           onClick={handlePrint}
           style={styles.reportBtn}
+          className="generate-report-btn"
         >
           Generate Report
         </button>
@@ -451,6 +454,7 @@ const TaskList = ({ tasks = [] }) => {
                     <Link
                       to={`/Showtask/${task._id}`}
                       style={styles.viewBtn}
+                      className="view-details-link"
                     >
                       View Details
                     </Link>
